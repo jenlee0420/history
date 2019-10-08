@@ -32,10 +32,12 @@
             $(window).load(function() {
                 var main_container = $("#main_container");
                 var mp4_container = $("#mp4_container");
-                var ori_width = $(window).innerWidth() - $(window).innerWidth()*0.2;
-                baseWidth = ori_width
-                console.log($(window).innerWidth(),$(window).innerWidth()/20)
-                var ori_height = $(window).innerHeight() - 50;
+                // var ori_width = $(window).innerWidth() - $(window).innerWidth() * 0.2;
+                // baseWidth = ori_width
+                // var ori_height = $(window).innerHeight() - 50;
+                //fix
+                var ori_width = 600;
+                var ori_height = 600;
                 var arr_flag = [0, 0, 0, 0, 0, 0, 0, 0];
                 var canvas = createMap(arr_flag, 1).draggable({
                     disabled: true,
@@ -275,7 +277,6 @@
                                     */
                                     $("<div/>").addClass("zoom_button zoom_out blueButton").css({
                                         "width": "10%",
-                                        "padding": "5px",
                                         "font-size": "18px",
                                         "margin": "0 20px 3px 15px"
                                     }).append("<b>-</b>"),
@@ -293,7 +294,7 @@
                                     }),
                                     $("<div/>").addClass("zoom_button zoom_in blueButton").css({
                                         "width": "10%",
-                                        "padding": "5px",
+
                                         "font-size": "18px",
                                         "margin": "0 10px 3px 10px"
                                     }).append("<b>+</b>")
@@ -328,14 +329,14 @@
 </head>
 
 <body>
-    <div id="main_container" style="display:none; width:100%;position: relative; overflow: hidden;">
+    <div id="main_container" style="display:none;width: 830px; height: 700px; position: relative; overflow: hidden;">
         <div id="soundCon"></div>
     </div>
     <div id="loading" style="width:820px; height:700px"><img src="img/loading.gif"></div>
     <div id="mp4_container"></div>
     <div class="question">
         <div>1. 以下哪一個<span class="underline">不是</span>隋煬帝下令建設運河的原因？</div>
-        <div> 
+        <div>
             <span class="item">A. 便利運兵</span>
             <span class="item">B. 增加稅收</span>
             <span class="item">C. 便利糧食運輸</span>
