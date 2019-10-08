@@ -188,7 +188,7 @@
                                     $("<div/>").addClass("sample blueButton action").data("action", "0").append(
                                         $("<span />").append($("<img />", {
                                             "src": "img/icon/capital_icon.png"
-                                        }).addClass("icon fix_height"), "狥常")
+                                        }).addClass("icon fix_height"), "常")
                                     ),
                                     $("<div/>").addClass("sample blueButton action").data("action", "1").append(
                                         $("<span />").append($("<img />", {
@@ -256,15 +256,11 @@
                                 ),
                                 $("<div/>").addClass("greyContainer").append(
                                     $("<div/>").css({
-                                        "height": "36px",
+                                        "display": "flex",
                                         "width": "100%"
                                     }).append(
-                                        $("<div/>").addClass("blueButton action_all").append("场陪ボ").css({
-                                            "float": "left"
-                                        }).data("action", "show"),
-                                        $("<div/>").addClass("blueButton action_all").append("场留旅").css({
-                                            "float": "right"
-                                        }).data("action", "hide")
+                                        $("<div/>").addClass("blueButton action_all").append("场陪ボ").data("action", "show"),
+                                        $("<div/>").addClass("blueButton action_all").append("场留旅").data("action", "hide")
                                     )
                                 ),
                                 $("<div/>", {

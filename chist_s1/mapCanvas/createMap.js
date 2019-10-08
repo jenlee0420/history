@@ -45,6 +45,8 @@ var m04 = document.createElement('audio')
 var m05 = document.createElement('audio')
 var m06 = document.createElement('audio')
 var m07 = document.createElement('audio')
+var waveSound = document.createElement('audio')
+var winSound = document.createElement('audio')
 m01.src = 'img/vo/map003_01.mp3'
 m02.src = 'img/vo/map003_02.mp3'
 m03.src = 'img/vo/map003_04.mp3'
@@ -52,6 +54,10 @@ m04.src = 'img/vo/map003_05.mp3'
 m05.src = 'img/vo/map003_06.mp3'
 m06.src = 'img/vo/map003_07.mp3'
 m07.src = 'img/vo/map003_07.mp3'
+waveSound.src = 'img/vo/wave.mp3'
+winSound.src = 'img/vo/win.mp3'
+waveSound.loop = 'loop'
+waveSound.volume  = 0.4
 
 
 // Variable init
@@ -447,6 +453,8 @@ function muteMe(elem) {
     m04.pause()
     m05.pause()
     m06.pause()
+    waveSound.pause()
+    winSound.pause()
 }
 
 function setSound(control, action) {
@@ -476,16 +484,24 @@ function setSound(control, action) {
             showCityAni(canvasStatic4, true)
             break;
         case '5':
-            m05.currentTime = 0
+            m05.currentTime = waveSound.currentTime = 0
             m05.play()
+            waveSound.play()
+            setTimeout(() => {
+                waveSound.pause()
+            }, 8000);
             break;
         case '6':
-            m06.currentTime = 0
+            m06.currentTime = waveSound.currentTime = 0
             m06.play()
+            waveSound.play()
+            setTimeout(() => {
+                waveSound.pause()
+            }, 8500);
             break;
         case '7':
-            // m07.currentTime = 0
-            // m07.play()
+            winSound.currentTime = 0
+            winSound.play()
             break;
         default:
             break;
@@ -705,6 +721,7 @@ function drawRiverPath(flag) {
         timerGroup[0] = setTimeout(() => {
             canvasStatic5.style.visibility = "visible";
             contextStatic5.drawImage(imageRiver, 0, 0, 1200, 1200);
+            showCityAni(canvasStatic1, true)
         }, 5000);
         timerGroup[1] = setTimeout(() => {
             contextStatic5.drawImage(imageRiver2, 0, 0, 1200, 1200);
