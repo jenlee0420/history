@@ -208,22 +208,26 @@ imagerice.onload = function() {
 imageHorse.onload = function() {
 
     var translate = [
-        [-1100, 1100],
-        [-1100, 1000],
-        [-1100, 936],
-        [-980, 890],
-        [-960, 712],
-        [-694, 416],
-        [-672, 180],
-        [-672, 180],
-        [-800, 170]
+        [-1200, 1000],
+        [-1080, 900],
+        // [-1040, 830],
+        [-1000, 800],
+        // [-1020, 760],
+        [-900, 750],
+        [-680, 670],
+        // [-680, 600],
+        [-760, 560],
+        [-830, 400],
+        [-880, 300],
+        // [-860, 150],
+        [-660, 150]
     ];
-    let position = translate[0]
-    contextAnimHorse.drawImage(imageHorse, position[0], position[1], 820 * 0.25, 360 * 0.25);
-    canvasAnimHorse.style.visibility = 'visible'
-    console.log(canvasAnimHorse.style.visibility)
-    var scale = [0, 1, 1, 1, 1, 1, 1, 0];
-    var dur = [7, 7, 7, 7, 7, 7, 7];
+    // let position = translate[11]
+    // contextAnimHorse.drawImage(imageHorse, position[0], position[1], 820 * 0.25, 360 * 0.25);
+    // canvasAnimHorse.style.visibility = 'visible'
+    // console.log(canvasAnimHorse.style.visibility)
+    var scale = [0, 1, 1, 1, 1, 1, 1,1, 0];
+    var dur = [7, 7, 7, 7, 7, 7, 7,7, 7, 7, 7, 7, 7];
     horseObject1 = initHorseObject(translate, scale, dur);
     translate = [
         [-500, 730],
@@ -493,7 +497,10 @@ function setSound(control, action) {
         case '0':
             m01.currentTime = 0
             m01.play()
-            showCityAni(canvasStatic1, true)
+            setTimeout(() => {
+                showCityAni(canvasStatic1, true)
+            }, 1000);
+            
             break;
         case '1':
             m02.currentTime = 0
@@ -554,7 +561,7 @@ function showCityAni(canvasStatic, bool) {
         canvasStatic.style.visibility = show ? 'visible' : 'hidden';
         show = !show
         times -= 1
-    }, 400);
+    }, 500);
 }
 // Main Function
 function createMap(controlArray, scale) {
@@ -735,10 +742,10 @@ function ship1(flag) {
             //     }
             // }, 100);
 
-        // drawHorsesTimeout = setInterval(() => {
-        //     canvasClear(canvasAnimHorse);
-        //     drawHorse(horseObject1, true)
-        // }, 60);
+        drawHorsesTimeout = setInterval(() => {
+            canvasClear(canvasAnimHorse);
+            drawHorse(horseObject1, true)
+        }, 60);
 
         // drawHorsesTimeout = setTimeout(function () { ship1(flag); }, 1 / 30 * 1000);
     } else {
@@ -1184,7 +1191,7 @@ function drawHorse(object, isInvert) {
 
     if (object.position.currPoint + 1 < object.position.totalPoint) {
         contextAnimHorse.save();
-        //		contextAnimHorse.position(canvasAnimHorse.width, 0);
+        		// contextAnimHorse.position(canvasAnimHorse.width, 0);
         if (isInvert) {
             contextAnimHorse.scale(-1, 1);
         }
@@ -1192,12 +1199,6 @@ function drawHorse(object, isInvert) {
         var position = new Array();
         var scale;
 
-        // Anim Frame control
-        if (object.currFrame < object.totalFrame - 1) {
-            object.currFrame++;
-        } else {
-            object.currFrame = 0;
-        }
         if (object.position.scales[object.position.currPoint] != object.position.scales[object.position.currPoint + 1]) {
             if (object.position.scales[object.position.currPoint] > object.position.scales[object.position.currPoint + 1]) {
                 scale = object.position.scales[object.position.currPoint] * (object.position.dur[object.position.currPoint] - object.position.currDur) / object.position.dur[object.position.currPoint];
@@ -1212,7 +1213,8 @@ function drawHorse(object, isInvert) {
         }
         position[0] = (object.position.points[object.position.currPoint][0] * (object.position.dur[object.position.currPoint] - object.position.currDur) + object.position.points[object.position.currPoint + 1][0] * object.position.currDur) / object.position.dur[object.position.currPoint];
         position[1] = (object.position.points[object.position.currPoint][1] * (object.position.dur[object.position.currPoint] - object.position.currDur) + object.position.points[object.position.currPoint + 1][1] * object.position.currDur) / object.position.dur[object.position.currPoint];
-        contextAnimHorse.drawImage(imageHorse, object.currFrame * object.width, 0, object.width, object.height, position[0], position[1], object.width * scale * 0.25, object.height * scale * 0.25);
+        contextAnimHorse.drawImage(imageHorse,position[0], position[1], object.width * scale * 0.25, object.height * scale * 0.25);
+        // contextAnimHorse.drawImage(imageHorse,0,0, object.width * scale * 0.25, object.height * scale * 0.25);
         contextAnimHorse.restore();
         // Anim Position control
         if (object.position.currDur <= object.position.dur[object.position.currPoint]) {
