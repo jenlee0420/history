@@ -242,16 +242,16 @@
                                             "src": "img/icon/question.png"
                                         }).addClass("icon"), "°ÝÃD")
                                     ),
-                                    $("<div/>").addClass("smallMap").css({
-                                        "width": "202px",
-                                        "height": "202px",
-                                        "margin": "3px auto",
-                                        "overflow": "hidden"
-                                    }).append(
-                                        redBox // .css({"visibility": "hidden"})
-                                    ).css({
-                                        "visibility": "hidden"
-                                    })
+                                    // $("<div/>").addClass("smallMap").css({
+                                    //     "width": "202px",
+                                    //     "height": "202px",
+                                    //     "margin": "3px auto",
+                                    //     "overflow": "hidden"
+                                    // }).append(
+                                    //     redBox // .css({"visibility": "hidden"})
+                                    // ).css({
+                                    //     "visibility": "hidden"
+                                    // })
                                     // $("<div/>").addClass("sample").css({"background-color":"transparent", "border-bottom":"2px solid black", "border-radius":"0px"}),
                                 ),
                                 $("<div/>").addClass("greyContainer").append(
@@ -265,7 +265,10 @@
                                 ),
                                 $("<div/>", {
                                     "id": "map_action_container"
-                                }).addClass("greyContainer").append(
+                                }).addClass("greyContainer").css({
+                                    'margin-bottom':'10px'
+                                })
+                                .append(
                                     /*
                                     $("<div/>").addClass("smallMap").css({"width":"202px", "height":"202px", "margin":"3px auto", "overflow":"hidden"}).append(
                                     	redBox.css({"visibility": "hidden"})
