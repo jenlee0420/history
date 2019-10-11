@@ -215,7 +215,7 @@ imageHorse.onload = function() {
 
     var translate = [
         [1000, 1000],
-        [850, 850]
+        [880, 830]
         // [-1040, 830],
 
     ];
@@ -228,17 +228,17 @@ imageHorse.onload = function() {
     var sharpPoint = [0, 1]
     horseObject1 = initHorseObject(translate, scale, dur, sharpPoint);
     translate = [
-        [840, 850],
-        [800, 750]
+        [870, 850],
+        [820, 730]
     ];
     scale = [1, 1];
     dur = [7, 7];
     sharpPoint = [0, 1]
     horseObject2 = initHorseObject(translate, scale, dur, sharpPoint);
     translate = [
-        [800, 740],
-        [700, 750],
-        [540, 670]
+        [820, 730],
+        [670, 730],
+        [500, 650]
     ];
     scale = [1, 1, 1];
     dur = [8, 8, 10];
@@ -249,7 +249,7 @@ imageHorse.onload = function() {
         [540, 560],
         // [-830, 400],
         [630, 300],
-        [600, 150]
+        [610, 150]
     ];
     scale = [1, 1, 1, 1];
     dur = [8, 10, 15, 10];
@@ -257,12 +257,12 @@ imageHorse.onload = function() {
     horseObject4 = initHorseObject(translate, scale, dur, sharpPoint);
 
     translate = [
-        [340, 660],
+        [400, 660],
         [200, 720],
     ];
     scale = [1, 1];
-    dur = [8, 10];
-    sharpPoint = [0, 1]
+    dur = [10, 10];
+    sharpPoint = [0, 2]
     horseObject5 = initHorseObject(translate, scale, dur, sharpPoint);
 }
 
@@ -534,7 +534,7 @@ function setSound(control, action) {
             waveSound.play()
             setTimeout(() => {
                 waveSound.pause()
-            }, 8000);
+            }, 10000);
             break;
         case '6':
             m06.currentTime = waveSound.currentTime = 0
@@ -547,6 +547,7 @@ function setSound(control, action) {
         case '7':
             winSound.currentTime = 0
             winSound.play()
+            showCityAni(canvasStatic6, true)
             break;
         default:
             break;
@@ -656,7 +657,7 @@ function createMap(controlArray, scale) {
         if (controlArray[7] == 1) {
             canvasStatic6.style.visibility = "visible";
         } else {
-            canvasStatic6.style.visibility = "hidden";
+            showCityAni(canvasStatic6, false)
         }
     }
 
@@ -772,7 +773,7 @@ function ship1(flag) {
 function ship2(flag) {
     var img = new Image()
     let w = 10,
-        x = 380
+        x = 580
     var addRadial2 = function() {
         contextAnimGreenPath.save(); //保存当前绘图状态
         contextAnimGreenPath.beginPath(); //开始创建路径
@@ -1229,7 +1230,7 @@ function drawHorse2() {
             drawHorse(horseObject5, false, canvasAnimHorse2, contextAnimHorse2).then(() => {
                 horsetimerGroup2[1] = setTimeout(() => {
                     canvasClear(canvasAnimHorse2);
-                }, 4000)
+                }, 1000)
             })
         }, 60);
     }, 4000)
@@ -1255,23 +1256,23 @@ function drawHousePromise() {
             canvasClear(canvasAnimHorse);
             drawHorse(horseObject2, false, canvasAnimHorse, contextAnimHorse)
         }, 60)
-    }, 7800);
+    }, 7400);
     horsetimerGroup[2] = setTimeout(() => {
         drawHorsesTimeout = setInterval(() => {
             canvasClear(canvasAnimHorse);
             drawHorse(horseObject3, false, canvasAnimHorse, contextAnimHorse)
         }, 60)
-    }, 12000);
+    }, 11500);
     horsetimerGroup[3] = setTimeout(() => {
         drawHorsesTimeout = setInterval(() => {
             canvasClear(canvasAnimHorse);
             drawHorse(horseObject4, false, canvasAnimHorse, contextAnimHorse).then(() => {
                 horsetimerGroup[2] = setTimeout(() => {
                     canvasClear(canvasAnimHorse);
-                }, 4000)
+                }, 1000)
             })
         }, 60)
-    }, 16000);
+    }, 15000);
 }
 
 function drawHorse(object, isInvert, canvasS, contextS) {
@@ -1313,14 +1314,17 @@ function drawHorse(object, isInvert, canvasS, contextS) {
                 object.position.currDur = 1;
                 object.position.currPoint++;
             }
-            if (object.point[object.position.currPoint] == 1) {
+            if (object.point[object.position.currPoint] > 0) {
+                // if(object.point[object.position.currPoint] == 1){
+                //     showCityAni(canvasS, true)
+                // }
                 object.animating = false;
                 object.animated = true;
                 clearInterval(drawHorsesTimeout)
                 clearInterval(drawHorsesTimeout2)
-                showCityAni(canvasS, true)
                 resolve()
             }
+            
         } else {
             // position[0] = (object.position.points[object.position.totalPoint][0] * (object.position.dur[object.position.totalPoint] - object.position.currDur) + object.position.points[object.position.totalPoint + 1][0] * object.position.currDur) / object.position.dur[object.position.totalPoint];
             // position[1] = (object.position.points[object.position.totalPoint][1] * (object.position.dur[object.position.totalPoint] - object.position.currDur) + object.position.points[object.position.totalPoint + 1][1] * object.position.currDur) / object.position.dur[object.position.totalPoint];
@@ -1334,6 +1338,7 @@ function drawHorse(object, isInvert, canvasS, contextS) {
             clearInterval(drawHorsesTimeout)
             clearInterval(drawHorsesTimeout2)
             console.log(drawHorsesTimeout2)
+            
                 // showCityAni(canvasAnimHorse, true)
         }
     })

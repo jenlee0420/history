@@ -212,7 +212,7 @@ div.smallMap {
 .question {
     display: none;
     width: 720px;
-    height: 220px;
+    min-height: 220px;
     padding: 40px;
     font-size: 30px;
 }
