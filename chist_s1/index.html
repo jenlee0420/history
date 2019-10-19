@@ -130,7 +130,7 @@
                 });
                 var redBox = $("<div/>").css({
                     "width": "200px",
-                    "height": "200px",
+                    "height": "auto",
                     "border": "1px solid red"
                 }).draggable({
                     disabled: true,
@@ -181,8 +181,9 @@
                                 $("<div/>", {
                                     "id": "action_container"
                                 }).addClass("greyContainer").css({
-                                    "padding": "1px 1px 5px 1px",
-                                    "height": "80%"
+                                    "padding": "1px 3px 5px 1px",
+                                    "height": "auto",
+                                    "flex":'1'
                                 }).append(
                                     $("<div/>").addClass("sample_title").append("圖例"),
                                     $("<div/>").addClass("sample blueButton action").data("action", "0").append(
@@ -242,16 +243,17 @@
                                             "src": "img/icon/question.png"
                                         }).addClass("icon"), "問題")
                                     ),
-                                    // $("<div/>").addClass("smallMap").css({
-                                    //     "width": "202px",
-                                    //     "height": "202px",
-                                    //     "margin": "3px auto",
-                                    //     "overflow": "hidden"
-                                    // }).append(
-                                    //     redBox // .css({"visibility": "hidden"})
-                                    // ).css({
-                                    //     "visibility": "hidden"
-                                    // })
+                                    $("<div/>").addClass("smallMap").css({
+                                        "width": "202px",
+                                        "height": "auto",
+                                        "margin": "3px auto",
+                                        "overflow": "hidden"
+                                    }).append(
+                                        redBox // .css({"visibility": "hidden"})
+                                    ).css({
+                                        "visibility": "hidden",
+                                        "display":'none'
+                                    })
                                     // $("<div/>").addClass("sample").css({"background-color":"transparent", "border-bottom":"2px solid black", "border-radius":"0px"}),
                                 ),
                                 $("<div/>").addClass("greyContainer").append(
@@ -275,15 +277,16 @@
                                     ).hide(),
                                     */
                                     $("<div/>").addClass("zoom_button zoom_out blueButton").css({
-                                        "width": "10%",
+                                        "width": "1.7em",
                                         "font-size": "18px",
-                                        "margin": "0 20px 3px 15px"
+                                        "margin": "5px 20px 3px 15px"
                                     }).append("<b>-</b>"),
                                     $("<div/>", {
                                         "id": "slider"
                                     }).addClass("zoom_button").css({
                                         "width": "40%",
-                                        "height": "10px"
+                                        "height": "10px",
+                                        "border-radius":'4px'
                                     }).slider({
                                         min: main_container.data("min_zoom"),
                                         max: main_container.data("max_zoom"),
@@ -292,10 +295,9 @@
                                         }
                                     }),
                                     $("<div/>").addClass("zoom_button zoom_in blueButton").css({
-                                        "width": "10%",
-
+                                        "width": "1.7em",
                                         "font-size": "18px",
-                                        "margin": "0 10px 3px 10px"
+                                        "margin": "5px 10px 3px 10px"
                                     }).append("<b>+</b>")
 
                                 )
@@ -334,7 +336,7 @@
     <div id="loading" style="width:820px; height:700px"><img src="img/loading.gif"></div>
     <div id="mp4_container"></div>
     <div class="question">
-        <div>1. 以下哪一個<span class="underline">不是</span>隋煬帝下令建設運河原的原因？</div>
+        <div>1. 以下哪一個<span class="underline">不是</span>隋煬帝下令建設運河的原因？</div>
         <div>
             <span class="item">A. 便利運兵</span>
             <span class="item">B. 增加稅收</span>

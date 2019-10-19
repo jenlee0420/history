@@ -199,12 +199,12 @@ imageRiver.onload = function() {
 imageRiver4.onload = function() {
     canvasStatic8.width = 1200;
     canvasStatic8.height = 1200;
-    contextStatic8.drawImage(imageRiver4, 0, 0, 1200, 1200);
+    // contextStatic8.drawImage(imageRiver4, 0, 0, 1200, 1200);
 }
 imageRiver5.onload = function() {
     canvasStatic9.width = 1200;
     canvasStatic9.height = 1200;
-    contextStatic9.drawImage(imageRiver5, 0, 0, 1200, 1200);
+    // contextStatic9.drawImage(imageRiver5, 0, 0, 1200, 1200);
 }
 imagerice.onload = function() {
     canvasStatic6.width = 1200;
@@ -246,10 +246,10 @@ imageHorse.onload = function() {
     horseObject3 = initHorseObject(translate, scale, dur, sharpPoint);
     translate = [
         [480, 670],
-        [540, 560],
+        [590, 560],
         // [-830, 400],
-        [630, 300],
-        [610, 150]
+        [670, 300],
+        [640, 120]
     ];
     scale = [1, 1, 1, 1];
     dur = [8, 10, 15, 10];
@@ -258,7 +258,7 @@ imageHorse.onload = function() {
 
     translate = [
         [400, 660],
-        [200, 720],
+        [180, 730],
     ];
     scale = [1, 1];
     dur = [10, 10];
@@ -532,17 +532,13 @@ function setSound(control, action) {
             m05.currentTime = waveSound.currentTime = 0
             m05.play()
             waveSound.play()
-            setTimeout(() => {
-                waveSound.pause()
-            }, 10000);
+            
             break;
         case '6':
             m06.currentTime = waveSound.currentTime = 0
             m06.play()
             waveSound.play()
-            setTimeout(() => {
-                waveSound.pause()
-            }, 8500);
+
             break;
         case '7':
             winSound.currentTime = 0
@@ -863,45 +859,56 @@ function drawRiverPath(flag) {
     }
     if (flag == true) {
         if (drawRiverTimeout == 'end') { return }
-        console.log('start')
+       
         canvasClear(canvasStatic5);
         canvasStatic5.style.visibility = "visible";
         drawRiverTimeout = 'end'
-        timerGroup[0] = setTimeout(() => {
-            console.log('river1')
+        /*timerGroup[0] = setTimeout(() => {
             sharp(0, 0, 1200, 1200, imageRiver)
         }, 4500);
         timerGroup[1] = setTimeout(() => {
-            console.log('river2')
             sharp(984, 845, 176, 200, imageRiver2)
         }, 6200);
         timerGroup[2] = setTimeout(() => {
-            console.log('river3')
             sharp(908, 743, 134, 116, imageRiver3)
         }, 8000);
         timerGroup[3] = setTimeout(() => {
-            console.log('river4')
             sharp2(canvasStatic8)
         }, 9500);
         timerGroup[4] = setTimeout(() => {
             sharp2(canvasStatic9)
-            
-        }, 11000);
+        }, 11000);*/
+        timerGroup[0] = setTimeout(() => {
+            canvasStatic5.style.visibility = "visible";
+            contextStatic5.drawImage(imageRiver, 0, 0, 1200, 1200);
+        }, 5000);
+        timerGroup[1] = setTimeout(() => {
+            contextStatic5.drawImage(imageRiver2, 0, 0, 1200, 1200);
+        }, 7000);
+        timerGroup[2] = setTimeout(() => {
+            contextStatic5.drawImage(imageRiver3, 0, 0, 1200, 1200);
+        }, 9000);
+        timerGroup[3] = setTimeout(() => {
+            contextStatic5.drawImage(imageRiver4, 0, 0, 1200, 1200);
+        }, 10000);
+        timerGroup[4] = setTimeout(() => {
+            contextStatic5.drawImage(imageRiver5, 0, 0, 1200, 1200);
+        }, 12000);
     } else {
         console.log('clear')
         drawRiverTimeout = ''
         for (var i = 0; i < timerGroup.length; i++) {
             clearTimeout(timerGroup[i])
         }
-        clearInterval(canvasStatic5.timeout)
+        canvasClear(canvasStatic5);
+        /*clearInterval(canvasStatic5.timeout)
         clearInterval(canvasStatic8.timeout)
         clearInterval(canvasStatic9.timeout)
         canvasStatic5.style.visibility = "hidden";
         canvasStatic8.style.visibility = "hidden";
-        canvasStatic9.style.visibility = "hidden";
-        canvasClear(canvasStatic5);
-        // canvasClear(canvasStatic8);
-        // canvasClear(canvasStatic9);
+        canvasStatic9.style.visibility = "hidden";*/
+        
+
     }
 }
 
@@ -1230,6 +1237,7 @@ function drawHorse2() {
             drawHorse(horseObject5, false, canvasAnimHorse2, contextAnimHorse2).then(() => {
                 horsetimerGroup2[1] = setTimeout(() => {
                     canvasClear(canvasAnimHorse2);
+                    waveSound.pause()
                 }, 1000)
             })
         }, 60);
@@ -1239,7 +1247,7 @@ function drawHorse2() {
 }
 
 function drawHousePromise() {
-    console.log(horseObject4.animated,'4444')
+    // console.log(horseObject4.animated,'4444')
     if (horseObject4.animated == true) { return }
     canvasAnimHorse.style.visibility = 'visible'
     contextAnimHorse.drawImage(imageHorse, horseObject1.position.points[0][0], horseObject1.position.points[0][1], horseObject1.width * 0.25, horseObject1.height * 0.25);
@@ -1269,6 +1277,7 @@ function drawHousePromise() {
             drawHorse(horseObject4, false, canvasAnimHorse, contextAnimHorse).then(() => {
                 horsetimerGroup[2] = setTimeout(() => {
                     canvasClear(canvasAnimHorse);
+                    waveSound.pause()
                 }, 1000)
             })
         }, 60)
