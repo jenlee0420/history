@@ -224,7 +224,7 @@ imageHorse.onload = function() {
     // canvasAnimHorse.style.visibility = 'visible'
     // console.log(canvasAnimHorse.style.visibility)
     var scale = [1, 1];
-    var dur = [15, 7];
+    var dur = [10, 7];
     var sharpPoint = [0, 1]
     horseObject1 = initHorseObject(translate, scale, dur, sharpPoint);
     translate = [
@@ -237,32 +237,33 @@ imageHorse.onload = function() {
     horseObject2 = initHorseObject(translate, scale, dur, sharpPoint);
     translate = [
         [820, 730],
-        [670, 730],
-        [500, 650]
+        [651, 683],
+        [480, 643]
     ];
     scale = [1, 1, 1];
-    dur = [8, 8, 10];
+    dur = [5, 5, 5];
     sharpPoint = [0, 0, 1]
     horseObject3 = initHorseObject(translate, scale, dur, sharpPoint);
     translate = [
-        [480, 670],
-        [590, 560],
+        [480, 643],
+        [586, 523],
         // [-830, 400],
-        [670, 300],
-        [640, 120]
+        [692, 305],
+        [670, 150]
     ];
-    scale = [1, 1, 1, 1];
-    dur = [8, 10, 15, 10];
+    scale = [1, 1, 1, 0];
+    dur = [8, 7, 10, 10];
     sharpPoint = [0, 0, 0, 1]
     horseObject4 = initHorseObject(translate, scale, dur, sharpPoint);
 
     translate = [
         [400, 660],
-        [180, 730],
+        [260, 720],
+        [180, 760],
     ];
-    scale = [1, 1];
-    dur = [10, 10];
-    sharpPoint = [0, 2]
+    scale = [1, 1,0];
+    dur = [7, 10,7];
+    sharpPoint = [0, 0,2]
     horseObject5 = initHorseObject(translate, scale, dur, sharpPoint);
 }
 
@@ -505,9 +506,7 @@ function setSound(control, action) {
         case '0':
             m01.currentTime = 0
             m01.play()
-            setTimeout(() => {
                 showCityAni(canvasStatic1, true)
-            }, 1000);
 
             break;
         case '1':
@@ -556,8 +555,8 @@ function showCityAni(canvasStatic, bool) {
         canvasStatic.style.visibility = "hidden";
         return
     }
-    let show = true
-    let times = 5
+    let show = false
+    let times = 4
     canvasStatic.timeout = setInterval(() => {
         if (times == 0) {
             clearInterval(canvasStatic.timeout)
@@ -566,7 +565,7 @@ function showCityAni(canvasStatic, bool) {
         canvasStatic.style.visibility = show ? 'visible' : 'hidden';
         show = !show
         times -= 1
-    }, 500);
+    }, 260);
 }
 // Main Function
 function createMap(controlArray, scale) {
@@ -1241,7 +1240,7 @@ function drawHorse2() {
                 }, 1000)
             })
         }, 60);
-    }, 4000)
+    }, 2000)
 
 
 }
@@ -1257,20 +1256,20 @@ function drawHousePromise() {
             canvasClear(canvasAnimHorse);
             drawHorse(horseObject1, false, canvasAnimHorse, contextAnimHorse)
         }, 60);
-    }, 4000)
+    }, 1200)
 
     horsetimerGroup[1] = setTimeout(() => {
         drawHorsesTimeout = setInterval(() => {
             canvasClear(canvasAnimHorse);
             drawHorse(horseObject2, false, canvasAnimHorse, contextAnimHorse)
         }, 60)
-    }, 7400);
+    }, 2100);
     horsetimerGroup[2] = setTimeout(() => {
         drawHorsesTimeout = setInterval(() => {
             canvasClear(canvasAnimHorse);
             drawHorse(horseObject3, false, canvasAnimHorse, contextAnimHorse)
         }, 60)
-    }, 11500);
+    }, 3000);
     horsetimerGroup[3] = setTimeout(() => {
         drawHorsesTimeout = setInterval(() => {
             canvasClear(canvasAnimHorse);
@@ -1281,7 +1280,7 @@ function drawHousePromise() {
                 }, 1000)
             })
         }, 60)
-    }, 15000);
+    }, 4300);
 }
 
 function drawHorse(object, isInvert, canvasS, contextS) {
