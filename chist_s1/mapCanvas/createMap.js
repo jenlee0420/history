@@ -241,18 +241,17 @@ imageHorse.onload = function() {
         [480, 643]
     ];
     scale = [1, 1, 1];
-    dur = [5, 5, 5];
+    dur = [8, 8, 8];
     sharpPoint = [0, 0, 1]
     horseObject3 = initHorseObject(translate, scale, dur, sharpPoint);
     translate = [
         [480, 643],
         [586, 523],
-        // [-830, 400],
-        [692, 305],
-        [670, 150]
+        [700, 305],
+        [690, 150]
     ];
     scale = [1, 1, 1, 0];
-    dur = [8, 7, 10, 10];
+    dur = [8, 10, 10, 18];
     sharpPoint = [0, 0, 0, 1]
     horseObject4 = initHorseObject(translate, scale, dur, sharpPoint);
 
@@ -263,27 +262,28 @@ imageHorse.onload = function() {
     ];
     scale = [1, 1,0];
     dur = [7, 10,7];
-    sharpPoint = [0, 0,2]
+    sharpPoint = [0, 0,1]
     horseObject5 = initHorseObject(translate, scale, dur, sharpPoint);
+    horseObject5.id=5
 }
 
 redPathObject = {
     'anim1': {
         'path1': {
-            'startPointX': 1325,
-            'startPointY': -1300,
-            'endPointX': 725,
-            'endPointY': 690,
-            'controlPointX': 797,
-            'controlPointY': 550
+            'startPointX': 1070,
+            'startPointY': 1012,
+            'endPointX': 972,
+            'endPointY': 864,
+            'controlPointX': 1068,
+            'controlPointY': 940
         },
         'mask1': {
-            'originX': 710,
-            'originY': 140,
-            'width': 100,
-            'height': 280,
-            'currOriginX': 710,
-            'currOriginY': 150,
+            'originX': 932,
+            'originY': 854,
+            'width': 222,
+            'height': 222,
+            'currOriginX': 932,
+            'currOriginY': 854,
             'shiftX': 0,
             'shiftY': 20
         },
@@ -506,21 +506,21 @@ function setSound(control, action) {
         case '0':
             m01.currentTime = 0
             m01.play()
-                showCityAni(canvasStatic1, true)
+                // showCityAni(canvasStatic1, true)
 
             break;
         case '1':
             m02.currentTime = 0
             m02.play()
-            showCityAni(canvasStatic2, true)
+            
             break;
         case '2':
-            showCityAni(canvasStatic3, true)
+            // showCityAni(canvasStatic3, true)
             break;
         case '3':
             m03.currentTime = 0
             m03.play()
-            showCityAni(canvasStatic4, true)
+            // showCityAni(canvasStatic4, true)
             break;
         case '4':
             m04.currentTime = 0
@@ -542,7 +542,7 @@ function setSound(control, action) {
         case '7':
             winSound.currentTime = 0
             winSound.play()
-            showCityAni(canvasStatic6, true)
+            // showCityAni(canvasStatic6, true)
             break;
         default:
             break;
@@ -553,8 +553,11 @@ function showCityAni(canvasStatic, bool) {
     if (!bool) {
         clearInterval(canvasStatic.timeout)
         canvasStatic.style.visibility = "hidden";
+        canvasStatic.ani=false
         return
     }
+    if(canvasStatic.ani == true){return}
+    
     let show = false
     let times = 4
     canvasStatic.timeout = setInterval(() => {
@@ -566,6 +569,7 @@ function showCityAni(canvasStatic, bool) {
         show = !show
         times -= 1
     }, 260);
+    canvasStatic.ani=true
 }
 // Main Function
 function createMap(controlArray, scale) {
@@ -613,21 +617,25 @@ function createMap(controlArray, scale) {
             horse3 = false;
         if (controlArray[0] == 1) {
             canvasStatic1.style.visibility = "visible";
+            showCityAni(canvasStatic1, true)
         } else {
             showCityAni(canvasStatic1, false)
         }
         if (controlArray[1] == 1) {
             canvasStatic2.style.visibility = "visible";
+            showCityAni(canvasStatic2, true)
         } else {
             showCityAni(canvasStatic2, false)
         }
         if (controlArray[2] == 1) {
             canvasStatic3.style.visibility = "visible";
+            showCityAni(canvasStatic3, true)
         } else {
             showCityAni(canvasStatic3, false)
         }
         if (controlArray[3] == 1) {
             canvasStatic4.style.visibility = "visible";
+            showCityAni(canvasStatic4, true)
         } else {
             showCityAni(canvasStatic4, false)
         }
@@ -641,6 +649,7 @@ function createMap(controlArray, scale) {
             // drawRedPath(true);
             // horse1 = true;
             ship1(true)
+            
         } else {
             ship1(false)
         }
@@ -651,6 +660,7 @@ function createMap(controlArray, scale) {
         }
         if (controlArray[7] == 1) {
             canvasStatic6.style.visibility = "visible";
+            showCityAni(canvasStatic5, true)
         } else {
             showCityAni(canvasStatic6, false)
         }
@@ -705,17 +715,30 @@ function createMap(controlArray, scale) {
 function ship1(flag) {
     var img = new Image()
     let h = 50,
-        y = 1000
+        y = 1000,
+        xx=930,
+        ww=220
     var addRadial = function() {
         contextAnimRedPath.save(); //保存当前绘图状态
         contextAnimRedPath.beginPath(); //开始创建路径
-        contextAnimRedPath.rect(480, y, 610, h)
+        if(xx <= 530){
+            y -= 15
+            h += 15
+        }   
+        else if(y<=740){
+            xx-=15
+            ww+=15
+            y=690
+        }else if(y<=1000){
+            y -= 15
+            h += 15
+        }
+        contextAnimRedPath.rect(xx, y, ww, h)
         contextAnimRedPath.closePath(); //关闭路径
         contextAnimRedPath.clip();
         contextAnimRedPath.drawImage(img, 0, 0, 1200, 1200);
         contextAnimRedPath.restore();
-        y -= 10
-        h += 10
+        
         if (h < 1000) {
             redTimer = setTimeout(() => {
                 addRadial()
@@ -1288,7 +1311,7 @@ function drawHorse(object, isInvert, canvasS, contextS) {
     return new Promise((resolve, reject) => {
 
         if (object.position.currPoint + 1 < object.position.totalPoint) {
-            console.log(object.position.currPoint, object.position.totalPoint)
+            // console.log(object.position.currPoint, object.position.totalPoint)
             contextS.save();
             // contextAnimHorse.position(canvasAnimHorse.width, 0);
             if (isInvert) {
@@ -1310,7 +1333,6 @@ function drawHorse(object, isInvert, canvasS, contextS) {
             } else {
                 scale = 1;
             }
-
             position[0] = (object.position.points[object.position.currPoint][0] * (object.position.dur[object.position.currPoint] - object.position.currDur) + object.position.points[object.position.currPoint + 1][0] * object.position.currDur) / object.position.dur[object.position.currPoint];
             position[1] = (object.position.points[object.position.currPoint][1] * (object.position.dur[object.position.currPoint] - object.position.currDur) + object.position.points[object.position.currPoint + 1][1] * object.position.currDur) / object.position.dur[object.position.currPoint];
             contextS.drawImage(imageHorse, position[0], position[1], object.width * scale * 0.25, object.height * scale * 0.25);
@@ -1328,8 +1350,12 @@ function drawHorse(object, isInvert, canvasS, contextS) {
                 // }
                 object.animating = false;
                 object.animated = true;
-                clearInterval(drawHorsesTimeout)
+                
+                if(object.id == 5){
                 clearInterval(drawHorsesTimeout2)
+                }else{
+                    clearInterval(drawHorsesTimeout)
+                }
                 resolve()
             }
             
@@ -1343,9 +1369,12 @@ function drawHorse(object, isInvert, canvasS, contextS) {
                 // contextAnimHorse.save();
                 // contextAnimHorse.drawImage(imageHorse, position[0], position[1], object.width * scale * 0.25, object.height * scale * 0.25);
                 // contextAnimHorse.restore();
-            clearInterval(drawHorsesTimeout)
-            clearInterval(drawHorsesTimeout2)
-            console.log(drawHorsesTimeout2)
+            
+            if(object.id == 5){
+                clearInterval(drawHorsesTimeout2)
+                }else{
+                    clearInterval(drawHorsesTimeout)
+                }
             
                 // showCityAni(canvasAnimHorse, true)
         }
