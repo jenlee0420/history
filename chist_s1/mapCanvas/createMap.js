@@ -660,7 +660,7 @@ function createMap(controlArray, scale) {
         }
         if (controlArray[7] == 1) {
             canvasStatic6.style.visibility = "visible";
-            showCityAni(canvasStatic5, true)
+            showCityAni(canvasStatic6, true)
         } else {
             showCityAni(canvasStatic6, false)
         }
