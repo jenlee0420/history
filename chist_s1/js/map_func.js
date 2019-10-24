@@ -155,6 +155,7 @@ function bind_map_func(div, mp4div) {
             } else {
                 target.toggleClass("clicked");
                 arr[action] = target.hasClass("clicked") ? 1 : 0;
+                console.log($(e.delegateTarget).data())
                 createMap(arr, $(e.delegateTarget).data("scale"));
                 setSound(arr[action], action)
             }

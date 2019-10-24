@@ -8,11 +8,28 @@ var horseObject1
 var redTimer, greedTimer, timerGroup = [],
     horsetimerGroup = [],
     horsetimerGroup2 = [],
-    soundindex=''
+    soundindex = ''
 var redNumber = 1,
     greedNumber = 1
 var isMute = false
-var baseWidth = 600 //fix
+var baseWidth = 1488, //fix
+    baseHeight = 1365
+var canvasW = 1488,
+    canvasH = 1365 //fix
+
+var bodyHeight = $(window).innerHeight(),
+    bodytWidth = $(window).innerWidth()
+
+if (bodytWidth > bodyHeight) {
+    canvasW = ((bodyHeight - 50) / canvasH) * canvasW
+    canvasH = bodyHeight - 50
+    
+} else {
+    canvasH = ((bodytWidth - 230)/canvasW ) * canvasH
+    canvasW = bodytWidth - 230
+    
+}
+
 
 var divTag = document.createElement('div');
 var canvasBackground = document.createElement('canvas');
@@ -133,14 +150,14 @@ canvasAnimHorse.style.zIndex = canvasAnimHorse2.style.zIndex = "6";
 
 canvasBackground.width = 0;
 canvasBackground.height = 0;
-canvasAnimRedPath.width = 1200;
-canvasAnimRedPath.height = 1200;
-canvasAnimGreenPath.width = 1200;
-canvasAnimGreenPath.height = 1200;
-canvasAnimBluePath.width = 1200;
-canvasAnimBluePath.height = 1200;
-canvasAnimHorse.width = canvasAnimHorse2.width = 1200;
-canvasAnimHorse.height = canvasAnimHorse2.height = 1200;
+canvasAnimRedPath.width = canvasW;
+canvasAnimRedPath.height = canvasH;
+canvasAnimGreenPath.width = canvasW;
+canvasAnimGreenPath.height = canvasH;
+canvasAnimBluePath.width = canvasW;
+canvasAnimBluePath.height = canvasH;
+canvasAnimHorse.width = canvasAnimHorse2.width = canvasW;
+canvasAnimHorse.height = canvasAnimHorse2.height = canvasH;
 
 imageMap = new Image();
 imageMapDetail = new Image();
@@ -171,47 +188,47 @@ imageRiver4.src = "img/river04.png";
 imageRiver5.src = "img/river05.png";
 imageHorse.src = "img/ship.png";
 
-imageCapital.onload = function() {
-    canvasStatic1.width = 1200;
-    canvasStatic1.height = 1200;
-    contextStatic1.drawImage(imageCapital, 0, 0, 1200, 1200);
+imageCapital.onload = function () {
+    canvasStatic1.width = canvasW;
+    canvasStatic1.height = canvasH;
+    contextStatic1.drawImage(imageCapital, 0, 0, baseWidth, baseHeight);
 }
-imagedongdu.onload = function() {
-    canvasStatic2.width = 1200;
-    canvasStatic2.height = 1200;
-    contextStatic2.drawImage(imagedongdu, 0, 0, 1200, 1200);
+imagedongdu.onload = function () {
+    canvasStatic2.width = canvasW;
+    canvasStatic2.height = canvasH;
+    contextStatic2.drawImage(imagedongdu, 0, 0, baseWidth, baseHeight);
 }
-imageMainCity.onload = function() {
-    canvasStatic3.width = 1200;
-    canvasStatic3.height = 1200;
-    contextStatic3.drawImage(imageMainCity, 0, 0, 1200, 1200);
+imageMainCity.onload = function () {
+    canvasStatic3.width = canvasW;
+    canvasStatic3.height = canvasH;
+    contextStatic3.drawImage(imageMainCity, 0, 0, canvasW, canvasH);
 }
-imageGate.onload = function() {
-    canvasStatic4.width = 1200;
-    canvasStatic4.height = 1200;
-    contextStatic4.drawImage(imageGate, 0, 0, 1200, 1200);
+imageGate.onload = function () {
+    canvasStatic4.width = canvasW;
+    canvasStatic4.height = canvasH;
+    contextStatic4.drawImage(imageGate, 0, 0, canvasW, canvasH);
 }
-imageRiver.onload = function() {
-    canvasStatic5.width = 1200;
-    canvasStatic5.height = 1200;
+imageRiver.onload = function () {
+    canvasStatic5.width = canvasW;
+    canvasStatic5.height = canvasH;
     // contextStatic5.drawImage(imageRiver, 0, 0, 1200, 1200);
 }
-imageRiver4.onload = function() {
-    canvasStatic8.width = 1200;
-    canvasStatic8.height = 1200;
+imageRiver4.onload = function () {
+    canvasStatic8.width = canvasW;
+    canvasStatic8.height = canvasH;
     // contextStatic8.drawImage(imageRiver4, 0, 0, 1200, 1200);
 }
-imageRiver5.onload = function() {
-    canvasStatic9.width = 1200;
-    canvasStatic9.height = 1200;
+imageRiver5.onload = function () {
+    canvasStatic9.width = canvasW;
+    canvasStatic9.height = canvasH;
     // contextStatic9.drawImage(imageRiver5, 0, 0, 1200, 1200);
 }
-imagerice.onload = function() {
-    canvasStatic6.width = 1200;
-    canvasStatic6.height = 1200;
-    contextStatic6.drawImage(imagerice, 0, 0, 1200, 1200);
+imagerice.onload = function () {
+    canvasStatic6.width = canvasW;
+    canvasStatic6.height = canvasH;
+    contextStatic6.drawImage(imagerice, 0, 0, canvasW, canvasH);
 }
-imageHorse.onload = function() {
+imageHorse.onload = function () {
 
     var translate = [
         [1000, 1000],
@@ -260,11 +277,11 @@ imageHorse.onload = function() {
         [260, 720],
         [180, 760],
     ];
-    scale = [1, 1,0];
-    dur = [7, 10,7];
-    sharpPoint = [0, 0,1]
+    scale = [1, 1, 0];
+    dur = [7, 10, 7];
+    sharpPoint = [0, 0, 1]
     horseObject5 = initHorseObject(translate, scale, dur, sharpPoint);
-    horseObject5.id=5
+    horseObject5.id = 5
 }
 
 redPathObject = {
@@ -496,23 +513,25 @@ function muteMe(elem) {
 }
 
 function setSound(control, action) {
-    if (control==0 && action != soundindex){return}
+    if (control == 0 && action != soundindex) {
+        return
+    }
     //停止所有声音
     muteMe()
     // console.log(control,action)
-    soundindex= action
+    soundindex = action
     if (control == '0' || isMute == true) return
     switch (action) {
         case '0':
             m01.currentTime = 0
             m01.play()
-                // showCityAni(canvasStatic1, true)
+            // showCityAni(canvasStatic1, true)
 
             break;
         case '1':
             m02.currentTime = 0
             m02.play()
-            
+
             break;
         case '2':
             // showCityAni(canvasStatic3, true)
@@ -525,13 +544,13 @@ function setSound(control, action) {
         case '4':
             m04.currentTime = 0
             m04.play()
-                // showCityAni(canvasStatic4, true)
+            // showCityAni(canvasStatic4, true)
             break;
         case '5':
             m05.currentTime = waveSound.currentTime = 0
             m05.play()
             waveSound.play()
-            
+
             break;
         case '6':
             m06.currentTime = waveSound.currentTime = 0
@@ -553,11 +572,13 @@ function showCityAni(canvasStatic, bool) {
     if (!bool) {
         clearInterval(canvasStatic.timeout)
         canvasStatic.style.visibility = "hidden";
-        canvasStatic.ani=false
+        canvasStatic.ani = false
         return
     }
-    if(canvasStatic.ani == true){return}
-    
+    if (canvasStatic.ani == true) {
+        return
+    }
+
     let show = false
     let times = 4
     canvasStatic.timeout = setInterval(() => {
@@ -569,7 +590,7 @@ function showCityAni(canvasStatic, bool) {
         show = !show
         times -= 1
     }, 260);
-    canvasStatic.ani=true
+    canvasStatic.ani = true
 }
 // Main Function
 function createMap(controlArray, scale) {
@@ -583,20 +604,20 @@ function createMap(controlArray, scale) {
         }
     }
 
-    var tmp = baseWidth * _scale; //fix
+    var tmp = canvasW * _scale; //fix
     divTag.style.width = tmp + "px";
     divTag.style.height = tmp + "px";
 
     var boundary;
     if (_scale <= 2) {
-        boundary = 1200;
+        boundary = canvasW;
     } else {
-        boundary = 1800;
+        boundary = canvasW;
     }
 
     if (canvasBackground.width != boundary) {
         canvasBackground.width = boundary;
-        canvasBackground.height = boundary;
+        canvasBackground.height = canvasH;
         sameChecking = false;
     }
 
@@ -605,9 +626,9 @@ function createMap(controlArray, scale) {
         contextBackground.setTransform(1, 0, 0, 1, 0, 0);
         contextBackground.clearRect(0, 0, canvasBackground.width, canvasBackground.height);
         contextBackground.restore();
-        contextBackground.drawImage(imageMap, 0, 0, boundary, boundary);
+        contextBackground.drawImage(imageMap, 0, 0, boundary, canvasH);
     }
-    var scale = _scale / (boundary / baseWidth);
+    var scale = _scale / canvasW ;
     setScale(canvasBackground, scale);
     //	canvasBackground.style.zoom = _scale / (boundary / 600);
 
@@ -649,7 +670,7 @@ function createMap(controlArray, scale) {
             // drawRedPath(true);
             // horse1 = true;
             ship1(true)
-            
+
         } else {
             ship1(false)
         }
@@ -666,7 +687,7 @@ function createMap(controlArray, scale) {
         }
     }
 
-    var scale = _scale / (boundary / baseWidth); //fix
+    var scale = _scale / (boundary / canvasW); //fix
     setScale(canvasStatic1, scale);
     setScale(canvasStatic2, scale);
     setScale(canvasStatic3, scale);
@@ -692,7 +713,7 @@ function createMap(controlArray, scale) {
     */
     if (canvasTop.width != boundary) {
         canvasTop.width = boundary;
-        canvasTop.height = boundary;
+        canvasTop.height = canvasH;
         sameChecking = false;
     }
     if (!sameChecking) {
@@ -700,7 +721,7 @@ function createMap(controlArray, scale) {
         contextTop.setTransform(1, 0, 0, 1, 0, 0);
         contextTop.clearRect(0, 0, canvasTop.width, canvasTop.height);
         contextTop.restore();
-        contextTop.drawImage(imageMapDetail, 0, 0, boundary, boundary);
+        contextTop.drawImage(imageMapDetail, 0, 0, baseWidth, baseHeight);
     }
     setScale(canvasTop, scale);
     //	canvasTop.style.zoom = _scale / (boundary / 600);
@@ -716,20 +737,19 @@ function ship1(flag) {
     var img = new Image()
     let h = 50,
         y = 1000,
-        xx=930,
-        ww=220
-    var addRadial = function() {
+        xx = 930,
+        ww = 220
+    var addRadial = function () {
         contextAnimRedPath.save(); //保存当前绘图状态
         contextAnimRedPath.beginPath(); //开始创建路径
-        if(xx <= 530){
+        if (xx <= 530) {
             y -= 15
             h += 15
-        }   
-        else if(y<=740){
-            xx-=15
-            ww+=15
-            y=690
-        }else if(y<=1000){
+        } else if (y <= 740) {
+            xx -= 15
+            ww += 15
+            y = 690
+        } else if (y <= 1000) {
             y -= 15
             h += 15
         }
@@ -738,7 +758,7 @@ function ship1(flag) {
         contextAnimRedPath.clip();
         contextAnimRedPath.drawImage(img, 0, 0, 1200, 1200);
         contextAnimRedPath.restore();
-        
+
         if (h < 1000) {
             redTimer = setTimeout(() => {
                 addRadial()
@@ -749,25 +769,25 @@ function ship1(flag) {
     }
     if (flag == true) {
         img.src = 'img/route1/xianlu1a0090.png'
-        img.onload = function() {
-                canvasAnimRedPath.style.visibility = "visible";
-                // console.log('anistart')
-            if (!canvasAnimRedPath.playing){
+        img.onload = function () {
+            canvasAnimRedPath.style.visibility = "visible";
+            // console.log('anistart')
+            if (!canvasAnimRedPath.playing) {
                 addRadial()
                 drawHousePromise()
-            canvasAnimRedPath.playing=true
+                canvasAnimRedPath.playing = true
             }
-                    // redTimer = setInterval(() => {
-                    //     addRadial()
-                    //     if (h >= 1000) {
-                    //         clearInterval(redTimer)
-                    //     }
-                    //     y -= 10
-                    //     h += 10
-                    // }, 50);
+            // redTimer = setInterval(() => {
+            //     addRadial()
+            //     if (h >= 1000) {
+            //         clearInterval(redTimer)
+            //     }
+            //     y -= 10
+            //     h += 10
+            // }, 50);
 
-            }
-            // drawHousePromise()
+        }
+        // drawHousePromise()
 
         // drawHorsesTimeout = setTimeout(function () { ship1(flag); }, 1 / 30 * 1000);
     } else {
@@ -792,7 +812,7 @@ function ship2(flag) {
     var img = new Image()
     let w = 10,
         x = 580
-    var addRadial2 = function() {
+    var addRadial2 = function () {
         contextAnimGreenPath.save(); //保存当前绘图状态
         contextAnimGreenPath.beginPath(); //开始创建路径
         contextAnimGreenPath.rect(x, 650, w, 180)
@@ -812,24 +832,24 @@ function ship2(flag) {
     }
     if (flag == true) {
         img.src = 'img/route2/xianlu2b0050.png'
-        img.onload = function() {
-                canvasAnimGreenPath.style.visibility = "visible";
+        img.onload = function () {
+            canvasAnimGreenPath.style.visibility = "visible";
             if (!canvasAnimGreenPath.playing) {
                 addRadial2()
                 drawHorse2()
                 canvasAnimGreenPath.playing = true
             }
-                    // greedTimer = setInterval(() => {
-                    //     addRadial2(x,w)
-                    //     if (x <= 0) {
-                    //         clearInterval(greedTimer)
-                    //     }
-                    //     x -= 10
-                    //     w += 10
-                    // }, 50);
+            // greedTimer = setInterval(() => {
+            //     addRadial2(x,w)
+            //     if (x <= 0) {
+            //         clearInterval(greedTimer)
+            //     }
+            //     x -= 10
+            //     w += 10
+            // }, 50);
 
-            }
-            // drawHorse2()
+        }
+        // drawHorse2()
     } else {
         // console.log('clear')
         canvasAnimGreenPath.playing = false
@@ -847,8 +867,8 @@ function ship2(flag) {
 }
 
 function drawRiverPath(flag) {
-    
-    var sharp = function(x, y, w, h, River) {
+
+    var sharp = function (x, y, w, h, River) {
         let show = false
         let times = 4
         contextStatic5.timeout = setInterval(() => {
@@ -866,7 +886,7 @@ function drawRiverPath(flag) {
             times -= 1
         }, 300);
     }
-    var sharp2 = function(canvasStatic) {
+    var sharp2 = function (canvasStatic) {
         let show = false
         let times = 4
         canvasStatic.timeout = setInterval(() => {
@@ -880,8 +900,10 @@ function drawRiverPath(flag) {
         }, 300);
     }
     if (flag == true) {
-        if (drawRiverTimeout == 'end') { return }
-       
+        if (drawRiverTimeout == 'end') {
+            return
+        }
+
         canvasClear(canvasStatic5);
         canvasStatic5.style.visibility = "visible";
         drawRiverTimeout = 'end'
@@ -929,7 +951,7 @@ function drawRiverPath(flag) {
         canvasStatic5.style.visibility = "hidden";
         canvasStatic8.style.visibility = "hidden";
         canvasStatic9.style.visibility = "hidden";*/
-        
+
 
     }
 }
@@ -1053,7 +1075,7 @@ function drawRedPath(flag) {
 
             contextAnimRedPath.restore();
             canvasAnimRedPath.style.visibility = "visible";
-            redPathObject.timeout = setTimeout(function() {
+            redPathObject.timeout = setTimeout(function () {
                 drawRedPath(flag);
             }, 40);
         }
@@ -1124,7 +1146,7 @@ function drawGreenPath(flag) {
             contextAnimGreenPath.restore();
             canvasAnimGreenPath.style.visibility = "visible";
 
-            greenPathObject.timeout = setTimeout(function() {
+            greenPathObject.timeout = setTimeout(function () {
                 drawGreenPath(flag);
             }, 40);
         }
@@ -1168,7 +1190,7 @@ function drawBluePath(flag) {
             contextAnimBluePath.restore();
             canvasAnimBluePath.style.visibility = "visible";
 
-            bluePathObject.timeout = setTimeout(function() {
+            bluePathObject.timeout = setTimeout(function () {
                 drawBluePath(flag);
             }, 40);
         }
@@ -1249,7 +1271,9 @@ function initHorseObject(translate, scale, dur, sharpPoint) {
 
 function drawHorse2() {
     console.log(horseObject5.animated)
-    if (horseObject5.animated == true) { return }
+    if (horseObject5.animated == true) {
+        return
+    }
     canvasAnimHorse2.style.visibility = 'visible'
     contextAnimHorse2.drawImage(imageHorse, horseObject5.position.points[0][0], horseObject5.position.points[0][1], horseObject5.width * 0.25, horseObject5.height * 0.25);
     showCityAni(canvasAnimHorse2, true)
@@ -1270,7 +1294,9 @@ function drawHorse2() {
 
 function drawHousePromise() {
     // console.log(horseObject4.animated,'4444')
-    if (horseObject4.animated == true) { return }
+    if (horseObject4.animated == true) {
+        return
+    }
     canvasAnimHorse.style.visibility = 'visible'
     contextAnimHorse.drawImage(imageHorse, horseObject1.position.points[0][0], horseObject1.position.points[0][1], horseObject1.width * 0.25, horseObject1.height * 0.25);
     showCityAni(canvasAnimHorse, true)
@@ -1350,15 +1376,15 @@ function drawHorse(object, isInvert, canvasS, contextS) {
                 // }
                 object.animating = false;
                 object.animated = true;
-                
-                if(object.id == 5){
-                clearInterval(drawHorsesTimeout2)
-                }else{
+
+                if (object.id == 5) {
+                    clearInterval(drawHorsesTimeout2)
+                } else {
                     clearInterval(drawHorsesTimeout)
                 }
                 resolve()
             }
-            
+
         } else {
             // position[0] = (object.position.points[object.position.totalPoint][0] * (object.position.dur[object.position.totalPoint] - object.position.currDur) + object.position.points[object.position.totalPoint + 1][0] * object.position.currDur) / object.position.dur[object.position.totalPoint];
             // position[1] = (object.position.points[object.position.totalPoint][1] * (object.position.dur[object.position.totalPoint] - object.position.currDur) + object.position.points[object.position.totalPoint + 1][1] * object.position.currDur) / object.position.dur[object.position.totalPoint];
@@ -1366,17 +1392,17 @@ function drawHorse(object, isInvert, canvasS, contextS) {
             object.animating = false;
             object.animated = true;
             console.log('end', object.position.currPoint, object.position.totalPoint)
-                // contextAnimHorse.save();
-                // contextAnimHorse.drawImage(imageHorse, position[0], position[1], object.width * scale * 0.25, object.height * scale * 0.25);
-                // contextAnimHorse.restore();
-            
-            if(object.id == 5){
+            // contextAnimHorse.save();
+            // contextAnimHorse.drawImage(imageHorse, position[0], position[1], object.width * scale * 0.25, object.height * scale * 0.25);
+            // contextAnimHorse.restore();
+
+            if (object.id == 5) {
                 clearInterval(drawHorsesTimeout2)
-                }else{
-                    clearInterval(drawHorsesTimeout)
-                }
-            
-                // showCityAni(canvasAnimHorse, true)
+            } else {
+                clearInterval(drawHorsesTimeout)
+            }
+
+            // showCityAni(canvasAnimHorse, true)
         }
     })
 }

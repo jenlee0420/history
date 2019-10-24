@@ -129,12 +129,9 @@ body {
 }
 
 #menu_container {
-    /* fix */
-    /* width: 20vw; 
-    height: 100%;
-    */
+
     width: 230px;
-    height: 600px;
+    height: 100%;
     display: flex;
     flex-direction: column;
     background-color: #434399;
