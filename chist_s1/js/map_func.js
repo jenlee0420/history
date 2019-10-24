@@ -174,11 +174,7 @@ function bind_map_func(div, mp4div) {
             target.toggleClass("clicked", true);
 
 
-            clearInterval(redTimer)
-            clearInterval(greedTimer)
-            for (var i = 0; i < timerGroup.length; i++) {
-                clearTimeout(timerGroup[i])
-            }
+            
             muteMe()
             switch (action) {
                 case "show":
@@ -192,6 +188,11 @@ function bind_map_func(div, mp4div) {
                         return 0;
                     });
                     actions.toggleClass("clicked", false);
+                    clearInterval(redTimer)
+            clearInterval(greedTimer)
+            for (var i = 0; i < timerGroup.length; i++) {
+                clearTimeout(timerGroup[i])
+            }
                     break;
                 default:
                     break;

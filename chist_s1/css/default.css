@@ -40,8 +40,9 @@ body {
 .greyContainer {
     background-color: #D6D6D6;
     border-radius: 8px;
-    padding: 3px;
+    padding: 3px 0px;
     margin: 3px;
+    margin-bottom: 0;
 }
 
 .blueButton {
@@ -51,7 +52,7 @@ body {
     color: #000000;
     vertical-align: middle;
     /* padding: 3px; */
-    margin: 5px auto;
+    margin: 5px;
     height: 33px;
     font-size: 16px;
     box-sizing: border-box;
@@ -78,7 +79,7 @@ body {
 }
 
 .sample {
-    width: 100%;
+    /* width: 100%; */
     text-align: left;
 }
 
@@ -134,6 +135,8 @@ body {
     */
     width: 230px;
     height: 600px;
+    display: flex;
+    flex-direction: column;
     background-color: #434399;
 }
 
@@ -209,7 +212,7 @@ div.smallMap {
 .question {
     display: none;
     width: 720px;
-    height: 220px;
+    min-height: 220px;
     padding: 40px;
     font-size: 30px;
 }
@@ -261,4 +264,8 @@ div.smallMap {
 
 #soundCon.mute:hover {
     background-image: url('../img/icon/btn_mute_on.png');
+}
+#slider a{
+    border-radius: 4px;
+    margin-top: 3px
 }
