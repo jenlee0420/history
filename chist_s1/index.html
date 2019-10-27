@@ -33,10 +33,11 @@
             $(window).load(function() {
                 var main_container = $("#main_container");
                 var mp4_container = $("#mp4_container");
+                
+               
                 var ori_width = canvasW;
                 var ori_height = canvasH; 
-                
-                
+                console.log(ori_width,ori_height)
                 // var ori_width = $(window).innerWidth() - $(window).innerWidth() * 0.2;
                 // baseWidth = ori_width
                 // var ori_height = $(window).innerHeight() - 50;
@@ -160,11 +161,12 @@
                 });
                 main_container.append(
                         $("<div/>").addClass("title_bar purpleGradient").css({
-                            "height": "50px"
+                            // 'height':$(window).innerHeight() * 0.11 +'px'
                         }).append(
                             $("<div/>").append($("<div/>").addClass("back_action blueButton").text("返回")).css({
                                 "float": "right"
                             }).hide(),
+                            $("<div/>",{'id':'soundCon'}),
                             "隋代運河分佈圖 (581-618 年)"
                         ),
                         $("<div class='main_box'/>").append(
@@ -263,7 +265,8 @@
                                 $("<div/>").addClass("greyContainer").append(
                                     $("<div/>").css({
                                         "display": "flex",
-                                        "width": "100%"
+                                        "width": "100%",
+                                        "justify-content":'space-between'
                                     }).append(
                                         $("<div/>").addClass("blueButton action_all").append("全部顯示").data("action", "show"),
                                         $("<div/>").addClass("blueButton action_all").append("全部隱藏").data("action", "hide")
@@ -283,12 +286,12 @@
                                     $("<div/>").addClass("zoom_button zoom_out blueButton").css({
                                         "width": "1.7em",
                                         "font-size": "18px",
-                                        "margin": "5px 20px 3px 15px"
+                                        "margin": "5px 10px 3px 10px"
                                     }).append("<b>-</b>"),
                                     $("<div/>", {
                                         "id": "slider"
                                     }).addClass("zoom_button").css({
-                                        "width": "40%",
+                                        "width": "50%",
                                         "height": "10px",
                                         "border-radius":'4px'
                                     }).slider({
@@ -328,7 +331,8 @@
                 bind_sound($("#soundCon"))
                 $("#loading").hide();
                 $("#main_container").show();
-                $("#main_container").css({'width':ori_width +230})
+                $("#main_container").css({'width':docWidth,'height':bodyHeight})
+                
             })
         })
     </script>
@@ -337,7 +341,6 @@
 <body>
     <!-- width: 2048px; height: 1536px; -->
     <div id="main_container" style="display:none; position: relative; overflow: hidden;">
-        <div id="soundCon"></div>
     </div>
     <div id="loading" style="width:820px; height:700px"><img src="img/loading.gif"></div>
     <div id="mp4_container"></div>
@@ -351,7 +354,5 @@
         </div>
         <div class="ansBox"></div>
     </div>
-    
 </body>
-
 </html>
