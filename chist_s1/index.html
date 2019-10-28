@@ -33,16 +33,16 @@
             $(window).load(function() {
                 var main_container = $("#main_container");
                 var mp4_container = $("#mp4_container");
-                
-               
+
+
                 var ori_width = canvasW;
-                var ori_height = canvasH; 
-                console.log(ori_width,ori_height)
-                // var ori_width = $(window).innerWidth() - $(window).innerWidth() * 0.2;
-                // baseWidth = ori_width
-                // var ori_height = $(window).innerHeight() - 50;
-                //fix
-                
+                var ori_height = canvasH;
+                console.log(ori_width, ori_height)
+                    // var ori_width = $(window).innerWidth() - $(window).innerWidth() * 0.2;
+                    // baseWidth = ori_width
+                    // var ori_height = $(window).innerHeight() - 50;
+                    //fix
+
                 var arr_flag = [0, 0, 0, 0, 0, 0, 0, 0];
                 var canvas = createMap(arr_flag, 1).draggable({
                     disabled: true,
@@ -166,8 +166,10 @@
                             $("<div/>").append($("<div/>").addClass("back_action blueButton").text("返回")).css({
                                 "float": "right"
                             }).hide(),
-                            $("<div/>",{'id':'soundCon'}),
-                            "隋代運河分佈圖 (581-618 年)"
+                            $("<div/>", {
+                                'id': 'soundCon'
+                            }),
+                            "<span>隋代運河分佈圖 (581-618 年)</span>"
                         ),
                         $("<div class='main_box'/>").append(
                             $("<div/>", {
@@ -189,7 +191,7 @@
                                 }).addClass("greyContainer").css({
                                     "padding": "1px 3px 5px 1px",
                                     "height": "auto",
-                                    "flex":'1'
+                                    "flex": '1'
                                 }).append(
                                     $("<div/>").addClass("sample_title").append("圖例"),
                                     $("<div/>").addClass("sample blueButton action").data("action", "0").append(
@@ -258,7 +260,7 @@
                                         redBox // .css({"visibility": "hidden"})
                                     ).css({
                                         "visibility": "hidden",
-                                        "display":'none'
+                                        "display": 'none'
                                     })
                                     // $("<div/>").addClass("sample").css({"background-color":"transparent", "border-bottom":"2px solid black", "border-radius":"0px"}),
                                 ),
@@ -266,7 +268,7 @@
                                     $("<div/>").css({
                                         "display": "flex",
                                         "width": "100%",
-                                        "justify-content":'space-between'
+                                        "justify-content": 'space-between'
                                     }).append(
                                         $("<div/>").addClass("blueButton action_all").append("全部顯示").data("action", "show"),
                                         $("<div/>").addClass("blueButton action_all").append("全部隱藏").data("action", "hide")
@@ -275,7 +277,7 @@
                                 $("<div/>", {
                                     "id": "map_action_container"
                                 }).addClass("greyContainer").css({
-                                    'margin-bottom':'10px'
+                                    'margin-bottom': '10px'
                                 })
                                 .append(
                                     /*
@@ -285,15 +287,14 @@
                                     */
                                     $("<div/>").addClass("zoom_button zoom_out blueButton").css({
                                         "width": "1.7em",
-                                        "font-size": "18px",
                                         "margin": "5px 10px 3px 10px"
                                     }).append("<b>-</b>"),
                                     $("<div/>", {
                                         "id": "slider"
                                     }).addClass("zoom_button").css({
                                         "width": "50%",
-                                        "height": "10px",
-                                        "border-radius":'4px'
+                                        "height": "0.06em",
+                                        "border-radius": '4px'
                                     }).slider({
                                         min: main_container.data("min_zoom"),
                                         max: main_container.data("max_zoom"),
@@ -303,7 +304,6 @@
                                     }),
                                     $("<div/>").addClass("zoom_button zoom_in blueButton").css({
                                         "width": "1.7em",
-                                        "font-size": "18px",
                                         "margin": "5px 10px 3px 10px"
                                     }).append("<b>+</b>")
 
@@ -331,8 +331,18 @@
                 bind_sound($("#soundCon"))
                 $("#loading").hide();
                 $("#main_container").show();
-                $("#main_container").css({'width':docWidth,'height':bodyHeight})
-                
+                $("#main_container").css({
+                    'width': docWidth,
+                    'height': bodyHeight
+                })
+                var rem = docEl.clientWidth / 10
+                docEl.style.fontSize = rem + 'px'
+                $('body').css({
+                    'overflow': 'hidden',
+                    'height': bodyHeight
+                })
+
+
             })
         })
     </script>
@@ -355,4 +365,5 @@
         <div class="ansBox"></div>
     </div>
 </body>
+
 </html>
