@@ -306,8 +306,12 @@ $(function() {
             'width': docWidth,
             'height': bodyHeight
         })
+        $(".title_bar").css({ 'height': 168 * boxscale})
+        
+        let t = 1+(1 / dpr)
+        if (dpr==1){t=1}
         var rem = docEl.clientWidth / 10
-        docEl.style.fontSize = rem + 'px'
+        docEl.style.fontSize = (rem * t) + 'px'
         $('body').css({
             'overflow': 'hidden',
             'height': bodyHeight

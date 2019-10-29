@@ -35,13 +35,13 @@ body {
     color: #FFFFFF;
     /* padding: 5px; */
     vertical-align: middle;
-    height: 11.1vh;
+    height: 1rem;
     display: flex;
     align-items: center;
     position: relative;
 }
 .title_bar span {
-        font-size: 0.35rem;
+        font-size: 0.30rem;
 }
 
 .greyContainer {
@@ -57,13 +57,12 @@ body {
     background-color: #C0E7F3;
     box-shadow: -2px 5px 2px #F1FFFF inset, 2px -5px 2px #B7D4EA inset;
     color: #000000;
-    vertical-align: middle;
     /* padding: 3px; */
-    margin: 0.6vh;
-    height: 2.07em;
-    font-size: 0.15rem;
+    margin: 0.03rem;
+    height: 0.22rem;
+    font-size: 0.12rem;
     box-sizing: border-box;
-    line-height: 0.31rem;
+    line-height: 0.22rem;
 }
 
 .twoline {
