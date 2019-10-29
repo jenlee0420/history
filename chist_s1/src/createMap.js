@@ -1,4 +1,4 @@
-require('babel-polyfill');
+
 
 // Variable Declare
 var dpr = window.devicePixelRatio || 1
@@ -6,10 +6,10 @@ var docEl = document.documentElement
 
 var _scale = 1;
 var _controlArray = [0, 0, 0, 0, 0, 0, 0, 0];
-var imageMap, imageMapDetail;
+var imageMap, imageMapDetail, imagedongdu, imageRiver2, imageRiver3, imageRiver4, imageRiver5, imagerice;
 var imageCapital, imageGate, imageMainCity, imageRiver, imageControlCity, imageHorse, drawHorsesTimeout, drawHorsesTimeout2;
 var drawRiverTimeout;
-var horseObject1
+var horseObject1, horseObject2, horseObject3, horseObject4, horseObject5
 var redTimer, greedTimer, timerGroup = [],
     horsetimerGroup = [],
     horsetimerGroup2 = [],
@@ -22,8 +22,8 @@ var baseWidth = 1488, //fix
 var canvasW = 1488,
     canvasH = 1365 //fix
 var docWidth = 0,
-    docHeight = 0
-boxscale = 1
+    docHeight = 0,
+    boxscale = 1
 var bodyHeight = $(window).outerHeight(),
     bodytWidth = $(window).innerWidth()
 
@@ -293,217 +293,8 @@ imageHorse.onload = function() {
     horseObject5.id = 5
 }
 
-redPathObject = {
-    'anim1': {
-        'path1': {
-            'startPointX': 1070,
-            'startPointY': 1012,
-            'endPointX': 972,
-            'endPointY': 864,
-            'controlPointX': 1068,
-            'controlPointY': 940
-        },
-        'mask1': {
-            'originX': 932,
-            'originY': 854,
-            'width': 222,
-            'height': 222,
-            'currOriginX': 932,
-            'currOriginY': 854,
-            'shiftX': 0,
-            'shiftY': 20
-        },
-        'arrow1': {
-            'point': [
-                [725, 700],
-                [730, 680]
-            ]
-        }
-    },
-    'anim2': {
-        'path1': {
-            'startPointX': 725,
-            'startPointY': 730,
-            'endPointX': 780,
-            'endPointY': 760,
-            'controlPointX': 730,
-            'controlPointY': 770
-        },
-        'path2': {
-            'startPointX': 715,
-            'startPointY': 730,
-            'endPointX': 640,
-            'endPointY': 730,
-            'controlPointX': 680,
-            'controlPointY': 770
-        },
-        'mask1': {
-            'originX': 720,
-            'originY': 720,
-            'width': 0,
-            'height': 100,
-            'currOriginX': 720,
-            'currOriginY': 720,
-            'shiftX': -20,
-            'shiftY': 0,
-            'enlargeWidth': 40,
-            'enlargeHeight': 0
-        },
-        'arrow1': {
-            'point': [
-                [785, 760],
-                [775, 761]
-            ]
-        },
-        'arrow2': {
-            'point': [
-                [640, 730],
-                [645, 734]
-            ]
-        }
-    },
-    'anim3': {
-        'path1': {
-            'startPointX': 630,
-            'startPointY': 730,
-            'endPointX': 560,
-            'endPointY': 760,
-            'controlPointX': 620,
-            'controlPointY': 760
-        },
-        'mask1': {
-            'originX': 630,
-            'originY': 730,
-            'width': 120,
-            'height': 50,
-            'currOriginX': 630,
-            'currOriginY': 730,
-            'shiftX': -20,
-            'shiftY': 0
-        },
-        'arrow1': {
-            'point': [
-                [560, 760],
-                [566, 760]
-            ]
-        }
 
-    },
-    'anim4': {
-        'path1': {
-            'startPointX': 550,
-            'startPointY': 760,
-            'endPointX': 510,
-            'endPointY': 775,
-            'controlPointX': 535,
-            'controlPointY': 775
-        },
-        'mask1': {
-            'originX': 555,
-            'originY': 760,
-            'width': 120,
-            'height': 50,
-            'currOriginX': 555,
-            'currOriginY': 760,
-            'shiftX': -20,
-            'shiftY': 0
-        },
-        'arrow1': {
-            'point': [
-                [510, 775],
-                [515, 774]
-            ]
-        }
 
-    },
-    'timeout': null
-};
-
-greenPathObject = {
-    'anim1': {
-        'path1': {
-            'startPointX': 515,
-            'startPointY': 765,
-            'endPointX': 470,
-            'endPointY': 740,
-            'controlPointX': 530,
-            'controlPointY': 720
-        },
-        'mask1': {
-            'originX': 465,
-            'originY': 770,
-            'width': 100,
-            'height': 100,
-            'currOriginX': 465,
-            'currOriginY': 770,
-            'shiftX': 0,
-            'shiftY': -5
-        },
-        'arrow1': {
-            'point': [
-                [470, 740],
-                [475, 739]
-            ]
-        }
-    },
-    'anim2': {
-        'path1': {
-            'startPointX': 430,
-            'startPointY': 755,
-            'endPointX': 280,
-            'endPointY': 930,
-            'controlPointX': 340,
-            'controlPointY': 825
-        },
-        'mask1': {
-            'originX': 265,
-            'originY': 555,
-            'width': 200,
-            'height': 200,
-            'currOriginX': 265,
-            'currOriginY': 555,
-            'shiftX': 0,
-            'shiftY': 15
-        },
-        'arrow1': {
-            'point': [
-                [275, 935],
-                [283, 925]
-            ]
-        }
-    },
-    'timeout': null
-};
-
-bluePathObject = {
-    'anim1': {
-        'path1': {
-            'startPointX': 445,
-            'startPointY': 720,
-            'endPointX': 390,
-            'endPointY': 540,
-            'controlPointX': 420,
-            'controlPointY': 612
-        },
-        'mask1': {
-            'originX': 380,
-            'originY': 720,
-            'width': 100,
-            'height': 200,
-            'currOriginX': 380,
-            'currOriginY': 720,
-            'shiftX': 0,
-            'shiftY': -10
-        },
-        'arrow1': {
-            'point': [
-                [389, 539],
-                [391, 544]
-            ]
-        }
-    },
-    'timeout': null
-};
 
 /*
 imageMapDetail.onload = function() {

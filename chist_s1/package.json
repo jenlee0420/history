@@ -1,0 +1,23 @@
+{
+    "scripts": {
+        "build": "babel src -d js",
+        "watch": "babel src --watch --out-dir js"
+    },
+  "browserify": {
+    "transform": [
+      [
+        "babelify",
+        {
+          "presets": [
+            "latest"
+          ]
+        }
+      ]
+    ]
+  },
+  "devDependencies": {
+    "babel-preset-latest": "^6.24.1",
+    "babelify": "^10.0.0",
+    "babel-cli": "^6.0.0"
+  }
+}
