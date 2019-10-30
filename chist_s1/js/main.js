@@ -1,4 +1,3 @@
-
 $(function() {
     $(window).load(function() {
 
@@ -9,10 +8,10 @@ $(function() {
         var ori_width = canvasW;
         var ori_height = canvasH;
         console.log(ori_width, ori_height)
-        // var ori_width = $(window).innerWidth() - $(window).innerWidth() * 0.2;
-        // baseWidth = ori_width
-        // var ori_height = $(window).innerHeight() - 50;
-        //fix
+            // var ori_width = $(window).innerWidth() - $(window).innerWidth() * 0.2;
+            // baseWidth = ori_width
+            // var ori_height = $(window).innerHeight() - 50;
+            //fix
 
         var arr_flag = [0, 0, 0, 0, 0, 0, 0, 0];
         var canvas = createMap(arr_flag, 1).draggable({
@@ -302,21 +301,27 @@ $(function() {
         bind_sound($("#soundCon"))
         $("#loading").hide();
         $("#main_container").show();
+        resetWidth()
+    })
+
+    function resetWidth(params) {
+        console.log('ere', boxscale)
         $("#main_container").css({
             'width': docWidth,
-            'height': bodyHeight
+            'height': docHeight
         })
-        $(".title_bar").css({ 'height': 168 * boxscale})
-        
-        let t = 1+(1 / dpr)
-        if (dpr==1){t=1}
-        var rem = docEl.clientWidth / 10
-        docEl.style.fontSize = (rem * t) + 'px'
+        $(".title_bar").css({ 'height': 168 * boxscale })
         $('body').css({
             'overflow': 'hidden',
-            'height': bodyHeight
+            'height': docHeight
         })
-
-
-    })
+        var can = document.querySelectorAll('canvas')
+        for(i=0;i<can.length; i++){
+            $(can[i]).css({ 'zoom': boxscale})
+        }
+        $("#map_container").css({ width: canvasW, height: canvasH})
+        $("#canvasInnerDiv").css({ width: canvasW, height: canvasH})
+        
+    }
+    window.addEventListener('resize', resetWidth)
 })

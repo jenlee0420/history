@@ -1,5 +1,3 @@
-"use strict";
-
 function bind_map_func(div, mp4div) {
     div.on("check_bound", function () {
         var me = $(this);

@@ -1,5 +1,3 @@
-'use strict';
-
 // Variable Declare
 var dpr = window.devicePixelRatio || 1;
 var docEl = document.documentElement;
@@ -30,16 +28,42 @@ var docWidth = 0,
 var bodyHeight = $(window).outerHeight(),
     bodytWidth = $(window).innerWidth();
 
-if (bodytWidth > bodyHeight) {
-    boxscale = bodyHeight / 1536;
-} else {
-    boxscale = bodytWidth / 2048;
+window.addEventListener('resize', setRemUnit);
+// window.addEventListener('orientationchange', setRemUnit)
+
+setRemUnit();
+
+function setRemUnit() {
+    if (window.orientation === 0 || window.orientation === 180) {
+        //竖屏
+        bodyHeight = $(window).outerHeight(), bodytWidth = $(window).innerWidth();
+        console.log('竖屏', bodytWidth);
+    } else if (window.orientation === 90 || window.orientation === -90) {
+        //横屏
+
+        bodyHeight = $(window).outerHeight(), bodytWidth = $(window).innerWidth();
+        console.log('横屏', bodytWidth);
+    }
+
+    if (bodytWidth > bodyHeight) {
+        boxscale = bodyHeight / 1536;
+    } else {
+        boxscale = bodytWidth / 2048;
+    }
+
+    docWidth = 2048 * boxscale;
+    docHeight = 1536 * boxscale;
+    canvasW = Math.ceil(baseWidth * boxscale);
+    canvasH = Math.ceil(baseHeight * boxscale);
+    console.log(boxscale);
+
+    var t = 1 + 1 / dpr;
+    if (dpr == 1) {
+        t = 1;
+    }
+    var rem = docEl.clientWidth / 10;
+    docEl.style.fontSize = rem * t + 'px';
 }
-console.log(boxscale);
-docWidth = 2048 * boxscale;
-docHeight = 1536 * boxscale;
-canvasW = Math.ceil(baseWidth * boxscale);
-canvasH = Math.ceil(baseHeight * boxscale);
 
 var divTag = document.createElement('div');
 var canvasBackground = document.createElement('canvas');
@@ -1055,12 +1079,13 @@ function drawHorse2() {
     horsetimerGroup2[0] = setTimeout(function () {
         drawHorsesTimeout2 = setInterval(function () {
             canvasClear(canvasAnimHorse2);
-            drawHorse(horseObject5, false, canvasAnimHorse2, contextAnimHorse2).then(function () {
+            var endfun = function endfun() {
                 horsetimerGroup2[1] = setTimeout(function () {
                     canvasClear(canvasAnimHorse2);
                     waveSound.pause();
                 }, 1000);
-            });
+            };
+            drawHorse(horseObject5, false, endfun, contextAnimHorse2);
         }, 60);
     }, 2000);
 }
@@ -1095,86 +1120,91 @@ function drawHousePromise() {
     horsetimerGroup[3] = setTimeout(function () {
         drawHorsesTimeout = setInterval(function () {
             canvasClear(canvasAnimHorse);
-            drawHorse(horseObject4, false, canvasAnimHorse, contextAnimHorse).then(function () {
+            var endfun = function endfun() {
                 horsetimerGroup[2] = setTimeout(function () {
                     canvasClear(canvasAnimHorse);
                     waveSound.pause();
                 }, 1000);
-            });
+            };
+            drawHorse(horseObject4, false, endfun, contextAnimHorse);
         }, 60);
     }, 4300);
 }
 
-function drawHorse(object, isInvert, canvasS, contextS) {
+function drawHorse(object, isInvert, endfun, contextS) {
 
-    return new Promise(function (resolve, reject) {
+    // return new Promise((resolve, reject) => {
 
-        if (object.position.currPoint + 1 < object.position.totalPoint) {
-            // console.log(object.position.currPoint, object.position.totalPoint)
-            contextS.save();
-            // contextAnimHorse.position(canvasAnimHorse.width, 0);
-            if (isInvert) {
-                contextS.scale(-1, 1);
-            }
+    if (object.position.currPoint + 1 < object.position.totalPoint) {
+        // console.log(object.position.currPoint, object.position.totalPoint)
+        contextS.save();
+        // contextAnimHorse.position(canvasAnimHorse.width, 0);
+        if (isInvert) {
+            contextS.scale(-1, 1);
+        }
 
-            var position = new Array();
-            var scale;
+        var position = new Array();
+        var scale;
 
-            if (object.position.scales[object.position.currPoint] != object.position.scales[object.position.currPoint + 1]) {
-                if (object.position.scales[object.position.currPoint] > object.position.scales[object.position.currPoint + 1]) {
-                    scale = object.position.scales[object.position.currPoint] * (object.position.dur[object.position.currPoint] - object.position.currDur) / object.position.dur[object.position.currPoint];
-                } else {
-                    scale = object.position.scales[object.position.currPoint + 1] * object.position.currDur / object.position.dur[object.position.currPoint];
-                }
-                if (scale < 0) {
-                    scale = 0;
-                }
+        if (object.position.scales[object.position.currPoint] != object.position.scales[object.position.currPoint + 1]) {
+            if (object.position.scales[object.position.currPoint] > object.position.scales[object.position.currPoint + 1]) {
+                scale = object.position.scales[object.position.currPoint] * (object.position.dur[object.position.currPoint] - object.position.currDur) / object.position.dur[object.position.currPoint];
             } else {
-                scale = 1;
+                scale = object.position.scales[object.position.currPoint + 1] * object.position.currDur / object.position.dur[object.position.currPoint];
             }
-            position[0] = (object.position.points[object.position.currPoint][0] * (object.position.dur[object.position.currPoint] - object.position.currDur) + object.position.points[object.position.currPoint + 1][0] * object.position.currDur) / object.position.dur[object.position.currPoint];
-            position[1] = (object.position.points[object.position.currPoint][1] * (object.position.dur[object.position.currPoint] - object.position.currDur) + object.position.points[object.position.currPoint + 1][1] * object.position.currDur) / object.position.dur[object.position.currPoint];
-            contextS.drawImage(imageHorse, position[0], position[1], object.width * scale * 0.25, object.height * scale * 0.25);
-            contextS.restore();
-            // Anim Position control
-            if (object.position.currDur <= object.position.dur[object.position.currPoint]) {
-                object.position.currDur++;
-            } else {
-                object.position.currDur = 1;
-                object.position.currPoint++;
-            }
-            if (object.point[object.position.currPoint] > 0) {
-                // if(object.point[object.position.currPoint] == 1){
-                //     showCityAni(canvasS, true)
-                // }
-                object.animating = false;
-                object.animated = true;
-
-                if (object.id == 5) {
-                    clearInterval(drawHorsesTimeout2);
-                } else {
-                    clearInterval(drawHorsesTimeout);
-                }
-                resolve();
+            if (scale < 0) {
+                scale = 0;
             }
         } else {
-            // position[0] = (object.position.points[object.position.totalPoint][0] * (object.position.dur[object.position.totalPoint] - object.position.currDur) + object.position.points[object.position.totalPoint + 1][0] * object.position.currDur) / object.position.dur[object.position.totalPoint];
-            // position[1] = (object.position.points[object.position.totalPoint][1] * (object.position.dur[object.position.totalPoint] - object.position.currDur) + object.position.points[object.position.totalPoint + 1][1] * object.position.currDur) / object.position.dur[object.position.totalPoint];
-
+            scale = 1;
+        }
+        position[0] = (object.position.points[object.position.currPoint][0] * (object.position.dur[object.position.currPoint] - object.position.currDur) + object.position.points[object.position.currPoint + 1][0] * object.position.currDur) / object.position.dur[object.position.currPoint];
+        position[1] = (object.position.points[object.position.currPoint][1] * (object.position.dur[object.position.currPoint] - object.position.currDur) + object.position.points[object.position.currPoint + 1][1] * object.position.currDur) / object.position.dur[object.position.currPoint];
+        contextS.drawImage(imageHorse, position[0], position[1], object.width * scale * 0.25, object.height * scale * 0.25);
+        contextS.restore();
+        // Anim Position control
+        if (object.position.currDur <= object.position.dur[object.position.currPoint]) {
+            object.position.currDur++;
+        } else {
+            object.position.currDur = 1;
+            object.position.currPoint++;
+        }
+        if (object.point[object.position.currPoint] > 0) {
+            // if(object.point[object.position.currPoint] == 1){
+            //     showCityAni(canvasS, true)
+            // }
             object.animating = false;
             object.animated = true;
-            console.log('end', object.position.currPoint, object.position.totalPoint);
-            // contextAnimHorse.save();
-            // contextAnimHorse.drawImage(imageHorse, position[0], position[1], object.width * scale * 0.25, object.height * scale * 0.25);
-            // contextAnimHorse.restore();
 
             if (object.id == 5) {
                 clearInterval(drawHorsesTimeout2);
             } else {
                 clearInterval(drawHorsesTimeout);
             }
-
-            // showCityAni(canvasAnimHorse, true)
+            if (typeof endfun == 'function') {
+                endfun();
+            }
+            // resolve()
+            // return "ok";
         }
-    });
-}
+    } else {
+        // position[0] = (object.position.points[object.position.totalPoint][0] * (object.position.dur[object.position.totalPoint] - object.position.currDur) + object.position.points[object.position.totalPoint + 1][0] * object.position.currDur) / object.position.dur[object.position.totalPoint];
+        // position[1] = (object.position.points[object.position.totalPoint][1] * (object.position.dur[object.position.totalPoint] - object.position.currDur) + object.position.points[object.position.totalPoint + 1][1] * object.position.currDur) / object.position.dur[object.position.totalPoint];
+
+        object.animating = false;
+        object.animated = true;
+        console.log('end', object.position.currPoint, object.position.totalPoint);
+        // contextAnimHorse.save();
+        // contextAnimHorse.drawImage(imageHorse, position[0], position[1], object.width * scale * 0.25, object.height * scale * 0.25);
+        // contextAnimHorse.restore();
+
+        if (object.id == 5) {
+            clearInterval(drawHorsesTimeout2);
+        } else {
+            clearInterval(drawHorsesTimeout);
+        }
+
+        // showCityAni(canvasAnimHorse, true)
+    }
+    // })
+};
