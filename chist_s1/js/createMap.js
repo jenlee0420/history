@@ -26,43 +26,65 @@ var docWidth = 0,
     docHeight = 0,
     boxscale = 1;
 var bodyHeight = $(window).outerHeight(),
-    bodytWidth = $(window).innerWidth();
+    bodytWidth = $(window).outerWidth();
 
-window.addEventListener('resize', setRemUnit);
-// window.addEventListener('orientationchange', setRemUnit)
-
-setRemUnit();
+$(document).ready(function () {
+    window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", setRemUnit, false);
+    docEl.style.fontSize = 137 + 'px';
+});
+function bodyScroll(event) {
+    event.preventDefault();
+}
 
 function setRemUnit() {
-    if (window.orientation === 0 || window.orientation === 180) {
-        //竖屏
-        bodyHeight = $(window).outerHeight(), bodytWidth = $(window).innerWidth();
-        console.log('竖屏', bodytWidth);
-    } else if (window.orientation === 90 || window.orientation === -90) {
-        //横屏
+    // if (window.orientation === 0 || window.orientation === 180) {
+    //     //竖屏
+    //     bodyHeight = $(window).outerHeight()
+    //     bodytWidth = $(window).innerWidth()
+    //     console.log('竖屏', bodytWidth)
 
-        bodyHeight = $(window).outerHeight(), bodytWidth = $(window).innerWidth();
-        console.log('横屏', bodytWidth);
-    }
+    // } else if (window.orientation === 90 || window.orientation === -90) {
+    //     //横屏
 
-    if (bodytWidth > bodyHeight) {
-        boxscale = bodyHeight / 1536;
+    //     bodyHeight = $(window).outerHeight()
+    //     bodytWidth = $(window).innerWidth()
+    //     console.log('横屏', bodytWidth)
+    // }
+    var selffun = function selffun() {
+        bodyHeight = $(window).outerHeight();
+        bodytWidth = $(window).outerWidth();
+        if (bodytWidth > bodyHeight) {
+            boxscale = bodyHeight / 1536;
+        } else {
+            boxscale = bodytWidth / 2048;
+        }
+
+        var u_agent = navigator.userAgent;
+        console.log(u_agent);
+
+        if (/Firefox/.test(u_agent) || u_agent.indexOf('Trident') > -1 && u_agent.indexOf('rv:11') > -1) {
+            $("#main_container").css({
+                '-moz-transform': 'scale(' + boxscale + ')',
+                '-ms-transform': 'scale(' + boxscale + ')',
+                '-moz-transform-origin': 'top left',
+                '-ms-transform-origin': 'top left'
+            });
+        } else {
+
+            $("#main_container").css({
+                // 'transform': 'scale('+scale+')',
+                // '-webkit-transform': 'scale('+scale+')',
+                'zoom': boxscale
+            });
+        }
+    };
+    if ("onorientationchange" in window) {
+        setTimeout(function () {
+            selffun();
+        }, 100);
     } else {
-        boxscale = bodytWidth / 2048;
+        selffun();
     }
-
-    docWidth = 2048 * boxscale;
-    docHeight = 1536 * boxscale;
-    canvasW = Math.ceil(baseWidth * boxscale);
-    canvasH = Math.ceil(baseHeight * boxscale);
-    console.log(boxscale);
-
-    var t = 1 + 1 / dpr;
-    if (dpr == 1) {
-        t = 1;
-    }
-    var rem = docEl.clientWidth / 10;
-    docEl.style.fontSize = rem * t + 'px';
 }
 
 var divTag = document.createElement('div');
@@ -557,7 +579,6 @@ function ship1(flag) {
             y -= 15;
             h += 15;
         }
-        console.log(y);
         contextAnimRedPath.rect(xx, y, ww, h);
         contextAnimRedPath.closePath(); //关闭路径
         contextAnimRedPath.clip();
@@ -596,6 +617,7 @@ function ship1(flag) {
 
         // drawHorsesTimeout = setTimeout(function () { ship1(flag); }, 1 / 30 * 1000);
     } else {
+        showCityAni(canvasAnimHorse, false);
         canvasAnimRedPath.playing = false;
         clearTimeout(redTimer);
         canvasAnimRedPath.style.visibility = "hidden";
@@ -606,6 +628,7 @@ function ship1(flag) {
         clearTimeout(canvasAnimHorse.timeout);
         canvasAnimHorse.style.visibility = "hidden";
         canvasClear(canvasAnimHorse);
+        clearInterval(drawHorsesTimeout);
         resetHorseObject(horseObject1);
         resetHorseObject(horseObject2);
         resetHorseObject(horseObject3);
@@ -656,6 +679,7 @@ function ship2(flag) {
         // drawHorse2()
     } else {
         // console.log('clear')
+        showCityAni(canvasAnimHorse2, false);
         canvasAnimGreenPath.playing = false;
         clearTimeout(greedTimer);
         canvasAnimGreenPath.style.visibility = "hidden";
@@ -1106,6 +1130,7 @@ function drawHousePromise() {
     }, 1200);
 
     horsetimerGroup[1] = setTimeout(function () {
+        console.log('path2');
         drawHorsesTimeout = setInterval(function () {
             canvasClear(canvasAnimHorse);
             drawHorse(horseObject2, false, canvasAnimHorse, contextAnimHorse);

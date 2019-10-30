@@ -256,15 +256,15 @@ $(function() {
                             ).hide(),
                             */
                             $("<div/>").addClass("zoom_button zoom_out blueButton").css({
-                                "width": "2.07em",
-                                "margin": "5px 10px 3px 10px"
+                                "width": "66px",
                             }).append("<b>-</b>"),
                             $("<div/>", {
                                 "id": "slider"
                             }).addClass("zoom_button").css({
                                 "width": "50%",
-                                "height": "0.06em",
-                                "border-radius": '4px'
+                                "height": ".7em",
+                                "border-radius": '4px',
+                                "font-size": "30px"
                             }).slider({
                                 min: main_container.data("min_zoom"),
                                 max: main_container.data("max_zoom"),
@@ -273,8 +273,7 @@ $(function() {
                                 }
                             }),
                             $("<div/>").addClass("zoom_button zoom_in blueButton").css({
-                                "width": "2.07em",
-                                "margin": "5px 10px 3px 10px"
+                                "width": "66px",
                             }).append("<b>+</b>")
 
                         )
@@ -301,27 +300,34 @@ $(function() {
         bind_sound($("#soundCon"))
         $("#loading").hide();
         $("#main_container").show();
-        resetWidth()
+        // resetWidth()
+        setRemUnit()
+        document.getElementById('map_container').addEventListener("touchstart", bodyScroll, {
+            passive: false //  禁止 passive 效果
+        })
     })
 
     function resetWidth(params) {
         console.log('ere', boxscale)
         $("#main_container").css({
-            'width': docWidth,
-            'height': docHeight
-        })
-        $(".title_bar").css({ 'height': 168 * boxscale })
-        $('body').css({
-            'overflow': 'hidden',
-            'height': docHeight
-        })
-        var can = document.querySelectorAll('canvas')
-        for(i=0;i<can.length; i++){
-            $(can[i]).css({ 'zoom': boxscale})
-        }
-        $("#map_container").css({ width: canvasW, height: canvasH})
-        $("#canvasInnerDiv").css({ width: canvasW, height: canvasH})
-        
+                'zoom': boxscale,
+            })
+            // $("#main_container").css({
+            //     'width': docWidth,
+            //     'height': docHeight
+            // })
+            // $(".title_bar").css({ 'height': 168 * boxscale })
+            // $('body').css({
+            //     'overflow': 'hidden',
+            //     'height': docHeight
+            // })
+            // var can = document.querySelectorAll('canvas')
+            // for(i=0;i<can.length; i++){
+            //     $(can[i]).css({ 'zoom': boxscale})
+            // }
+            // $("#map_container").css({ width: canvasW, height: canvasH})
+            // $("#canvasInnerDiv").css({ width: canvasW, height: canvasH})
+
     }
-    window.addEventListener('resize', resetWidth)
+    // window.addEventListener('resize', resetWidth)
 })

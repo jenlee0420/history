@@ -602,10 +602,8 @@ button.ui-button::-moz-focus-inner {
 
 .ui-dialog .ui-dialog-titlebar-close {
     position: absolute;
-    right: .1em;
-    width: .2em;
-    padding: 1px;
-    height: .2em;
+	right: .2em;
+	border: 1px solid transparent;
 }
 
 .ui-dialog .ui-dialog-titlebar-close span {
@@ -777,8 +775,8 @@ button.ui-button::-moz-focus-inner {
 }
 
 .ui-slider-horizontal .ui-slider-handle {
-    top: -.05rem;
-    margin-left: -.06rem;
+    top: -.25em;
+    margin-left: -.6em;
 }
 
 .ui-slider-horizontal .ui-slider-range {
@@ -1135,10 +1133,11 @@ button.ui-button::-moz-focus-inner {
 }
 
 .ui-widget-header .ui-icon {
-    width: 0.2em;
-    height: 0.2em;
+    width: 35px;
+    height: 35px;
     background-image: url('../img/close.png');
-    background-size: 100%
+	background-size: 100%;
+	
 }
 
 .ui-state-default .ui-icon {
@@ -1148,8 +1147,8 @@ button.ui-button::-moz-focus-inner {
 
 .ui-state-hover .ui-icon,
 .ui-state-focus .ui-icon {
-    width: 0.2em;
-    height: 0.2em;
+    width: 35px;
+    height: 35px;
     background-image: url('../img/close.png');
     background-size: 100%
     /*{iconsHover}*/
