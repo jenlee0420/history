@@ -25,44 +25,63 @@ var canvasW = 1488,
 var docWidth = 0,
     docHeight = 0,
     boxscale = 1;
-var bodyHeight = $(window).outerHeight(),
+var bodyHeight = $(window).innerHeight(),
     bodytWidth = $(window).innerWidth();
-
+var rem;
 window.addEventListener('resize', setRemUnit);
 // window.addEventListener('orientationchange', setRemUnit)
 
-setRemUnit();
 
 function setRemUnit() {
     if (window.orientation === 0 || window.orientation === 180) {
         //竖屏
-        bodyHeight = $(window).outerHeight(), bodytWidth = $(window).innerWidth();
         console.log('竖屏', bodytWidth);
     } else if (window.orientation === 90 || window.orientation === -90) {
         //横屏
-
-        bodyHeight = $(window).outerHeight(), bodytWidth = $(window).innerWidth();
         console.log('横屏', bodytWidth);
     }
 
+    bodyHeight = $(window).outerHeight();
+    bodytWidth = $(window).innerWidth();
+
     if (bodytWidth > bodyHeight) {
         boxscale = bodyHeight / 1536;
+        rem = docEl.clientHeight / 10;
     } else {
         boxscale = bodytWidth / 2048;
+        rem = docEl.clientWidth / 10;
     }
 
     docWidth = 2048 * boxscale;
     docHeight = 1536 * boxscale;
     canvasW = Math.ceil(baseWidth * boxscale);
     canvasH = Math.ceil(baseHeight * boxscale);
-    console.log(boxscale);
 
+    // var rem = docEl.clientHeight / 10
     var t = 1 + 1 / dpr;
     if (dpr == 1) {
         t = 1;
     }
-    var rem = docEl.clientWidth / 10;
-    docEl.style.fontSize = rem * t + 'px';
+    // else { rem = (bodytWidth * dpr) / 10}
+
+    console.log(boxscale, dpr, t);
+    docEl.style.fontSize = rem + 'px';
+
+    $("#main_container").css({
+        'width': docWidth,
+        'height': docHeight
+    });
+    $(".title_bar").css({ 'height': 168 * boxscale });
+    $('body').css({
+        'overflow': 'hidden',
+        'height': docHeight
+    });
+    var can = document.querySelectorAll('canvas');
+    for (i = 0; i < can.length; i++) {
+        $(can[i]).css({ 'zoom': boxscale });
+    }
+    $("#map_container").css({ width: canvasW, height: canvasH });
+    $("#canvasInnerDiv").css({ width: canvasW, height: canvasH });
 }
 
 var divTag = document.createElement('div');
@@ -263,17 +282,14 @@ imagerice.onload = function () {
 };
 imageHorse.onload = function () {
 
-    var translate = [[1180, 1120], [1120, 968]
-    // [-1040, 830],
-
-    ];
+    var translate = [[1180, 1120], [1120, 968], [1114, 952], [1023, 838], [1009, 821], [825, 807], [566, 753], [533, 746], [688, 612], [887, 375], [830, 165]];
     // let position = translate[0]
     // contextAnimHorse.drawImage(imageHorse, position[0], position[1], 820 * 0.25, 360 * 0.25);
     // canvasAnimHorse.style.visibility = 'visible'
     // console.log(canvasAnimHorse.style.visibility)
-    var scale = [1, 1];
-    var dur = [10, 7];
-    var sharpPoint = [0, 1];
+    var scale = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0];
+    var dur = [10, 1, 7, 1, 8, 8, 1, 8, 10, 10, 18];
+    var sharpPoint = [0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1];
     horseObject1 = initHorseObject(translate, scale, dur, sharpPoint);
     translate = [[1120, 978], [1023, 838]];
     scale = [1, 1];
@@ -505,16 +521,7 @@ function createMap(controlArray, scale) {
     setScale(canvasAnimBluePath, scale);
     setScale(canvasAnimHorse, scale);
     setScale(canvasAnimHorse2, scale);
-    /*
-    canvasStatic1.style.zoom = _scale / (boundary / 600);
-    canvasStatic2.style.zoom = _scale / (boundary / 600);
-    canvasStatic3.style.zoom = _scale / (boundary / 600);
-    canvasStatic4.style.zoom = _scale / (boundary / 600);
-    canvasStatic5.style.zoom = _scale / (boundary / 600);
-    canvasAnimRedPath.style.zoom = _scale / (boundary / 600);
-    canvasAnimGreenPath.style.zoom = _scale / (boundary / 600);
-    canvasAnimBluePath.style.zoom = _scale / (boundary / 600);
-    */
+
     if (canvasTop.width != boundary) {
         canvasTop.width = boundary;
         canvasTop.height = boundaryH;
@@ -557,7 +564,6 @@ function ship1(flag) {
             y -= 15;
             h += 15;
         }
-        console.log(y);
         contextAnimRedPath.rect(xx, y, ww, h);
         contextAnimRedPath.closePath(); //关闭路径
         contextAnimRedPath.clip();
@@ -583,18 +589,7 @@ function ship1(flag) {
                 drawHousePromise();
                 canvasAnimRedPath.playing = true;
             }
-            // redTimer = setInterval(() => {
-            //     addRadial()
-            //     if (h >= 1000) {
-            //         clearInterval(redTimer)
-            //     }
-            //     y -= 10
-            //     h += 10
-            // }, 50);
         };
-        // drawHousePromise()
-
-        // drawHorsesTimeout = setTimeout(function () { ship1(flag); }, 1 / 30 * 1000);
     } else {
         canvasAnimRedPath.playing = false;
         clearTimeout(redTimer);
@@ -604,12 +599,10 @@ function ship1(flag) {
             clearTimeout(horsetimerGroup[i]);
         }
         clearTimeout(canvasAnimHorse.timeout);
+        clearTimeout(drawHorsesTimeout);
         canvasAnimHorse.style.visibility = "hidden";
         canvasClear(canvasAnimHorse);
         resetHorseObject(horseObject1);
-        resetHorseObject(horseObject2);
-        resetHorseObject(horseObject3);
-        resetHorseObject(horseObject4);
     }
 }
 
@@ -644,16 +637,7 @@ function ship2(flag) {
                 drawHorse2();
                 canvasAnimGreenPath.playing = true;
             }
-            // greedTimer = setInterval(() => {
-            //     addRadial2(x,w)
-            //     if (x <= 0) {
-            //         clearInterval(greedTimer)
-            //     }
-            //     x -= 10
-            //     w += 10
-            // }, 50);
         };
-        // drawHorse2()
     } else {
         // console.log('clear')
         canvasAnimGreenPath.playing = false;
@@ -667,6 +651,7 @@ function ship2(flag) {
         canvasAnimHorse2.style.visibility = "hidden";
         resetHorseObject(horseObject5);
         canvasClear(canvasAnimHorse2);
+        clearTimeout(drawHorsesTimeout);
     }
 }
 
@@ -684,7 +669,6 @@ function drawRiverPath(flag) {
                 contextStatic5.drawImage(River, 0, 0, baseWidth, baseHeight);
             } else {
                 contextStatic5.clearRect(x, y, w, h);
-                // contextStatic5.fillRect(x, y, w, h)
             }
             show = !show;
             times -= 1;
@@ -749,258 +733,6 @@ function drawRiverPath(flag) {
             clearTimeout(timerGroup[i]);
         }
         canvasClear(canvasStatic5);
-        /*clearInterval(canvasStatic5.timeout)
-        clearInterval(canvasStatic8.timeout)
-        clearInterval(canvasStatic9.timeout)
-        canvasStatic5.style.visibility = "hidden";
-        canvasStatic8.style.visibility = "hidden";
-        canvasStatic9.style.visibility = "hidden";*/
-    }
-}
-
-function drawRedPath(flag) {
-    if (flag == true) {
-        if (redPathObject.anim4.mask1.currOriginX > redPathObject.anim4.path1.endPointX) {
-            //		if (true) {
-            canvasClear(canvasAnimRedPath);
-            var x1, x2, y1, y2;
-            if (redPathObject.anim1.mask1.currOriginY + redPathObject.anim1.mask1.height < redPathObject.anim1.path1.endPointY) {
-                redPathObject.anim1.mask1.currOriginY += redPathObject.anim1.mask1.shiftY;
-            } else {
-                if (redPathObject.anim2.mask1.currOriginX > redPathObject.anim2.path2.endPointX) {
-                    redPathObject.anim2.mask1.currOriginX += redPathObject.anim2.mask1.shiftX;
-                    redPathObject.anim2.mask1.width += redPathObject.anim2.mask1.enlargeWidth;
-                } else {
-                    if (redPathObject.anim3.mask1.currOriginX > redPathObject.anim3.path1.endPointX) {
-                        redPathObject.anim3.mask1.currOriginX += redPathObject.anim3.mask1.shiftX;
-                    } else {
-                        if (redPathObject.anim4.mask1.currOriginX > redPathObject.anim4.path1.endPointX) {
-                            redPathObject.anim4.mask1.currOriginX += redPathObject.anim4.mask1.shiftX;
-                        }
-                    }
-                }
-            }
-
-            contextAnimRedPath.save();
-            contextAnimRedPath.beginPath();
-            contextAnimRedPath.rect(redPathObject.anim1.mask1.currOriginX, redPathObject.anim1.mask1.currOriginY, redPathObject.anim1.mask1.width, redPathObject.anim1.mask1.height);
-            if (redPathObject.anim1.mask1.currOriginY + redPathObject.anim1.mask1.height >= redPathObject.anim1.path1.endPointY) {
-                contextAnimRedPath.rect(redPathObject.anim2.mask1.currOriginX, redPathObject.anim2.mask1.currOriginY, redPathObject.anim2.mask1.width, redPathObject.anim2.mask1.height);
-            }
-            if (redPathObject.anim2.mask1.currOriginX <= redPathObject.anim2.path2.endPointX) {
-                contextAnimRedPath.rect(redPathObject.anim3.mask1.currOriginX, redPathObject.anim3.mask1.currOriginY, redPathObject.anim3.mask1.width, redPathObject.anim3.mask1.height);
-            }
-            if (redPathObject.anim3.mask1.currOriginX <= redPathObject.anim3.path1.endPointX) {
-                contextAnimRedPath.rect(redPathObject.anim4.mask1.currOriginX, redPathObject.anim4.mask1.currOriginY, redPathObject.anim4.mask1.width, redPathObject.anim4.mask1.height);
-            }
-            contextAnimRedPath.clip();
-
-            contextAnimRedPath.beginPath();
-            contextAnimRedPath.moveTo(redPathObject.anim1.path1.startPointX, redPathObject.anim1.path1.startPointY);
-            contextAnimRedPath.quadraticCurveTo(redPathObject.anim1.path1.controlPointX, redPathObject.anim1.path1.controlPointY, redPathObject.anim1.path1.endPointX, redPathObject.anim1.path1.endPointY);
-            contextAnimRedPath.lineWidth = 3;
-            contextAnimRedPath.strokeStyle = "#ff0000";
-            contextAnimRedPath.stroke();
-
-            x1 = redPathObject.anim1.arrow1.point[1][0];
-            x2 = redPathObject.anim1.arrow1.point[0][0];
-            y1 = redPathObject.anim1.arrow1.point[1][1];
-            y2 = redPathObject.anim1.arrow1.point[0][1];
-
-            var radians = Math.atan((y1 - y2) / (x1 - x2));
-            radians += (x2 > x1 ? 90 : -90) * Math.PI / 180;
-            drawArrow(contextAnimRedPath, x2, y2, radians, 'red');
-
-            contextAnimRedPath.beginPath();
-            contextAnimRedPath.moveTo(redPathObject.anim2.path1.startPointX, redPathObject.anim2.path1.startPointY);
-            contextAnimRedPath.quadraticCurveTo(redPathObject.anim2.path1.controlPointX, redPathObject.anim2.path1.controlPointY, redPathObject.anim2.path1.endPointX, redPathObject.anim2.path1.endPointY);
-            contextAnimRedPath.lineWidth = 3;
-            contextAnimRedPath.strokeStyle = "#ff0000";
-            contextAnimRedPath.stroke();
-
-            x1 = redPathObject.anim2.arrow1.point[1][0];
-            x2 = redPathObject.anim2.arrow1.point[0][0];
-            y1 = redPathObject.anim2.arrow1.point[1][1];
-            y2 = redPathObject.anim2.arrow1.point[0][1];
-
-            var radians = Math.atan((y1 - y2) / (x1 - x2));
-            radians += (x2 > x1 ? 90 : -90) * Math.PI / 180;
-            drawArrow(contextAnimRedPath, x2, y2, radians, 'red');
-
-            contextAnimRedPath.beginPath();
-            contextAnimRedPath.moveTo(redPathObject.anim2.path2.startPointX, redPathObject.anim2.path2.startPointY);
-            contextAnimRedPath.quadraticCurveTo(redPathObject.anim2.path2.controlPointX, redPathObject.anim2.path2.controlPointY, redPathObject.anim2.path2.endPointX, redPathObject.anim2.path2.endPointY);
-            contextAnimRedPath.lineWidth = 3;
-            contextAnimRedPath.strokeStyle = "#ff0000";
-            contextAnimRedPath.stroke();
-
-            x1 = redPathObject.anim2.arrow2.point[1][0];
-            x2 = redPathObject.anim2.arrow2.point[0][0];
-            y1 = redPathObject.anim2.arrow2.point[1][1];
-            y2 = redPathObject.anim2.arrow2.point[0][1];
-
-            var radians = Math.atan((y1 - y2) / (x1 - x2));
-            radians += (x2 > x1 ? 90 : -90) * Math.PI / 180;
-            drawArrow(contextAnimRedPath, x2, y2, radians, 'red');
-
-            contextAnimRedPath.beginPath();
-            contextAnimRedPath.moveTo(redPathObject.anim3.path1.startPointX, redPathObject.anim3.path1.startPointY);
-            contextAnimRedPath.quadraticCurveTo(redPathObject.anim3.path1.controlPointX, redPathObject.anim3.path1.controlPointY, redPathObject.anim3.path1.endPointX, redPathObject.anim3.path1.endPointY);
-            contextAnimRedPath.lineWidth = 3;
-            contextAnimRedPath.strokeStyle = "#ff0000";
-            contextAnimRedPath.stroke();
-
-            x1 = redPathObject.anim3.arrow1.point[1][0];
-            x2 = redPathObject.anim3.arrow1.point[0][0];
-            y1 = redPathObject.anim3.arrow1.point[1][1];
-            y2 = redPathObject.anim3.arrow1.point[0][1];
-
-            var radians = Math.atan((y1 - y2) / (x1 - x2));
-            radians += (x2 > x1 ? 90 : -90) * Math.PI / 180;
-            drawArrow(contextAnimRedPath, x2, y2, radians, 'red');
-
-            contextAnimRedPath.beginPath();
-            contextAnimRedPath.moveTo(redPathObject.anim4.path1.startPointX, redPathObject.anim4.path1.startPointY);
-            contextAnimRedPath.quadraticCurveTo(redPathObject.anim4.path1.controlPointX, redPathObject.anim4.path1.controlPointY, redPathObject.anim4.path1.endPointX, redPathObject.anim4.path1.endPointY);
-            contextAnimRedPath.lineWidth = 3;
-            contextAnimRedPath.strokeStyle = "#ff0000";
-            contextAnimRedPath.stroke();
-
-            x1 = redPathObject.anim4.arrow1.point[1][0];
-            x2 = redPathObject.anim4.arrow1.point[0][0];
-            y1 = redPathObject.anim4.arrow1.point[1][1];
-            y2 = redPathObject.anim4.arrow1.point[0][1];
-
-            var radians = Math.atan((y1 - y2) / (x1 - x2));
-            radians += (x2 > x1 ? 90 : -90) * Math.PI / 180;
-            drawArrow(contextAnimRedPath, x2, y2, radians, 'red');
-
-            contextAnimRedPath.restore();
-            canvasAnimRedPath.style.visibility = "visible";
-            redPathObject.timeout = setTimeout(function () {
-                drawRedPath(flag);
-            }, 40);
-        }
-    } else {
-        canvasAnimRedPath.style.visibility = "hidden";
-        redPathObject.anim1.mask1.currOriginX = redPathObject.anim1.mask1.originX;
-        redPathObject.anim1.mask1.currOriginY = redPathObject.anim1.mask1.originY;
-        redPathObject.anim2.mask1.currOriginX = redPathObject.anim2.mask1.originX;
-        redPathObject.anim2.mask1.width = 0;
-        redPathObject.anim3.mask1.currOriginX = redPathObject.anim3.mask1.originX;
-        redPathObject.anim4.mask1.currOriginX = redPathObject.anim3.mask1.originX;
-        clearTimeout(redPathObject.timeout);
-    }
-}
-
-function drawGreenPath(flag) {
-    if (flag == true) {
-        if (greenPathObject.anim2.mask1.currOriginY + greenPathObject.anim2.mask1.height < greenPathObject.anim2.path1.endPointY) {
-            canvasClear(canvasAnimGreenPath);
-
-            var x1, x2, y1, y2;
-            if (greenPathObject.anim1.mask1.currOriginY > greenPathObject.anim1.path1.endPointY - 10) {
-                greenPathObject.anim1.mask1.currOriginY += greenPathObject.anim1.mask1.shiftY;
-            } else if (greenPathObject.anim2.mask1.currOriginY + greenPathObject.anim2.mask1.height < greenPathObject.anim2.path1.endPointY) {
-                greenPathObject.anim2.mask1.currOriginY += greenPathObject.anim2.mask1.shiftY;
-            }
-
-            contextAnimGreenPath.save();
-            contextAnimGreenPath.beginPath();
-            contextAnimGreenPath.rect(greenPathObject.anim1.mask1.currOriginX, greenPathObject.anim1.mask1.currOriginY, greenPathObject.anim1.mask1.width, greenPathObject.anim1.mask1.height);
-            if (greenPathObject.anim1.mask1.currOriginY <= greenPathObject.anim1.path1.endPointY - 10) {
-                contextAnimGreenPath.rect(greenPathObject.anim2.mask1.currOriginX, greenPathObject.anim2.mask1.currOriginY, greenPathObject.anim2.mask1.width, greenPathObject.anim2.mask1.height);
-            }
-            contextAnimGreenPath.clip();
-
-            contextAnimGreenPath.beginPath();
-            contextAnimGreenPath.moveTo(greenPathObject.anim1.path1.startPointX, greenPathObject.anim1.path1.startPointY);
-            contextAnimGreenPath.quadraticCurveTo(greenPathObject.anim1.path1.controlPointX, greenPathObject.anim1.path1.controlPointY, greenPathObject.anim1.path1.endPointX, greenPathObject.anim1.path1.endPointY);
-            contextAnimGreenPath.lineWidth = 3;
-            contextAnimGreenPath.strokeStyle = "green";
-            contextAnimGreenPath.stroke();
-
-            x1 = greenPathObject.anim1.arrow1.point[1][0];
-            x2 = greenPathObject.anim1.arrow1.point[0][0];
-            y1 = greenPathObject.anim1.arrow1.point[1][1];
-            y2 = greenPathObject.anim1.arrow1.point[0][1];
-
-            var radians = Math.atan((y1 - y2) / (x1 - x2));
-            radians += (x2 > x1 ? 90 : -90) * Math.PI / 180;
-            drawArrow(contextAnimGreenPath, x2, y2, radians, 'green');
-
-            contextAnimGreenPath.beginPath();
-            contextAnimGreenPath.moveTo(greenPathObject.anim2.path1.startPointX, greenPathObject.anim2.path1.startPointY);
-            contextAnimGreenPath.quadraticCurveTo(greenPathObject.anim2.path1.controlPointX, greenPathObject.anim2.path1.controlPointY, greenPathObject.anim2.path1.endPointX, greenPathObject.anim2.path1.endPointY);
-            contextAnimGreenPath.lineWidth = 3;
-            contextAnimGreenPath.strokeStyle = "green";
-            contextAnimGreenPath.stroke();
-
-            x1 = greenPathObject.anim2.arrow1.point[1][0];
-            x2 = greenPathObject.anim2.arrow1.point[0][0];
-            y1 = greenPathObject.anim2.arrow1.point[1][1];
-            y2 = greenPathObject.anim2.arrow1.point[0][1];
-
-            var radians = Math.atan((y1 - y2) / (x1 - x2));
-            radians += (x2 > x1 ? 90 : -90) * Math.PI / 180;
-            drawArrow(contextAnimGreenPath, x2, y2, radians, 'green');
-
-            contextAnimGreenPath.restore();
-            canvasAnimGreenPath.style.visibility = "visible";
-
-            greenPathObject.timeout = setTimeout(function () {
-                drawGreenPath(flag);
-            }, 40);
-        }
-    } else {
-        canvasAnimGreenPath.style.visibility = "hidden";
-        greenPathObject.anim1.mask1.currOriginX = greenPathObject.anim1.mask1.originX;
-        greenPathObject.anim1.mask1.currOriginY = greenPathObject.anim1.mask1.originY;
-        greenPathObject.anim2.mask1.currOriginY = greenPathObject.anim2.mask1.originY;
-        clearTimeout(greenPathObject.timeout);
-    }
-}
-
-function drawBluePath(flag) {
-    if (flag == true) {
-        if (bluePathObject.anim1.mask1.currOriginY > bluePathObject.anim1.path1.endPointY - 5) {
-            canvasClear(canvasAnimBluePath);
-
-            bluePathObject.anim1.mask1.currOriginY += bluePathObject.anim1.mask1.shiftY;
-
-            contextAnimBluePath.save();
-            contextAnimBluePath.beginPath();
-            contextAnimBluePath.rect(bluePathObject.anim1.mask1.currOriginX, bluePathObject.anim1.mask1.currOriginY, bluePathObject.anim1.mask1.width, bluePathObject.anim1.mask1.height);
-            contextAnimBluePath.clip();
-
-            contextAnimBluePath.beginPath();
-            contextAnimBluePath.moveTo(bluePathObject.anim1.path1.startPointX, bluePathObject.anim1.path1.startPointY);
-            contextAnimBluePath.quadraticCurveTo(bluePathObject.anim1.path1.controlPointX, bluePathObject.anim1.path1.controlPointY, bluePathObject.anim1.path1.endPointX, bluePathObject.anim1.path1.endPointY);
-            contextAnimBluePath.lineWidth = 3;
-            contextAnimBluePath.strokeStyle = "#0000ff";
-            contextAnimBluePath.stroke();
-
-            x1 = bluePathObject.anim1.arrow1.point[1][0];
-            x2 = bluePathObject.anim1.arrow1.point[0][0];
-            y1 = bluePathObject.anim1.arrow1.point[1][1];
-            y2 = bluePathObject.anim1.arrow1.point[0][1];
-
-            var radians = Math.atan((y1 - y2) / (x1 - x2));
-            radians += (x2 > x1 ? 90 : -90) * Math.PI / 180;
-            drawArrow(contextAnimBluePath, x2, y2, radians, '#0000ff');
-
-            contextAnimBluePath.restore();
-            canvasAnimBluePath.style.visibility = "visible";
-
-            bluePathObject.timeout = setTimeout(function () {
-                drawBluePath(flag);
-            }, 40);
-        }
-    } else {
-        canvasAnimBluePath.style.visibility = "hidden";
-        bluePathObject.anim1.mask1.currOriginX = bluePathObject.anim1.mask1.originX;
-        bluePathObject.anim1.mask1.currOriginY = bluePathObject.anim1.mask1.originY;
-        clearTimeout(bluePathObject.timeout);
     }
 }
 
@@ -1069,7 +801,6 @@ function initHorseObject(translate, scale, dur, sharpPoint) {
 }
 
 function drawHorse2() {
-    console.log(horseObject5.animated);
     if (horseObject5.animated == true) {
         return;
     }
@@ -1077,63 +808,25 @@ function drawHorse2() {
     contextAnimHorse2.drawImage(imageHorse, horseObject5.position.points[0][0], horseObject5.position.points[0][1], horseObject5.width * 0.25, horseObject5.height * 0.25);
     showCityAni(canvasAnimHorse2, true);
     horsetimerGroup2[0] = setTimeout(function () {
-        drawHorsesTimeout2 = setInterval(function () {
-            canvasClear(canvasAnimHorse2);
-            var endfun = function endfun() {
-                horsetimerGroup2[1] = setTimeout(function () {
-                    canvasClear(canvasAnimHorse2);
-                    waveSound.pause();
-                }, 1000);
-            };
-            drawHorse(horseObject5, false, endfun, contextAnimHorse2);
-        }, 60);
-    }, 2000);
+        drawHorse(horseObject5, false, contextAnimHorse2, canvasAnimHorse2);
+    }, 1200);
 }
 
 function drawHousePromise() {
     // console.log(horseObject4.animated,'4444')
-    if (horseObject4.animated == true) {
+    if (horseObject1.animated == true) {
         return;
     }
     canvasAnimHorse.style.visibility = 'visible';
     contextAnimHorse.drawImage(imageHorse, horseObject1.position.points[0][0], horseObject1.position.points[0][1], horseObject1.width * 0.25, horseObject1.height * 0.25);
     showCityAni(canvasAnimHorse, true);
     horsetimerGroup[0] = setTimeout(function () {
-        drawHorsesTimeout = setInterval(function () {
-            canvasClear(canvasAnimHorse);
-            drawHorse(horseObject1, false, canvasAnimHorse, contextAnimHorse);
-        }, 60);
+        canvasClear(canvasAnimHorse);
+        drawHorse(horseObject1, false, contextAnimHorse, canvasAnimHorse);
     }, 1200);
-
-    horsetimerGroup[1] = setTimeout(function () {
-        drawHorsesTimeout = setInterval(function () {
-            canvasClear(canvasAnimHorse);
-            drawHorse(horseObject2, false, canvasAnimHorse, contextAnimHorse);
-        }, 60);
-    }, 2100);
-    horsetimerGroup[2] = setTimeout(function () {
-        drawHorsesTimeout = setInterval(function () {
-            canvasClear(canvasAnimHorse);
-            drawHorse(horseObject3, false, canvasAnimHorse, contextAnimHorse);
-        }, 60);
-    }, 3000);
-    horsetimerGroup[3] = setTimeout(function () {
-        drawHorsesTimeout = setInterval(function () {
-            canvasClear(canvasAnimHorse);
-            var endfun = function endfun() {
-                horsetimerGroup[2] = setTimeout(function () {
-                    canvasClear(canvasAnimHorse);
-                    waveSound.pause();
-                }, 1000);
-            };
-            drawHorse(horseObject4, false, endfun, contextAnimHorse);
-        }, 60);
-    }, 4300);
 }
 
-function drawHorse(object, isInvert, endfun, contextS) {
-
-    // return new Promise((resolve, reject) => {
+function drawHorse(object, isInvert, contextS, canvasAni) {
 
     if (object.position.currPoint + 1 < object.position.totalPoint) {
         // console.log(object.position.currPoint, object.position.totalPoint)
@@ -1158,34 +851,39 @@ function drawHorse(object, isInvert, endfun, contextS) {
         } else {
             scale = 1;
         }
+        // console.log(object.position.points, object.position.currPoint)
         position[0] = (object.position.points[object.position.currPoint][0] * (object.position.dur[object.position.currPoint] - object.position.currDur) + object.position.points[object.position.currPoint + 1][0] * object.position.currDur) / object.position.dur[object.position.currPoint];
         position[1] = (object.position.points[object.position.currPoint][1] * (object.position.dur[object.position.currPoint] - object.position.currDur) + object.position.points[object.position.currPoint + 1][1] * object.position.currDur) / object.position.dur[object.position.currPoint];
+
         contextS.drawImage(imageHorse, position[0], position[1], object.width * scale * 0.25, object.height * scale * 0.25);
         contextS.restore();
+        // console.log(position[0],position[1], object.position.currPoint)
         // Anim Position control
-        if (object.position.currDur <= object.position.dur[object.position.currPoint]) {
-            object.position.currDur++;
-        } else {
-            object.position.currDur = 1;
-            object.position.currPoint++;
-        }
-        if (object.point[object.position.currPoint] > 0) {
-            // if(object.point[object.position.currPoint] == 1){
-            //     showCityAni(canvasS, true)
-            // }
-            object.animating = false;
-            object.animated = true;
 
-            if (object.id == 5) {
-                clearInterval(drawHorsesTimeout2);
-            } else {
-                clearInterval(drawHorsesTimeout);
-            }
-            if (typeof endfun == 'function') {
-                endfun();
-            }
+        if (object.point[object.position.currPoint] > 0) {
+
+            drawHorsesTimeout = setTimeout(function () {
+                object.position.currPoint++;
+                setTimeout(function () {
+                    canvasClear(canvasAni);
+                    drawHorse(object, isInvert, contextS, canvasAni);
+                }, 60);
+                clearTimeout(drawHorsesTimeout);
+            }, 2000);
+
             // resolve()
             // return "ok";
+        } else {
+            if (object.position.currDur <= object.position.dur[object.position.currPoint]) {
+                object.position.currDur++;
+            } else {
+                object.position.currDur = 1;
+                object.position.currPoint++;
+            }
+            setTimeout(function () {
+                canvasClear(canvasAni);
+                drawHorse(object, isInvert, contextS, canvasAni);
+            }, 60);
         }
     } else {
         // position[0] = (object.position.points[object.position.totalPoint][0] * (object.position.dur[object.position.totalPoint] - object.position.currDur) + object.position.points[object.position.totalPoint + 1][0] * object.position.currDur) / object.position.dur[object.position.totalPoint];
@@ -1194,17 +892,7 @@ function drawHorse(object, isInvert, endfun, contextS) {
         object.animating = false;
         object.animated = true;
         console.log('end', object.position.currPoint, object.position.totalPoint);
-        // contextAnimHorse.save();
-        // contextAnimHorse.drawImage(imageHorse, position[0], position[1], object.width * scale * 0.25, object.height * scale * 0.25);
-        // contextAnimHorse.restore();
-
-        if (object.id == 5) {
-            clearInterval(drawHorsesTimeout2);
-        } else {
-            clearInterval(drawHorsesTimeout);
-        }
-
-        // showCityAni(canvasAnimHorse, true)
+        waveSound.pause();
+        clearTimeout(drawHorsesTimeout);
     }
-    // })
 };

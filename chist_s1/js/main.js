@@ -301,27 +301,12 @@ $(function() {
         bind_sound($("#soundCon"))
         $("#loading").hide();
         $("#main_container").show();
-        resetWidth()
+        setRemUnit()
     })
 
     function resetWidth(params) {
         console.log('ere', boxscale)
-        $("#main_container").css({
-            'width': docWidth,
-            'height': docHeight
-        })
-        $(".title_bar").css({ 'height': 168 * boxscale })
-        $('body').css({
-            'overflow': 'hidden',
-            'height': docHeight
-        })
-        var can = document.querySelectorAll('canvas')
-        for(i=0;i<can.length; i++){
-            $(can[i]).css({ 'zoom': boxscale})
-        }
-        $("#map_container").css({ width: canvasW, height: canvasH})
-        $("#canvasInnerDiv").css({ width: canvasW, height: canvasH})
+        
         
     }
-    window.addEventListener('resize', resetWidth)
 })
