@@ -139,7 +139,7 @@ $(function() {
                     $("<div/>", {
                         'id': 'soundCon'
                     }),
-                    "<span>隋代運河分佈圖 (581-618 年)</span>"
+                    "<span> 隋代運河分佈圖 (581-618 年)</span>"
                 ),
                 $("<div class='main_box'/>").append(
                     $("<div/>", {
