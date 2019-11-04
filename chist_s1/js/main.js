@@ -236,12 +236,12 @@ $(function() {
                         ),
                         $("<div/>").addClass("greyContainer").append(
                             $("<div/>").css({
-                                "display": "flex",
-                                "width": "100%",
-                                "justify-content": 'space-between'
+                                // "display": "flex",
+                                // "width": "100%",
+                                // "justify-content": 'space-between'
                             }).append(
-                                $("<div/>").addClass("blueButton action_all").append("全部顯示").data("action", "show"),
-                                $("<div/>").addClass("blueButton action_all").append("全部隱藏").data("action", "hide")
+                                $("<div/>").addClass("blueButton action_all").append("全部顯示").css({'float':'left'}).data("action", "show"),
+                                $("<div/>").addClass("blueButton action_all").append("全部隱藏").css({'float':'right'}).data("action", "hide")
                             )
                         ),
                         $("<div/>", {
@@ -301,33 +301,9 @@ $(function() {
         $("#loading").hide();
         $("#main_container").show();
         // resetWidth()
-        setRemUnit()
+        // setRemUnit()
         document.getElementById('map_container').addEventListener("touchstart", bodyScroll, {
             passive: false //  禁止 passive 效果
         })
     })
-
-    function resetWidth(params) {
-        console.log('ere', boxscale)
-        $("#main_container").css({
-                'zoom': boxscale,
-            })
-            // $("#main_container").css({
-            //     'width': docWidth,
-            //     'height': docHeight
-            // })
-            // $(".title_bar").css({ 'height': 168 * boxscale })
-            // $('body').css({
-            //     'overflow': 'hidden',
-            //     'height': docHeight
-            // })
-            // var can = document.querySelectorAll('canvas')
-            // for(i=0;i<can.length; i++){
-            //     $(can[i]).css({ 'zoom': boxscale})
-            // }
-            // $("#map_container").css({ width: canvasW, height: canvasH})
-            // $("#canvasInnerDiv").css({ width: canvasW, height: canvasH})
-
-    }
-    // window.addEventListener('resize', resetWidth)
 })

@@ -25,12 +25,15 @@ var canvasW = 1488,
 var docWidth = 0,
     docHeight = 0,
     boxscale = 1;
-var bodyHeight = $(window).outerHeight(),
-    bodytWidth = $(window).outerWidth();
+var bodyHeight, bodytWidth;
 
 $(document).ready(function () {
     window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", setRemUnit, false);
-    docEl.style.fontSize = 137 + 'px';
+    // docEl.style.fontSize = (137) + 'px'
+    setRemUnit();
+    bodyHeight = document.body.clientHeight;
+    bodytWidth = document.body.clientWidth;
+    console.log(bodytWidth, bodyHeight);
 });
 function bodyScroll(event) {
     event.preventDefault();
@@ -51,8 +54,8 @@ function setRemUnit() {
     //     console.log('横屏', bodytWidth)
     // }
     var selffun = function selffun() {
-        bodyHeight = $(window).outerHeight();
-        bodytWidth = $(window).outerWidth();
+        bodyHeight = document.body.clientHeight;
+        bodytWidth = document.body.clientWidth;
         if (bodytWidth > bodyHeight) {
             boxscale = bodyHeight / 1536;
         } else {
@@ -60,7 +63,7 @@ function setRemUnit() {
         }
 
         var u_agent = navigator.userAgent;
-        console.log(u_agent);
+        console.log(u_agent, bodyHeight, bodytWidth);
 
         if (/Firefox/.test(u_agent) || u_agent.indexOf('Trident') > -1 && u_agent.indexOf('rv:11') > -1) {
             $("#main_container").css({
