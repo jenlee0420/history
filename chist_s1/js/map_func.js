@@ -138,7 +138,8 @@ function bind_map_func(div, mp4div) {
             $(".ansBox").hide();
             var q = $(".question").clone(true);
             // $.extend(q,$('.question'))
-            console.log(bodytWidth, '///');
+            console.log(bodytWidth, '///？？？');
+            mp4div.empty();
             mp4div.append(q.css({ 'display': 'block', 'width': bodytWidth / 2 + 40 }));
             mp4div.dialog("option", "title", title).dialog('open');
         } else {

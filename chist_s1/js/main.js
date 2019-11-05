@@ -301,12 +301,14 @@ $(function() {
         bind_sound($("#soundCon"))
         $("#loading").hide();
         $("#main_container").show();
-        // resetWidth()
-        // setRemUnit()
-        // $(".question").css({'font-size':(200*boxscale) + 'px'});
-        docEl.style.fontSize=(bodytWidth/15)+'px'
+        // docEl.style.fontSize=(bodytWidth/15)+'px'
+
         document.getElementById('map_container').addEventListener("touchstart", bodyScroll, {
             passive: false //  禁止 passive 效果
         })
+        window.addEventListener("orientationchange", setPop, false);
+        function setPop(){
+            mp4_container.dialog('close')
+        }
     })
 })

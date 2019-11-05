@@ -62,6 +62,8 @@ function setRemUnit() {
 
         var u_agent = navigator.userAgent
         console.log(u_agent,bodyHeight,bodytWidth)
+        alert(u_agent)
+        alert(bodyHeight+"/"+bodytWidth)
 
         if ((/Firefox/.test(u_agent) || (u_agent.indexOf('Trident') > -1 && u_agent.indexOf('rv:11') > -1))) {
             $("#main_container").css({
@@ -78,6 +80,8 @@ function setRemUnit() {
                 'zoom': boxscale
             })
         }
+        docEl.style.fontSize=(bodytWidth/15)+'px'
+        alert(bodytWidth/15) //alert
     }
     if ("onorientationchange" in window){
         setTimeout(() => {
@@ -85,9 +89,6 @@ function setRemUnit() {
         }, 100);
     }else{
         selffun()
-    }
-    if(mp4_container.dialog){
-        mp4_container.dialog.close()
     }
     
 }
