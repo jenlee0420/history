@@ -302,7 +302,8 @@ $(function() {
         $("#loading").hide();
         $("#main_container").show();
         // docEl.style.fontSize=(bodytWidth/15)+'px'
-
+        console.log()
+        alert($('.blueButton').css('font-size')+'//'+$('.title_bar span').height()+"///"+window.devicePixelRatio)
         document.getElementById('map_container').addEventListener("touchstart", bodyScroll, {
             passive: false //  禁止 passive 效果
         })

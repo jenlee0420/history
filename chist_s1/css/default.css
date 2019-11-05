@@ -5,6 +5,7 @@ body {
     margin: 0px;
     padding: 0px;
     overflow: hidden;
+    /* -webkit-text-size-adjust: none; */
 }
 
 .main_box {
@@ -46,8 +47,10 @@ body {
 }
 
 .title_bar span {
-    font-size: 72px;
+    font-size: 72px !important;
     margin-left: 8px;
+    width: 100%;
+    display: inline-block;
 }
 
 .greyContainer {

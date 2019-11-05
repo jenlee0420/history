@@ -28,10 +28,7 @@ var bodyHeight ,
 $(document).ready(function () {
     window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", setRemUnit, false);
     // docEl.style.fontSize = (137) + 'px'
-    setRemUnit()
-    bodyHeight = document.body.clientHeight
-        bodytWidth = document.body.clientWidth
-        console.log(bodytWidth,bodyHeight)
+    setRemUnit()    
 })
 function bodyScroll(event) {
     event.preventDefault();
@@ -52,18 +49,27 @@ function setRemUnit() {
     //     console.log('横屏', bodytWidth)
     // }
     var selffun = function () {
+        var u_agent = navigator.userAgent
         bodyHeight = document.body.clientHeight
         bodytWidth = document.body.clientWidth
+        
+        if(/Safari/.test(u_agent) && !/Chrome/.test(u_agent)){
+            if (window.orientation === 90 || window.orientation === -90) {
+                //横屏
+                bodyHeight -= 85
+            }
+        }
+        
         if (bodytWidth > bodyHeight) {
             boxscale = bodyHeight / 1536
         } else {
             boxscale = bodytWidth / 2048
         }
 
-        var u_agent = navigator.userAgent
-        console.log(u_agent,bodyHeight,bodytWidth)
-        alert(u_agent)
-        alert(bodyHeight+"/"+bodytWidth)
+        
+        // console.log(u_agent,bodyHeight,bodytWidth)
+        // alert(u_agent)
+        // alert(bodyHeight+"/"+bodytWidth)
 
         if ((/Firefox/.test(u_agent) || (u_agent.indexOf('Trident') > -1 && u_agent.indexOf('rv:11') > -1))) {
             $("#main_container").css({
@@ -80,8 +86,9 @@ function setRemUnit() {
                 'zoom': boxscale
             })
         }
+        
         docEl.style.fontSize=(bodytWidth/15)+'px'
-        alert(bodytWidth/15) //alert
+        // alert(bodytWidth/15) //alert
     }
     if ("onorientationchange" in window){
         setTimeout(() => {

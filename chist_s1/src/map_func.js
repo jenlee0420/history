@@ -141,7 +141,7 @@ function bind_map_func(div, mp4div) {
             } else if (target.hasClass("googlemap")) {
                 var path = target.data("path");
                 var title = target.data("title");
-                var v = $(`<iframe src='${path}' ></iframe>`).attr("width", bodytWidth/1.8).attr("height", 700*boxscale)
+                var v = $(`<iframe src='${path}' ></iframe>`).attr("width", bodytWidth/1.8).attr("height", 650*boxscale)
 
                 mp4div.append(v);
                 mp4div.dialog("option", "title", title).dialog('open');
@@ -150,7 +150,6 @@ function bind_map_func(div, mp4div) {
                 $(".ansBox").hide()
                 var q = $(".question").clone(true)
                 // $.extend(q,$('.question'))
-                console.log(bodytWidth,'///？？？')
                 mp4div.empty();
                 mp4div.append(q.css({'display':'block','width':bodytWidth/2+40}));
                 mp4div.dialog("option", "title", title).dialog('open');
