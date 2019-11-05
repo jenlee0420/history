@@ -129,7 +129,7 @@ function bind_map_func(div, mp4div) {
         } else if (target.hasClass("googlemap")) {
             var path = target.data("path");
             var title = target.data("title");
-            var v = $("<iframe src='" + path + "' ></iframe>").attr("width", 800).attr("height", 450);
+            var v = $("<iframe src='" + path + "' ></iframe>").attr("width", bodytWidth / 1.8).attr("height", 700 * boxscale);
 
             mp4div.append(v);
             mp4div.dialog("option", "title", title).dialog('open');
@@ -138,12 +138,13 @@ function bind_map_func(div, mp4div) {
             $(".ansBox").hide();
             var q = $(".question").clone(true);
             // $.extend(q,$('.question'))
-            mp4div.append(q.css('display', 'block'));
+            console.log(bodytWidth, '///');
+            mp4div.append(q.css({ 'display': 'block', 'width': bodytWidth / 2 + 40 }));
             mp4div.dialog("option", "title", title).dialog('open');
         } else {
             target.toggleClass("clicked");
             arr[action] = target.hasClass("clicked") ? 1 : 0;
-            console.log($(e.delegateTarget).data());
+            // console.log($(e.delegateTarget).data())
             createMap(arr, $(e.delegateTarget).data("scale"));
             setSound(arr[action], action);
         }

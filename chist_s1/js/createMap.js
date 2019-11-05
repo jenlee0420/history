@@ -42,9 +42,7 @@ function bodyScroll(event) {
 function setRemUnit() {
     // if (window.orientation === 0 || window.orientation === 180) {
     //     //竖屏
-    //     bodyHeight = $(window).outerHeight()
-    //     bodytWidth = $(window).innerWidth()
-    //     console.log('竖屏', bodytWidth)
+    //     // console.log('竖屏', bodytWidth)
 
     // } else if (window.orientation === 90 || window.orientation === -90) {
     //     //横屏
@@ -87,6 +85,9 @@ function setRemUnit() {
         }, 100);
     } else {
         selffun();
+    }
+    if (mp4_container.dialog) {
+        mp4_container.dialog.close();
     }
 }
 

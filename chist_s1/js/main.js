@@ -237,7 +237,8 @@ $(function() {
                         $("<div/>").addClass("greyContainer").append(
                             $("<div/>").css({
                                 // "display": "flex",
-                                // "width": "100%",
+                                "height": "84px",
+                                "padding":'3px',
                                 // "justify-content": 'space-between'
                             }).append(
                                 $("<div/>").addClass("blueButton action_all").append("全部顯示").css({'float':'left'}).data("action", "show"),
@@ -247,7 +248,7 @@ $(function() {
                         $("<div/>", {
                             "id": "map_action_container"
                         }).addClass("greyContainer").css({
-                            'margin-bottom': '10px'
+                            'margin-bottom': '20px'
                         })
                         .append(
                             /*
@@ -302,6 +303,8 @@ $(function() {
         $("#main_container").show();
         // resetWidth()
         // setRemUnit()
+        // $(".question").css({'font-size':(200*boxscale) + 'px'});
+        docEl.style.fontSize=(bodytWidth/15)+'px'
         document.getElementById('map_container').addEventListener("touchstart", bodyScroll, {
             passive: false //  禁止 passive 效果
         })

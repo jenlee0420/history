@@ -64,7 +64,7 @@ body {
     box-shadow: -2px 13px 4px #F1FFFF inset, 5px -8px 5px #B7D4EA inset;
     color: #000000;
     /* padding: 3px; */
-    margin: 9px;
+    margin: 10px;
     height: 66px;
     font-size: 34px;
     box-sizing: border-box;
@@ -184,7 +184,7 @@ div.smallMap {
 }
 
 #map_action_container {
-    height: 100px;
+    height: 90px;
     display: -webkit-box;
     -webkit-flex-direction:row;
     display: flex;
@@ -220,7 +220,7 @@ div.smallMap {
     background-repeat: no-repeat;
     background-position: center;
     position: absolute;
-    top: 5em;
+    top: 6em;
     right: 2em;
 }
 
@@ -248,10 +248,12 @@ div.smallMap {
 
 .question {
     display: none;
+    /* width:1766px;
+    height:500px; */
     min-height: .5em;
-    padding: .2em;
-    font-size: .2em;
+    font-size: .35em;
     padding-bottom: 0;
+    /* width:1126px; */
 }
 
 .question div:nth-child(2) {

@@ -590,20 +590,27 @@ button.ui-button::-moz-focus-inner {
 }
 
 .ui-dialog .ui-dialog-titlebar {
-    padding: .1em .1em;
+    padding: .15em .1em;
     position: relative;
-    display: flex;
+	display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+    display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+    display: -ms-flexbox;      /* TWEENER - IE 10 */
+    display: -webkit-flex;     /* NEW - Chrome */
+	-ms-align-items: center;
+	display: flex;
+	align-items: center;
 }
 
 .ui-dialog .ui-dialog-title {
     float: left;
-    font-size: 0.2rem;
+    font-size: 0.25em;
 }
 
 .ui-dialog .ui-dialog-titlebar-close {
     position: absolute;
 	right: .2em;
 	border: 1px solid transparent;
+	top: 50%;  margin: -.2em 0 0 0;
 }
 
 .ui-dialog .ui-dialog-titlebar-close span {
@@ -618,7 +625,7 @@ button.ui-button::-moz-focus-inner {
 .ui-dialog .ui-dialog-content {
     position: relative;
     border: 0;
-    padding: .1em .1em;
+    padding: .5em .8em;
     background: none;
     overflow: auto;
     zoom: 1;
@@ -1133,8 +1140,8 @@ button.ui-button::-moz-focus-inner {
 }
 
 .ui-widget-header .ui-icon {
-    width: 35px;
-    height: 35px;
+    width: .4em;
+    height: .4em;
     background-image: url('../img/close.png');
 	background-size: 100%;
 	
@@ -1147,8 +1154,8 @@ button.ui-button::-moz-focus-inner {
 
 .ui-state-hover .ui-icon,
 .ui-state-focus .ui-icon {
-    width: 35px;
-    height: 35px;
+    width: .4em;
+    height: .4em;
     background-image: url('../img/close.png');
     background-size: 100%
     /*{iconsHover}*/
