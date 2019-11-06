@@ -237,7 +237,7 @@ $(function() {
                         $("<div/>").addClass("greyContainer").append(
                             $("<div/>").css({
                                 // "display": "flex",
-                                "height": "84px",
+                                // "height": "84px",
                                 "padding":'3px',
                                 // "justify-content": 'space-between'
                             }).append(
@@ -317,7 +317,7 @@ $(function() {
         document.getElementById('map_container').addEventListener("touchstart", bodyScroll, {
             passive: false //  禁止 passive 效果
         })
-        window.addEventListener("orientationchange", setPop, false);
+        window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", setPop, false);
         function setPop(){
             mp4_container.dialog('close')
         }

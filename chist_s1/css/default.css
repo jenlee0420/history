@@ -69,10 +69,10 @@ body {
     color: #000000;
     /* padding: 3px; */
     margin: 10px;
-    height: 66px;
-    font-size: 34px;
+    height: 72px;
+    font-size: 39px;
     box-sizing: border-box;
-    line-height: 66px
+    line-height: 72px
 }
 .blueButton span{
     display: flex;
@@ -104,6 +104,7 @@ body {
 
 .action_all {
     width: 45%;
+    margin: 5px 10px;
     text-align: center;
 }
 
@@ -143,7 +144,7 @@ body {
 }
 
 .clicked {
-    box-shadow: 2px 5px 2px #9AA7B4 inset, -2px -1px 3px #F1FFFF inset;
+    box-shadow: 5px 12px 3px #9AA7B4 inset, -5px -1px 8px #F1FFFF inset;
     background-color: #B7D5EA;
 }
 
@@ -188,7 +189,7 @@ div.smallMap {
 }
 
 #map_action_container {
-    height: 90px;
+    height: 85px;
     display: -webkit-box;
     -webkit-flex-direction:row;
     display: flex;
