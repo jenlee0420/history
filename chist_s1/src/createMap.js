@@ -22,8 +22,9 @@ var canvasW = 1488,
 var docWidth = 0,
     docHeight = 0,
     boxscale = 1
-var bodyHeight ,
-    bodytWidth 
+var bodyHeight,
+    bodytWidth;
+var u_agent = navigator.userAgent
 
 $(document).ready(function () {
     window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", setRemUnit, false);
@@ -49,17 +50,18 @@ function setRemUnit() {
     //     console.log('横屏', bodytWidth)
     // }
     var selffun = function () {
-        var u_agent = navigator.userAgent
         bodyHeight = document.body.clientHeight
         bodytWidth = document.body.clientWidth
         
-        if(/Safari/.test(u_agent) && !/Chrome/.test(u_agent)){
-            if (window.orientation === 90 || window.orientation === -90) {
-                //横屏
-                bodyHeight -= 85
-            }
-        }
+        // if(/Safari/.test(u_agent) && !/Chrome/.test(u_agent)){
+        //     if (window.orientation === 90 || window.orientation === -90) {
+        //         //横屏
+        //         //减去工具栏
+        //         bodyHeight -= 85
+        //     }
+        // }
         
+        docEl.style.fontSize=(bodytWidth/15)+'px'
         if (bodytWidth > bodyHeight) {
             boxscale = bodyHeight / 1536
         } else {
@@ -67,7 +69,7 @@ function setRemUnit() {
         }
 
         
-        // console.log(u_agent,bodyHeight,bodytWidth)
+        console.log(u_agent,bodyHeight,bodytWidth)
         // alert(u_agent)
         // alert(bodyHeight+"/"+bodytWidth)
 
@@ -87,7 +89,9 @@ function setRemUnit() {
             })
         }
         
-        docEl.style.fontSize=(bodytWidth/15)+'px'
+        
+        // $('.ui-widget').children('div').css('font-size':(bodytWidth/15)+'px')
+        console.log($('.ui-widget').children('div'))
         // alert(bodytWidth/15) //alert
     }
     if ("onorientationchange" in window){

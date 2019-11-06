@@ -302,8 +302,18 @@ $(function() {
         $("#loading").hide();
         $("#main_container").show();
         // docEl.style.fontSize=(bodytWidth/15)+'px'
-        console.log()
-        alert($('.blueButton').css('font-size')+'//'+$('.title_bar span').height()+"///"+window.devicePixelRatio)
+        // alert($('.blueButton').css('font-size')+'//'+$('.title_bar span').height()+"///"+window.devicePixelRatio)
+
+        if(/Safari/.test(u_agent) && !/Chrome/.test(u_agent) && /13.0.3/.test(u_agent) && /iPad/.test(u_agent)){
+            //&& /iPad/.test(u_agent)
+            // docEl.style.fontSize=(bodytWidth/15)+'px'
+            $(".title_bar span").css('font-size',34+(boxscale*0.2)+'px')
+            $(".blueButton").css('font-size',15+(boxscale*0.2)+'px')
+            $(".sample_title").css('font-size',20+(boxscale*0.2)+'px')
+            console.log(boxscale)
+        }
+        // $(".title_bar").css('background','#333')
+        
         document.getElementById('map_container').addEventListener("touchstart", bodyScroll, {
             passive: false //  禁止 passive 效果
         })
