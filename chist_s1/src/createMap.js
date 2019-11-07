@@ -17,8 +17,8 @@ var redNumber = 1,
 var isMute = false
 var baseWidth = 1488, //fix
     baseHeight = 1365
-var canvasW = 1488,
-    canvasH = 1365 //fix
+var canvasW = 1380,
+    canvasH = 1266 //fix
 var docWidth = 0,
     docHeight = 0,
     boxscale = 1
@@ -62,8 +62,8 @@ function setRemUnit() {
         // }
         
         docEl.style.fontSize=(bodytWidth/15)+'px'
-        if (bodytWidth > bodyHeight) {
-            boxscale = bodyHeight / 1536
+        if (bodytWidth-350 > bodyHeight) {
+            boxscale = bodyHeight / 1396
         } else {
             boxscale = bodytWidth / 2048
         }

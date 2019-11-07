@@ -40,7 +40,7 @@ body {
     color: #FFFFFF;
     /* padding: 5px; */
     vertical-align: middle;
-    height: 171px;
+    height: 130px;
     display: flex;
     align-items: center;
     position: relative;
@@ -150,8 +150,8 @@ body {
 
 #menu_container {
     /* width: 27.5%; */
-    width: 560px;
-    height: 1365px;
+    width: 668px;
+    height: 1266px;
     background-color: #434399;
     -webkit-flex-direction: column;
     display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
@@ -275,14 +275,14 @@ div.smallMap {
 
 .question .item.selected::before {
     content: '';
-    width: 1.7em;
-    height: 1.7em;
+    width: 1.6em;
+    height: 1.6em;
     border: solid #ff0000 1px;
     display: inline-block;
     position: absolute;
     border-radius: 50%;
-    margin-left: -0.4em;
-    margin-top: -3px;
+    margin-left: -0.45em;
+    margin-top: -0.15em;
 }
 
 #soundCon {
