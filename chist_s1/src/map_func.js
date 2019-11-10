@@ -141,7 +141,7 @@ function bind_map_func(div, mp4div) {
             } else if (target.hasClass("googlemap")) {
                 var path = target.data("path");
                 var title = target.data("title");
-                var v = $(`<iframe src='${path}' ></iframe>`).attr("width", 800).attr("height", 450)
+                var v = $(`<iframe src='${path}' ></iframe>`).attr("width", bodytWidth/1.8).attr("height", bodyHeight/1.8)
 
                 mp4div.append(v);
                 mp4div.dialog("option", "title", title).dialog('open');

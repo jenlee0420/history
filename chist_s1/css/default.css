@@ -9,12 +9,13 @@ body {
 }
 
 #map_container {
-    flex: 1
+    /* flex: 1 */
 }
 
 #main_container {
-    /* display: flex; */
-    display: inline-block;
+    display: -webkit-box;
+    display: flex;
+    /* display: inline-block; */
     flex-direction: column;
     /* height: calc(100vh - 4px); */
 }
@@ -26,44 +27,43 @@ body {
     vertical-align: middle;
 }
 
-.main_container {
-    display: flex;
-    /* flex-direction: column; */
-}
 
 .title_bar {
     color: #FFFFFF;
     /* padding: 5px; */
     vertical-align: middle;
-    height: 1rem;
+    /* height: 0.3rem; */
+    /* flex:1; */
     display: flex;
     align-items: center;
-    position: relative;
+    justify-content: space-between;
+    /* position: relative; */
 }
 
 .title_bar span {
-    font-size: 0.5rem;
+    font-size: 0.4rem;
+    margin-left: 0.05rem;
 }
 
 .greyContainer {
     background-color: #D6D6D6;
-    border-radius: 8px;
-    padding: 3px 0px;
-    margin: 3px;
+    border-radius: 0.15em;
+    padding: 0.05em;
+    margin: 0.05em;
     margin-bottom: 0;
 }
 
 .blueButton {
-    border-radius: 0.1rem;
+    border-radius: 0.12rem;
     background-color: #C0E7F3;
-    box-shadow: -2px 5px 2px #F1FFFF inset, 2px -5px 2px #B7D4EA inset;
+    box-shadow: -0.05em 0.3em 0.16em #F1FFFF inset, 0.05em -0.2em 0.06em #B7D4EA inset;
     color: #000000;
     /* padding: 3px; */
-    margin: 0.04rem;
-    height: 0.4rem;
-    font-size: 0.18rem;
+    margin: 0.07rem;
+    height: 0.52rem;
+    font-size: 0.265rem;
     box-sizing: border-box;
-    line-height: 0.4rem;
+    line-height: 0.52rem;
 }
 
 .twoline {
@@ -123,8 +123,8 @@ body {
 }
 
 .icon {
-    width: 2em;
-    height: 1.1em;
+    width: 1.81em;
+    height: 1.2em;
     padding-right: 0.6em;
     padding-left: 0.3em;
     padding-bottom: 2px;
@@ -132,12 +132,13 @@ body {
 }
 
 .clicked {
-    box-shadow: 2px 5px 2px #9AA7B4 inset, -2px -1px 3px #F1FFFF inset;
+    box-shadow: 0.07em 0.08rem 0.12em #9AA7B4 inset, -0.12em -0.04em 0.2em #F1FFFF inset;
     background-color: #B7D5EA;
 }
 
 #menu_container {
-    width: 27.5%;
+    flex:1;
+    /* width: 27.5%; */
     /* width: 300px; */
     /* height: 100%; */
     display: flex;
@@ -147,18 +148,18 @@ body {
 
 .sample_title {
     width: 100%;
-    height: 0.33rem;
+    height: 0.54rem;
     vertical-align: middle;
     text-align: center;
     background-color: #3C2E76;
     color: #FFFFFF;
-    border-radius: 8px 8px 0px 0px;
+    border-radius: 0.35em 0.35em 0 0;
     margin: 1px auto;
     display: flex;
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
-    font-size: 0.19rem;
+    font-size: 0.3rem;
 }
 
 div.smallMap {
@@ -186,8 +187,8 @@ div.smallMap {
 }
 
 .ui-slider-handle {
-    height: 0.1rem !important;
-    width: 0.1rem !important;
+    height: 0.2rem !important;
+    width: 0.2rem !important;
 }
 
 .ansBox {
@@ -199,7 +200,7 @@ div.smallMap {
     background-repeat: no-repeat;
     background-position: center;
     position: absolute;
-    top: 6.2em;
+    top: 5.8em;
     right: 2em;
 }
 
@@ -227,9 +228,9 @@ div.smallMap {
 
 .question {
     display: none;
-    min-height: .5rem;
-    padding: .2rem;
-    font-size: .2rem;
+    min-height: .6rem;
+    padding: .3rem;
+    font-size: .34rem;
     padding-bottom: 0;
 }
 
@@ -247,29 +248,30 @@ div.smallMap {
 
 .question .item.selected::before {
     content: '';
-    width: 1.7em;
-    height: 1.7em;
+    width: 1.6em;
+    height: 1.6em;
     border: solid #ff0000 1px;
     display: inline-block;
     position: absolute;
     border-radius: 50%;
-    margin-left: -0.4em;
-    margin-top: -3px;
+    margin-left: -0.35em;
+    margin-top: -0.1em;
 }
 
 #soundCon {
     background-size: 100% auto;
     background-repeat: no-repeat;
     background-position: center;
-    position: absolute;
+    /* position: absolute; */
     background-image: url('../img/icon/btn_sound.png');
     width: 0.35rem;
     height: 0.35rem;
     cursor: pointer;
+    margin-right:0.3rem;
     /* top: 45%; */
-    right: 0.3rem;
-    margin: auto 0;
-    margin-top: 0.03rem;
+    /* right: 0.3rem; */
+    /* margin: auto 0; */
+    /* margin-top: 0.03rem; */
 }
 
 #soundCon:hover {
@@ -285,6 +287,6 @@ div.smallMap {
 }
 
 #slider a {
-    border-radius: 4px;
-    margin-top: 3px
+    border-radius: 0.06em;
+    /* margin-top: 3px */
 }

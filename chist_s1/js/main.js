@@ -1,13 +1,10 @@
 $(function() {
     $(window).load(function() {
-
         var main_container = $("#main_container");
         var mp4_container = $("#mp4_container");
 
-
         var ori_width = canvasW;
         var ori_height = canvasH;
-        console.log(ori_width, ori_height)
             // var ori_width = $(window).innerWidth() - $(window).innerWidth() * 0.2;
             // baseWidth = ori_width
             // var ori_height = $(window).innerHeight() - 50;
@@ -54,7 +51,7 @@ $(function() {
             }
         }).swipe({
             pinchStatus: function(event, phase, direction, distance, duration, fingerCount, pinchZoom) {
-                var me = $(this);
+                var me = $(this); 
                 var data = $("#main_container").data();
                 var prev_zoom = data["curr_zoom"];
                 var curr_zoom;
@@ -135,11 +132,10 @@ $(function() {
                 }).append(
                     $("<div/>").append($("<div/>").addClass("back_action blueButton").text("返回")).css({
                         "float": "right"
-                    }).hide(),
-                    $("<div/>", {
-                        'id': 'soundCon'
-                    }),
-                    "<span>隋代運河分佈圖 (581-618 年)</span>"
+                    }).hide(),               
+                    "<span>隋代運河分佈圖 (581-618 年)</span>"+
+                    "<div id='soundCon'> </div>"
+                   
                 ),
                 $("<div class='main_box'/>").append(
                     $("<div/>", {
@@ -159,7 +155,7 @@ $(function() {
                         $("<div/>", {
                             "id": "action_container"
                         }).addClass("greyContainer").css({
-                            "padding": "1px 3px 5px 1px",
+                            "padding": "1px 0.03em 0.03em 0.03em",
                             "height": "auto",
                             "flex": '1'
                         }).append(
@@ -263,8 +259,8 @@ $(function() {
                                 "id": "slider"
                             }).addClass("zoom_button").css({
                                 "width": "50%",
-                                "height": "0.06em",
-                                "border-radius": '4px'
+                                "height": "0.15em",
+                                "border-radius": '0.06em'
                             }).slider({
                                 min: main_container.data("min_zoom"),
                                 max: main_container.data("max_zoom"),
@@ -301,12 +297,18 @@ $(function() {
         bind_sound($("#soundCon"))
         $("#loading").hide();
         $("#main_container").show();
-        setRemUnit()
+        setPop()
+        
+        // if(/Android/.test(u_agent)){
+        //     $(".ui-slider-horizontal .ui-slider-handle").css('top','-35%')
+        // }
+        // if(/iPad/.test(u_agent)){
+        //     $(".ui-slider-horizontal .ui-slider-handle").css('top','-35%')
+        // }
+        // window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", setPop, false);
+        function setPop(){
+            $(".title_bar").css({ 'height': docHeight- canvasH})
+        }
     })
 
-    function resetWidth(params) {
-        console.log('ere', boxscale)
-        
-        
-    }
 })

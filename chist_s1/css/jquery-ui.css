@@ -590,22 +590,25 @@ button.ui-button::-moz-focus-inner {
 }
 
 .ui-dialog .ui-dialog-titlebar {
-    padding: .1em .1em;
+    padding: .12em .12em;
     position: relative;
     display: flex;
 }
 
 .ui-dialog .ui-dialog-title {
     float: left;
-    font-size: 0.2rem;
+    font-size: .25rem;
 }
 
 .ui-dialog .ui-dialog-titlebar-close {
     position: absolute;
     right: .1em;
-    width: .2em;
+    width: .5em;
     padding: 1px;
-    height: .2em;
+    height: 100%;
+    top:0;
+    display: flex;
+    align-items: center;
 }
 
 .ui-dialog .ui-dialog-titlebar-close span {
@@ -777,8 +780,11 @@ button.ui-button::-moz-focus-inner {
 }
 
 .ui-slider-horizontal .ui-slider-handle {
-    top: -.05rem;
-    margin-left: -.06rem;
+    /* top: -.08em; */
+    top: -31%;
+    /* transform:translateY(-35%); */
+    /* -ms-transform:translateY(-40%); */
+    margin-left: -.08em;
 }
 
 .ui-slider-horizontal .ui-slider-range {
@@ -904,7 +910,7 @@ button.ui-button::-moz-focus-inner {
     Arial,
     sans-serif/*{ffDefault}*/
     ;
-    font-size: 1em;
+    font-size: 1.6em;
 }
 
 .ui-widget-content {
@@ -1110,8 +1116,8 @@ button.ui-button::-moz-focus-inner {
 ----------------------------------*/
 
 .ui-dialog {
-    border: 6px solid #ff9900;
-    border-radius: 20px;
+    border: .07em solid #ff9900;
+    border-radius: 0.22em;
 }
 
 .ui-dialog .ui-state-hover {
@@ -1135,8 +1141,8 @@ button.ui-button::-moz-focus-inner {
 }
 
 .ui-widget-header .ui-icon {
-    width: 0.2em;
-    height: 0.2em;
+    width: 0.4em;
+    height: 0.4em;
     background-image: url('../img/close.png');
     background-size: 100%
 }
@@ -1148,8 +1154,8 @@ button.ui-button::-moz-focus-inner {
 
 .ui-state-hover .ui-icon,
 .ui-state-focus .ui-icon {
-    width: 0.2em;
-    height: 0.2em;
+    width: 0.4em;
+    height: 0.4em;
     background-image: url('../img/close.png');
     background-size: 100%
     /*{iconsHover}*/
