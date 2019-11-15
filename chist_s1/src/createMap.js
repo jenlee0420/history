@@ -34,7 +34,7 @@ $(document).ready(function () {
 // window.addEventListener('orientationchange', setRemUnit)
 
 function load(){
-    window.location.reload()
+    window.location.href = window.location.href
 }
 
 
@@ -51,15 +51,24 @@ function setRemUnit() {
         orienta =2
     }
     var selffun = function () {
-    bodyHeight = $(window).innerHeight()
-    bodytWidth = $(window).innerWidth()
+    bodyHeight = window.innerHeight
+    bodytWidth = window.innerWidth
     console.log(u_agent,bodyHeight,bodytWidth)
-    if (bodytWidth-240> bodyHeight) {
+    if (bodytWidth> bodyHeight) {
         boxscale = bodyHeight / 1396
         o = bodyHeight
+        
+        var offest = (bodytWidth / bodyHeight)
+        console.log(document.body.clientHeight, bodyHeight, offest)
+        if (offest<1.49 && offest >1){
+           boxscale = bodytWidth / 2048
+            o = 1396 * boxscale
+        }
+        
     } else {
-        o = bodytWidth
         boxscale = bodytWidth / 2048
+        o = bodytWidth
+        console.log(o)
         
     }
 
@@ -68,22 +77,25 @@ function setRemUnit() {
     canvasW = Math.ceil(1430 * boxscale)
     canvasH = Math.ceil(1315 * boxscale)
     
-
-
-
-    if (dpr == 1) { rem = o / 10 }
-    else if(dpr ==2) { 
+    var s = 10
+    // if(o<800){ s =13}
+    
+    if (/Android/.test(u_agent)){
+        dpr =2
+    }
+    if(dpr>=2){
+        dpr = 2
+    }
+    if (dpr>=2){
         rem = (o / dpr) / 7.5
         if(orienta==2){
             rem = (o / dpr) / 5.2
         }
-    }else if(dpr >=3){
-        rem = (o / 2) / 7.5
-        if(orienta==2){
-            rem = (o / 2) / 5.2
-        }
+    } else if(dpr==1){
+        rem = o / s
     }
-    console.log(boxscale, o,dpr,canvasW,canvasH)
+    
+    console.log(boxscale, o, dpr, canvasW, canvasH, rem)
     docEl.style.fontSize = (rem ) + 'px'
 
     $("#main_container").css({

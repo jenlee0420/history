@@ -289,9 +289,7 @@ $(function() {
             modal: true,
             resizable: false,
             width: 'auto',
-            close: function() {
-                $(this).empty();
-            }
+           
         });
         bind_ques($(".question"), '增加稅收')
         bind_sound($("#soundCon"))
