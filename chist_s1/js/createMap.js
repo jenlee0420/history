@@ -82,7 +82,11 @@ function setRemUnit() {
                 rem = o / 2 / 5.2;
             }
         }
-        console.log(boxscale, o, dpr, canvasW, canvasH);
+
+        if (!rem) {
+            rem = o / 10;
+        }
+        console.log(boxscale, o, dpr, canvasW, canvasH, rem);
         docEl.style.fontSize = rem + 'px';
 
         $("#main_container").css({
