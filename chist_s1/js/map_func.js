@@ -200,6 +200,7 @@ function bind_ques(div, rightIndex) {
             $(".ansBox").show().addClass('wrongico');
         }
     });
+   
 }
 function bind_sound(div) {
     div.on('click', function () {
