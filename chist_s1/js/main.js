@@ -5,10 +5,10 @@ $(function() {
 
         var ori_width = canvasW;
         var ori_height = canvasH;
-            // var ori_width = $(window).innerWidth() - $(window).innerWidth() * 0.2;
-            // baseWidth = ori_width
-            // var ori_height = $(window).innerHeight() - 50;
-            //fix
+        // var ori_width = $(window).innerWidth() - $(window).innerWidth() * 0.2;
+        // baseWidth = ori_width
+        // var ori_height = $(window).innerHeight() - 50;
+        //fix
 
         var arr_flag = [0, 0, 0, 0, 0, 0, 0, 0];
         var canvas = createMap(arr_flag, 1).draggable({
@@ -51,7 +51,7 @@ $(function() {
             }
         }).swipe({
             pinchStatus: function(event, phase, direction, distance, duration, fingerCount, pinchZoom) {
-                var me = $(this); 
+                var me = $(this);
                 var data = $("#main_container").data();
                 var prev_zoom = data["curr_zoom"];
                 var curr_zoom;
@@ -132,10 +132,10 @@ $(function() {
                 }).append(
                     $("<div/>").append($("<div/>").addClass("back_action blueButton").text("返回")).css({
                         "float": "right"
-                    }).hide(),               
-                    "<span>隋代運河分佈圖 (581-618 年)</span>"+
+                    }).hide(),
+                    "<span>隋代運河分佈圖 (581-618 年)</span>" +
                     "<div id='soundCon'> </div>"
-                   
+
                 ),
                 $("<div class='main_box'/>").append(
                     $("<div/>", {
@@ -289,20 +289,18 @@ $(function() {
             modal: true,
             resizable: false,
             width: 'auto',
-            close:function () {
+            close: function() {
                 $(this).empty()
             }
-           
+
         });
-        bind_ques($(".question"), '增加稅收')
+        bind_ques($(".question"), 'B')
         bind_sound($("#soundCon"))
         $("#loading").hide();
         $("#main_container").show();
+        $('.ui-button').html('<span class="ui-icon-closethick"></span>')
         setPop()
-        $(".closeBtn2").on('click', function () {
-            mp4_container.dialog('close')
-            // mp4div.dialog("option", "title", title).dialog('open');
-        })
+
         // if(/Android/.test(u_agent)){
         //     $(".ui-slider-horizontal .ui-slider-handle").css('top','-35%')
         // }
@@ -310,8 +308,8 @@ $(function() {
         //     $(".ui-slider-horizontal .ui-slider-handle").css('top','-35%')
         // }
         // window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", setPop, false);
-        function setPop(){
-            $(".title_bar").css({ 'height': docHeight- canvasH})
+        function setPop() {
+            $(".title_bar").css({ 'height': docHeight - canvasH })
         }
     })
 

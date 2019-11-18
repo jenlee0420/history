@@ -1082,7 +1082,8 @@ function canvasClear(canvas) {
 
 function setScale(canvas, scale) {
     canvas.style.zoom = scale;
-    if ($.browser.mozilla && !/Trident\/7\./.test(navigator.userAgent)) {
+    console.log($.browser);
+    if (!/Trident\/7\./.test(navigator.userAgent)) {
         canvas.style.MozTransformOrigin = "0 0";
         canvas.style.MozTransform = "scale(" + scale + ", " + scale + ")";
     }
