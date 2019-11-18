@@ -298,11 +298,9 @@ $(function() {
         bind_sound($("#soundCon"))
         $("#loading").hide();
         $("#main_container").show();
+        $('.ui-button').html('<span class="ui-icon-closethick"></span>')
         setPop()
-        $(".closeBtn2").on('click', function () {
-            mp4_container.dialog('close')
-            // mp4div.dialog("option", "title", title).dialog('open');
-        })
+        
         // if(/Android/.test(u_agent)){
         //     $(".ui-slider-horizontal .ui-slider-handle").css('top','-35%')
         // }
