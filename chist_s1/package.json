@@ -1,7 +1,8 @@
 {
   "scripts": {
     "watch": "babel src --watch --out-dir js",
-    "build": "babel src -d js"
+    "build": "babel src -d js",
+    "svrx-code": "svrx --open=external --weinre --qrcode"
   },
   "browserify": {
     "transform": [
