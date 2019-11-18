@@ -1,5 +1,5 @@
 function bind_map_func(div, mp4div) {
-    div.on("check_bound", function () {
+    div.on("check_bound", function() {
         var me = $(this);
         var data = me.data();
         var map = data["mapCanvas"];
@@ -37,7 +37,7 @@ function bind_map_func(div, mp4div) {
             "top": -box_position.top / box.height() * (data["ori_height"] / 3),
             "left": -box_position.left / box.width() * (data["ori_width"] / 3)
         });
-    }).on("zoom_changed", function (e, curr_zoom) {
+    }).on("zoom_changed", function(e, curr_zoom) {
         var me = $(e.delegateTarget);
         var data = me.data();
         var arr = data["arr_flag"];
@@ -60,7 +60,7 @@ function bind_map_func(div, mp4div) {
         }, 10);
         */
         data["redBox"].width(200 / scale);
-        data["redBox"].height(200 / scale);{
+        data["redBox"].height(200 / scale); {
             var margin = 3;
             var red_w = data["redBox"].width();
             var red_h = data["redBox"].height();
@@ -109,13 +109,13 @@ function bind_map_func(div, mp4div) {
         }
         createMap(arr, scale);
         data["scale"] = scale;
-    }).on("click", ".zoom_in", function (e) {
+    }).on("click", ".zoom_in", function(e) {
         var me = $(e.delegateTarget);
         me.triggerHandler("zoom_changed", me.data("curr_zoom") + 1);
-    }).on("click", ".zoom_out", function (e) {
+    }).on("click", ".zoom_out", function(e) {
         var me = $(e.delegateTarget);
         me.triggerHandler("zoom_changed", me.data("curr_zoom") - 1);
-    }).on("click", ".action img", function (e) {}).on("click", ".action", function (e) {
+    }).on("click", ".action img", function(e) {}).on("click", ".action", function(e) {
         var target = e.target === this ? $(e.target) : $(e.target).closest("div.blueButton");
         var action = target.data("action");
         var me = $(e.delegateTarget);
@@ -148,15 +148,15 @@ function bind_map_func(div, mp4div) {
             setSound(arr[action], action);
         }
         me.data("arr_flag", arr);
-    }).on("mouseup", ".action_all", function (e) {
+    }).on("mouseup", ".action_all", function(e) {
         var target = $(e.target);
         target.toggleClass("clicked", false);
-    }).on("mousedown", ".action_all", function (e) {
+    }).on("mousedown", ".action_all", function(e) {
         var target = $(e.target);
         var action = target.data("action");
         var me = $(e.delegateTarget);
         var arr = me.data("arr_flag");
-        var actions = me.find(".action").filter(function () {
+        var actions = me.find(".action").filter(function() {
             return !$(this).is(".movie,.googlemap,.ques");
         });
         var new_arr;
@@ -165,13 +165,13 @@ function bind_map_func(div, mp4div) {
         muteMe();
         switch (action) {
             case "show":
-                new_arr = $.map(arr, function (o) {
+                new_arr = $.map(arr, function(o) {
                     return 1;
                 });
                 actions.toggleClass("clicked", true);
                 break;
             case "hide":
-                new_arr = $.map(arr, function (o) {
+                new_arr = $.map(arr, function(o) {
                     return 0;
                 });
                 actions.toggleClass("clicked", false);
@@ -190,20 +190,21 @@ function bind_map_func(div, mp4div) {
 }
 
 function bind_ques(div, rightIndex) {
-    div.on('click', '.item', function (e) {
+    div.on('click', '.item', function(e) {
         $(".ansBox").removeClass('rightico wrongico');
         $(e.target).addClass('selected').siblings().removeClass('selected');
         console.log(e.target.innerHTML, $(e.target).innerHTML);
-        if (e.target.innerHTML.indexOf('B') > -1) {
+        if (e.target.innerHTML.indexOf(rightIndex) > -1) {
             $(".ansBox").show().addClass('rightico');
         } else {
             $(".ansBox").show().addClass('wrongico');
         }
     });
-   
+
 }
+
 function bind_sound(div) {
-    div.on('click', function () {
+    div.on('click', function() {
         if (div.hasClass('mute')) {
             div.removeClass('mute');
             isMute = false;
