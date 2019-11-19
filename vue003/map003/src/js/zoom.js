@@ -117,7 +117,7 @@ Zoom.prototype.init = function () {
 // },
 Zoom.prototype.drage = function (touch) {
   // console.log('drag',this.nomove)
-  if(this.nomove == 1){return}
+
   if (this.lastPoint == null) {
     this.lastPoint = {
       x: touch.pageX,
@@ -240,8 +240,28 @@ Zoom.prototype.touchEndHandler = function (event) {
   return;
 }
 Zoom.prototype.setTransform = function (needAnimation, originX, originY) {
+  
   let distanceX = originX == undefined ? (this.left - this.originLeft) : -originX;
   let distanceY = originY == undefined ? (this.top - this.originTop) : -originY;
+  console.log(this.left, this.originW)
+ 
+  // console.log(distanceX, this.left)
+  // if (this.left >0 && distanceX>0){
+  //   this.left
+  //   distanceX=0
+  //   return
+  // }
+  if (this.left > 0) {
+    distanceX = 0
+  }
+  if (this.top > 0) {
+    distanceY = 0
+  }
+  if (this.left >= this.originW *-1) {
+    this.left = this.originW
+  }
+
+
   let scale = this.scale;
   originX = originX == undefined ? (this.originTop + 'px') : originX;
   originY = originY == undefined ? (this.originLeft + 'px') : originY;

@@ -6,15 +6,13 @@
         <div id="soundCon"> </div>
       </div>
       <div class="main_box">
-        <div id="map_container" class="modal_content" ref="map_container" :style="{'width':canvasW+'px','height':canvasH+'px'}" 
-        v-touch:scaleTouch="{func:scalePic,param:''}"
-        v-touch:slideTouch="{func:movePic,param:''}">
+        <div id="map_container" class="modal_content" ref="map_container" :style="{'width':canvasW+'px','height':canvasH+'px'}">
           
         </div>
         <div id="menu_container" style="float: right;">
           <div id="action_container" class="greyContainer" style="padding: 1px 0.03em 0.03em; height: auto; flex: 1 1 0%;">
             <div class="sample_title">圖例</div>
-            <div class="sample blueButton action" v-for="(item,index) in list" :key="index" @click="showCanvas(index)">
+            <div class="sample blueButton action" :class="{'clicked':item.show}" v-for="(item,index) in list" :key="index" @click="showCanvas(index)">
               <span>
                         <img :src="item.ico" class="icon fix_height">{{item.text}}</span>
             </div>
@@ -33,6 +31,35 @@
         </div>
       </div>
     </div>
+    <modal class=""
+           headTitle="问题"
+           :hideFooter="true"
+           v-if="popWindow"
+           @cancel-event="popWindow=false;list[4].show=false"
+    >
+        <div slot="modalCont" >
+          <div class="question">
+      <div>1. 以下哪一個<span class="underline">不是</span>隋煬帝下令建設運河的原因？</div>
+      <div>
+          <span class="item" :class="{'selected':currAns==index}" v-for="(item,index) in questionItem" :key="index" @click="checkans(index)">{{item}}</span>
+      </div>
+      <div class="ansBox" :class="showWrong==false?'wrongico':'rightico'" v-if="currAns!=null"></div>
+  </div>
+        </div>
+
+    </modal>
+    <modal class=""
+           headTitle="问题"
+           :hideFooter="true"
+           v-if="mapPop"
+           @cancel-event="mapPop=false;list[3].show=false"
+    >
+        <div slot="modalCont" style="height:55vh">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d845158.7150065893!2d108.8816973!3d34.161658!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x366379e922ac17b9%3A0x85d466fda794582e!2z5Lit5ZyL6Zmd6KW_55yB6KW_5a6J5biC!5e0!3m2!1szh-TW!2shk!4v1570607554797!5m2!1szh-TW!2shk"
+          ></iframe>
+        </div>
+
+    </modal>
   </div>
 </template>
 
@@ -43,10 +70,12 @@
   import canvasImage from "./components/canvasImage/index.js";
   import ConvertImage from "./components/canvasImage/main.js";
   import zoom from './js/zoom.js'
+  import modal from "./components/modal";
 
   export default {
     components: {
-      canvasImage
+      canvasImage,
+      modal
     },
     name: "App",
     mounted() {
@@ -65,25 +94,40 @@
     data() {
       return {
         zoomObj:null,
+        questionItem:[
+          'A. 便利運兵',
+          'B. 增加稅收',
+          'C. 便利糧食運輸',
+          'D. 方便巡視南方',
+        ],
+        rightans:1,
+        showWrong:0,
+        currAns:null,
         data: [],
+        mapPop:false,
         imgList: ['/static/img/map.png', '/static/img/mapDetail.png'],
         list: [{
           ico: '/static/img/icon/shoudu.png',
-          text: '首都'
+          text: '首都',
+          show:false
         }, {
           ico: '/static/img/icon/guancang.png',
-          text: '官倉'
+          text: '官倉',
+          show:false
         }, {
           ico: '/static/img/icon/jiangjiexian.png',
-          text: '疆界'
+          text: '疆界',
+          show:false
         }, {
           ico: '/static/img/icon/shoudu.png',
           text: '大興（今西安市）',
-          type: 'map'
+          type: 'map',
+          show:false
         }, {
           ico: '/static/img/icon/question.png',
           text: '問題',
-          type: 'question'
+          type: 'question',
+          show:false
         }],
         bodytWidth: '',
         bodyHeight: '',
@@ -100,89 +144,82 @@
         docHeight:'',
         horseObject1:{},
         scaleindex :1,
-        ele:null
+        ele:null,
+        popWindow:false,
+        canvasData:['myCanvasStatic1','myCanvasStatic2','myCanvasAnimRedPath'],
+        m01:null,
+        m02:null,
+        m03:null,
+        horsetimerGroup:null,
+        drawHorsesTimeout:null,
       }
     },
     methods: {
-      scalePic: function(param, is_endScale){
-      
-      let nodeStyle = this.ele.style.transform;
-      let changeSize = nodeStyle ?  parseFloat(nodeStyle.slice(nodeStyle.indexOf('scale')+6)) : 0;
-      if(is_endScale){
-        // 缩放图片结束，要重新计算定位
-        this.setMaxdisp(changeSize,parseInt(this.ele.style.marginLeft), parseInt(this.ele.style.marginTop), 'scale')
-        return 
-      }
-      console.log('changeSize',changeSize)
-      if(nodeStyle){
-        // 如果存在的话，就说明已经设置了，scale已经改变了
-        let currScaleSize = changeSize + param; 
-        currScaleSize > 3 ? currScaleSize = 3 : null
-        currScaleSize < 1 ? currScaleSize = 1 : null
-        this.ele.style.transform = 'translate(-50%, -50%) scale('+currScaleSize+','+currScaleSize+')';
-      }else{ // 如果不存在，就说明是第一次设置
-          let scale = param + 1 
-          this.ele.style.marginLeft =  '0px';
-          this.ele.style.marginTop  = '0px';
-          this.ele.style.transform = 'translate(-50%, -50%) scale('+scale+','+scale+')';
-      }
-    },
-    setMaxdisp:function(changeSize, changeX, changeY, type){
-      // 计算最大位移
-      // naturalWidth ： 是图片原始的宽度，通过比例可以计算出当前图片在页面的高度
-      let picHeight =  this.bodyWidth  / (this.ele.naturalWidth / this.ele.naturalHeight); 
-      let maxTop = ( picHeight * changeSize - window.innerHeight) /2 
-      let maxLeft = this.bodyWidth / 2 * (changeSize - 1) 
-      if(changeX >= maxLeft){
-        this.ele.style.marginLeft = maxLeft + 'px'
-      }else if(changeX < -maxLeft){
-        this.ele.style.marginLeft = -maxLeft + 'px'
-      }else if(type==='move'){
-        this.ele.style.marginLeft =changeX +'px'; 
-      }
-      // 如果图片当前尺寸大于屏幕尺寸，可以移动
-      if(maxTop > 0){
-        if(changeY >= maxTop){
-          this.ele.style.marginTop = maxTop + 'px';
-        }else if(changeY < -maxTop){
-          this.ele.style.marginTop = -maxTop + 'px'
-        }else if(type==='move'){
-          this.ele.style.marginTop = changeY+'px';
-        }
-      }else if(type==='move'){
-        this.ele.style.marginTop = 0 +'px'; 
-      }
-    },
-    movePic: function(param){
-     if(param.is_endMove){ // 每次移动松开手指的时候要下次移动的基础坐标
-        this.baseLeft = parseInt(this.ele.style.marginLeft.slice(0, -2));
-        this.baseTop = parseInt(this.ele.style.marginTop.slice(0, -2));
-      }else{
-        let nodeStyle = this.ele.style.transform 
-        if(nodeStyle){ // 有这个就表示应该是移动
-          let currScaleSize = parseFloat(nodeStyle.slice(nodeStyle.indexOf('scale')+6))
-          this.setMaxdisp(currScaleSize,this.baseLeft+ param.x, this.baseTop + param.y, 'move')
-        }
-      }
-    },
-      tt(e){
-console.log(e)
-      },
       setScaleBtn(type){
-        console.log('////')
-        this.scalePic(0.5,false)
-        // if(type == 'add'){
-        //   this.scaleindex++
-        //   if(this.scaleindex>10){this.scaleindex=10}
-        // }else{
-        //   this.scaleindex--
-        //   if(this.scaleindex<=0){this.scaleindex=1}
-        // }
-        // console.log(this.boxscale,this.scaleindex)
-        // this.zoomObj.preSetScale(this.boxscale * (1+this.scaleindex * 0.1),0,0)
-        // this.zoomObj.setTransform(true)
+        // console.log('////')
+        // this.scalePic(0.5,false)
+        if(type == 'add'){
+          this.scaleindex++
+          if(this.scaleindex>10){this.scaleindex=10}
+        }else{
+          this.scaleindex--
+          if(this.scaleindex<=0){this.scaleindex=1}
+        }
+        console.log(this.boxscale,this.scaleindex)
+        this.zoomObj.preSetScale(this.boxscale * (1+this.scaleindex * 0.1),0,0)
+        this.zoomObj.setTransform(true)
       },
-      showCanvas(index) {},
+      muteMe(){
+        this.m01.pause()
+        this.m02.pause()
+        this.m03.pause()
+      },
+      showCanvas(index) {
+        let c= document.getElementById(this.canvasData[index])
+        let swip = !this.list[index].show
+        console.log(swip)
+        this.muteMe()
+        switch (index) {
+          case 0:
+            if(swip){
+              this.m01.currentTime = 0
+              this.m01.play()
+            }
+            this.showCityAni(c,swip)
+            break;
+          case 1:
+            if(swip){
+              this.m02.currentTime = 0
+              this.m02.play()
+            }
+            this.showCityAni(c,swip)
+            break;
+          case 2:
+            if(swip){
+              this.m03.currentTime = 0
+              this.m03.play()
+              this.drawHousePromise()
+            }else{
+              this.horseObject1.animated=  false
+              clearInterval(this.drawHorsesTimeout)
+              clearTimeout(this.horsetimerGroup)
+            }
+            break;
+          case 3:
+            this.mapPop = swip
+            break;
+          case 4:
+            this.popWindow = swip
+            break;
+          default:
+            break;
+        }
+        this.$nextTick(()=>{
+          this.list[index].show = swip
+        })
+        this.list[index].show = swip
+        console.log(this.list)
+      },
       setRemUnit() {
         const u_agent = navigator.userAgent
         if (window.orientation === 0 || window.orientation === 180) {
@@ -273,7 +310,7 @@ console.log(e)
           return
         }
         let show = false
-        let times = 4
+        let times = 5
         canvasStatic.timeout = setInterval(() => {
           if (times == 0) {
             clearInterval(canvasStatic.timeout)
@@ -285,6 +322,98 @@ console.log(e)
         }, 260);
         canvasStatic.ani = true
       },
+      drawHousePromise(){
+        if (this.horseObject1.animated == true) {
+          return
+        }
+        let canvasAnimHorse =  document.getElementById('myCanvasAnimHorse')
+        let contextAnimHorse = canvasAnimHorse.getContext('2d');
+        canvasAnimHorse.style.visibility = 'visible'
+        var imageHorse = new Image();
+        imageHorse.src = "/static/img/rices.png";
+        contextAnimHorse.drawImage(imageHorse, this.horseObject1.position.points[0][0], this.horseObject1.position.points[0][1], this.horseObject1.width * 0.55, this.horseObject1.height * 0.55);
+        // this.showCityAni(canvasAnimHorse, true)
+        this.horsetimerGroup = setTimeout(() => {
+            this.drawHorsesTimeout = setInterval(() => {
+                this.canvasClear(canvasAnimHorse);
+                this.drawHorse(this.horseObject1, false, canvasAnimHorse, contextAnimHorse,imageHorse)
+            }, 60);
+        }, 1200)
+      },
+      drawHorse(object, isInvert, endfun, contextS,imageHorse) {
+
+    // return new Promise((resolve, reject) => {
+
+    if (object.position.currPoint + 1 < object.position.totalPoint) {
+        // console.log(object.position.currPoint, object.position.totalPoint)
+        contextS.save();
+        // contextAnimHorse.position(canvasAnimHorse.width, 0);
+        if (isInvert) {
+            contextS.scale(-1, 1);
+        }
+
+        var position = new Array();
+        var scale;
+
+        if (object.position.scales[object.position.currPoint] != object.position.scales[object.position.currPoint + 1]) {
+            if (object.position.scales[object.position.currPoint] > object.position.scales[object.position.currPoint + 1]) {
+                scale = object.position.scales[object.position.currPoint] * (object.position.dur[object.position.currPoint] - object.position.currDur) / object.position.dur[object.position.currPoint];
+            } else {
+                scale = object.position.scales[object.position.currPoint + 1] * (object.position.currDur) / object.position.dur[object.position.currPoint];
+            }
+            if (scale < 0) {
+                scale = 0;
+            }
+        } else {
+            scale = 1;
+        }
+        position[0] = (object.position.points[object.position.currPoint][0] * (object.position.dur[object.position.currPoint] - object.position.currDur) + object.position.points[object.position.currPoint + 1][0] * object.position.currDur) / object.position.dur[object.position.currPoint];
+        position[1] = (object.position.points[object.position.currPoint][1] * (object.position.dur[object.position.currPoint] - object.position.currDur) + object.position.points[object.position.currPoint + 1][1] * object.position.currDur) / object.position.dur[object.position.currPoint];
+        contextS.drawImage(imageHorse, position[0], position[1], object.width * scale * 0.55, object.height * scale * 0.55);
+        contextS.restore();
+        // Anim Position control
+        if (object.position.currDur <= object.position.dur[object.position.currPoint]) {
+            object.position.currDur++;
+        } else {
+            object.position.currDur = 1;
+            object.position.currPoint++;
+        }
+        if (object.point[object.position.currPoint] > 0) {
+            // if(object.point[object.position.currPoint] == 1){
+            //     showCityAni(canvasS, true)
+            // }
+            object.animating = false;
+            object.animated = true;
+
+            
+            clearInterval(this.drawHorsesTimeout)
+            
+            if (typeof endfun == 'function') {
+                endfun()
+            }
+            // resolve()
+            // return "ok";
+        }
+
+    } else {
+        // position[0] = (object.position.points[object.position.totalPoint][0] * (object.position.dur[object.position.totalPoint] - object.position.currDur) + object.position.points[object.position.totalPoint + 1][0] * object.position.currDur) / object.position.dur[object.position.totalPoint];
+        // position[1] = (object.position.points[object.position.totalPoint][1] * (object.position.dur[object.position.totalPoint] - object.position.currDur) + object.position.points[object.position.totalPoint + 1][1] * object.position.currDur) / object.position.dur[object.position.totalPoint];
+
+        object.animating = false;
+        object.animated = true;
+        console.log('end', object.position.currPoint, object.position.totalPoint)
+            // contextAnimHorse.save();
+            // contextAnimHorse.drawImage(imageHorse, position[0], position[1], object.width * scale * 0.25, object.height * scale * 0.25);
+            // contextAnimHorse.restore();
+
+        
+            clearInterval(this.drawHorsesTimeout)
+        
+
+        // showCityAni(canvasAnimHorse, true)
+    }
+    // })
+},
       createMap() {
         var divTag = document.createElement('div');
         var canvasBackground = document.createElement('canvas');
@@ -318,18 +447,13 @@ console.log(e)
         var contextStatic8 = canvasStatic8.getContext('2d');
         var contextStatic9 = canvasStatic9.getContext('2d');
         /* 音频 */
-        var m01 = document.createElement('audio')
-        var m02 = document.createElement('audio')
-        var m03 = document.createElement('audio')
-        var waveSound = document.createElement('audio')
-        var winSound = document.createElement('audio')
-        m01.src = 'img/vo/Map002-1.mp3'
-        m02.src = 'img/vo/Map002-2.mp3'
-        m03.src = 'img/vo/Map002-3.mp3'
-        waveSound.src = 'img/vo/wave.mp3'
-        winSound.src = 'img/vo/win.mp3'
-        waveSound.loop = 'loop'
-        waveSound.volume = 0.4
+        this.m01 = document.createElement('audio')
+        this.m02 = document.createElement('audio')
+        this.m03 = document.createElement('audio')
+      
+        this.m01.src = '/static/img/vo/Map002-1.mp3'
+        this.m02.src = '/static/img/vo/Map002-2.mp3'
+        this.m03.src = '/static/img/vo/Map002-3.mp3'
         // Variable init
         divTag.appendChild(canvasBackground);
         divTag.appendChild(canvasTop);
@@ -423,11 +547,13 @@ console.log(e)
           canvasStatic1.width = this.baseWidth;
           canvasStatic1.height = this.baseHeight;
           contextStatic1.drawImage(imageCapital, 0, 0, this.baseWidth, this.baseHeight);
+          canvasStatic1.style.visibility='hidden'
         }
         imageGate.onload = () => {
           canvasStatic2.width = this.baseWidth;
           canvasStatic2.height = this.baseHeight;
           contextStatic2.drawImage(imageGate, 0, 0, this.baseWidth, this.baseHeight);
+          canvasStatic2.style.visibility='hidden'
         }
         imageHorse.onload = () => {
           var translate = [
@@ -477,7 +603,22 @@ console.log(e)
           'timeout': null
         };
         return object;
-      }
+      },
+      canvasClear(canvas) {
+    var context = canvas.getContext('2d');
+    context.save();
+    context.setTransform(1, 0, 0, 1, 0, 0);
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.restore();
+},
+checkans(index){
+  this.currAns = index
+  if(this.rightans == index){
+    this.showWrong= true
+  }else{
+    this.showWrong= false
+  }
+}
     }
   };
 </script>
