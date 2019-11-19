@@ -1,6 +1,7 @@
 body {
     margin: 0px;
     padding: 0px;
+    overflow: hidden;
 }
 
 .main_box {
@@ -19,7 +20,11 @@ body {
     flex-direction: column;
     /* height: calc(100vh - 4px); */
 }
-
+#canvasInnerDiv{
+    width: 1430px;
+    height: 1315px;
+    overflow: hidden;
+}
 .purpleGradient {
     box-shadow: 0px -10px 20px #8580C8 inset, 0px 10px 20px #8580C8 inset;
     background: linear-gradient(#625EAE, #4C4299);
@@ -33,7 +38,7 @@ body {
     /* padding: 5px; */
     vertical-align: middle;
     /* height: 0.3rem; */
-    /* flex:1; */
+    flex:1;
     display: flex;
     align-items: center;
     justify-content: space-between;
