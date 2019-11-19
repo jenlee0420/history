@@ -1,138 +1,119 @@
 <template>
   <div id="app">
     <div id="main_container" :style="{'width':docWidth+'px','height':docHeight+'px'}">
-      <div class="title_bar purpleGradient">
+      <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
         <span>隋代運河分佈圖 (581-618 年)</span>
-        <div id="soundCon"> </div>
+        <div id="soundCon" :class="{'mute':noVoice}" @click="noVoice=!noVoice"> </div>
       </div>
       <div class="main_box">
         <div id="map_container" class="modal_content" ref="map_container" :style="{'width':canvasW+'px','height':canvasH+'px'}">
-          
         </div>
         <div id="menu_container" style="float: right;">
           <div id="action_container" class="greyContainer" style="padding: 1px 0.03em 0.03em; height: auto; flex: 1 1 0%;">
             <div class="sample_title">圖例</div>
             <div class="sample blueButton action" :class="{'clicked':item.show}" v-for="(item,index) in list" :key="index" @click="showCanvas(index)">
               <span>
-                        <img :src="item.ico" class="icon fix_height">{{item.text}}</span>
+                              <img :src="item.ico" class="icon fix_height">{{item.text}}</span>
             </div>
           </div>
           <div class="greyContainer">
             <div style="display: flex; width: 100%; justify-content: space-between;">
-              <div class="blueButton action_all">全部顯示</div>
-              <div class="blueButton action_all">全部隱藏</div>
+              <div class="blueButton action_all" @click="showall(true)">全部顯示</div>
+              <div class="blueButton action_all " @click="showall(false)">全部隱藏</div>
             </div>
           </div>
           <div id="map_action_container" class="greyContainer" style="margin-bottom: 10px;">
-            <div class="zoom_button zoom_out blueButton" style="width: 2.07em; margin: 5px 10px 3px;" @click="setScaleBtn('de')"><b>-</b></div>
-            <div id="slider" class="zoom_button ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content" style="width: 50%; height: 0.15em; border-radius: 0.06em;"><span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default" style="left: 0%;"></span></div>
-            <div class="zoom_button zoom_in blueButton" style="width: 2.07em; margin: 5px 10px 3px;" @click="setScaleBtn('add')"><b>+</b></div>
+            <div class="blueButton zoom_button" style="width: 2.07em; margin: 5px 10px 3px;" @click="setScaleBtn('de')"><b>-</b></div>
+            <!-- 滑块 -->
+            <bar @offestx="offestx" :scaleindex.sync="scaleindex"></bar>
+            <div class="blueButton zoom_button" style="width: 2.07em; margin: 5px 10px 3px;" @click="setScaleBtn('add')"><b>+</b></div>
           </div>
         </div>
       </div>
     </div>
-    <modal class=""
-           headTitle="问题"
-           :hideFooter="true"
-           v-if="popWindow"
-           @cancel-event="popWindow=false;list[4].show=false"
-    >
-        <div slot="modalCont" >
-          <div class="question">
-      <div>1. 以下哪一個<span class="underline">不是</span>隋煬帝下令建設運河的原因？</div>
-      <div>
-          <span class="item" :class="{'selected':currAns==index}" v-for="(item,index) in questionItem" :key="index" @click="checkans(index)">{{item}}</span>
+    <modal class="" headTitle="问题" :hideFooter="true" v-if="popWindow" @cancel-event="popWindow=false;list[4].show=false">
+      <div slot="modalCont">
+        <div class="question">
+          <div>1. 以下哪一個<span class="underline">不是</span>隋煬帝下令建設運河的原因？</div>
+          <div>
+            <span class="item" :class="{'selected':currAns==index}" v-for="(item,index) in questionItem" :key="index" @click="checkans(index)">{{item}}</span>
+          </div>
+          <div class="ansBox" :class="showWrong==false?'wrongico':'rightico'" v-if="currAns!=null"></div>
+        </div>
       </div>
-      <div class="ansBox" :class="showWrong==false?'wrongico':'rightico'" v-if="currAns!=null"></div>
-  </div>
-        </div>
-
     </modal>
-    <modal class=""
-           headTitle="问题"
-           :hideFooter="true"
-           v-if="mapPop"
-           @cancel-event="mapPop=false;list[3].show=false"
-    >
-        <div slot="modalCont" style="height:55vh">
-          <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d845158.7150065893!2d108.8816973!3d34.161658!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x366379e922ac17b9%3A0x85d466fda794582e!2z5Lit5ZyL6Zmd6KW_55yB6KW_5a6J5biC!5e0!3m2!1szh-TW!2shk!4v1570607554797!5m2!1szh-TW!2shk"
-          ></iframe>
-        </div>
-
+    <modal class="" headTitle="大興（今西安市）" :hideFooter="true" v-if="mapPop" @cancel-event="mapPop=false;list[3].show=false">
+      <div slot="modalCont" style="height:55vh">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d845158.7150065893!2d108.8816973!3d34.161658!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x366379e922ac17b9%3A0x85d466fda794582e!2z5Lit5ZyL6Zmd6KW_55yB6KW_5a6J5biC!5e0!3m2!1szh-TW!2shk!4v1572421815894!5m2!1szh-TW!2shk"
+          width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+      </div>
     </modal>
   </div>
 </template>
 
 <script>
-  import {
-    createMap
-  } from './js/creatMap.js'
-  import canvasImage from "./components/canvasImage/index.js";
-  import ConvertImage from "./components/canvasImage/main.js";
   import zoom from './js/zoom.js'
   import modal from "./components/modal";
-
+  import bar from "./components/bar";
   export default {
     components: {
-      canvasImage,
-      modal
+      modal,
+      bar
     },
     name: "App",
     mounted() {
-      // window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", load, false);
+      window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", this.setRemUnit, false);
       this.zoomObj = require('./js/zoom.js')
       this.setRemUnit()
-      
-      
-      // tt(this.$refs['canvasInnerDiv'],{width:300,height:300})
-      // tt.setScale(0.1)
-      // createMap.createMap()
       this.initCanvas()
       this.createMap()
-      this.ele =document.getElementsByClassName('modal_content')[0]; // 这个应该在图片显示的时候设置
+      document.getElementById('map_container').addEventListener("touchstart", this.bodyScroll, {
+            passive: false //  禁止 passive 效果
+        })
     },
     data() {
       return {
-        zoomObj:null,
-        questionItem:[
+        noVoice:false,
+        zoomObj: null,
+        questionItem: [
           'A. 便利運兵',
           'B. 增加稅收',
           'C. 便利糧食運輸',
           'D. 方便巡視南方',
         ],
-        rightans:1,
-        showWrong:0,
-        currAns:null,
+        rightans: 1,
+        showWrong: 0,
+        currAns: null,
         data: [],
-        mapPop:false,
+        mapPop: false,
         imgList: ['/static/img/map.png', '/static/img/mapDetail.png'],
         list: [{
           ico: '/static/img/icon/shoudu.png',
           text: '首都',
-          show:false
+          show: false
         }, {
           ico: '/static/img/icon/guancang.png',
           text: '官倉',
-          show:false
+          show: false
         }, {
           ico: '/static/img/icon/jiangjiexian.png',
           text: '疆界',
-          show:false
+          show: false
         }, {
           ico: '/static/img/icon/shoudu.png',
           text: '大興（今西安市）',
           type: 'map',
-          show:false
+          show: false
         }, {
           ico: '/static/img/icon/question.png',
           text: '問題',
           type: 'question',
-          show:false
+          show: false
         }],
         bodytWidth: '',
         bodyHeight: '',
-        baseWidth:'1430',
-        baseHeight:'1315',
+        baseWidth: '1430',
+        baseHeight: '1315',
         orienta: '',
         boxscale: 1,
         o: '',
@@ -140,69 +121,83 @@
         rem: '',
         canvasH: '',
         canvasW: '',
-        docWidth:'',
-        docHeight:'',
-        horseObject1:{},
-        scaleindex :1,
-        ele:null,
-        popWindow:false,
-        canvasData:['myCanvasStatic1','myCanvasStatic2','myCanvasAnimRedPath'],
-        m01:null,
-        m02:null,
-        m03:null,
-        horsetimerGroup:null,
-        drawHorsesTimeout:null,
+        docWidth: '',
+        docHeight: '',
+        horseObject1: {},
+        scaleindex: 0,
+        ele: null,
+        popWindow: false,
+        canvasData: ['myCanvasStatic1', 'myCanvasStatic2', 'myCanvasStatic3'],
+        m01: null,
+        m02: null,
+        m03: null,
+        horsetimerGroup: null,
+        drawHorsesTimeout: null,
+        redTimer: null,
+        shipPlay: false,
+        titleH:70,
       }
     },
     methods: {
-      setScaleBtn(type){
+      bodyScroll(event) {
+        event.preventDefault();
+      },
+      setScaleBtn(type) {
         // console.log('////')
         // this.scalePic(0.5,false)
-        if(type == 'add'){
+        if (type == 'add') {
           this.scaleindex++
-          if(this.scaleindex>10){this.scaleindex=10}
-        }else{
+            if (this.scaleindex > 10) {
+              this.scaleindex = 10
+            }
+        } else {
           this.scaleindex--
-          if(this.scaleindex<=0){this.scaleindex=1}
+            if (this.scaleindex <= 0) {
+              this.scaleindex = 0
+            }
         }
-        console.log(this.boxscale,this.scaleindex)
-        this.zoomObj.preSetScale(this.boxscale * (1+this.scaleindex * 0.1),0,0)
+        console.log(this.boxscale, this.scaleindex)
+        this.zoomObj.preSetScale(this.boxscale * (1 + this.scaleindex * 0.1), 0, 0)
         this.zoomObj.setTransform(true)
       },
-      muteMe(){
+      muteMe() {
         this.m01.pause()
         this.m02.pause()
         this.m03.pause()
       },
       showCanvas(index) {
-        let c= document.getElementById(this.canvasData[index])
+        let c = document.getElementById(this.canvasData[index])
         let swip = !this.list[index].show
-        console.log(swip)
+        // console.log(swip)
         this.muteMe()
         switch (index) {
           case 0:
-            if(swip){
+            if (swip && !this.noVoice) {
               this.m01.currentTime = 0
               this.m01.play()
             }
-            this.showCityAni(c,swip)
+            this.showCityAni(c, swip)
             break;
           case 1:
-            if(swip){
+            if (swip && !this.noVoice) {
               this.m02.currentTime = 0
               this.m02.play()
             }
-            this.showCityAni(c,swip)
+            this.showCityAni(c, swip)
             break;
           case 2:
-            if(swip){
-              this.m03.currentTime = 0
-              this.m03.play()
-              this.drawHousePromise()
-            }else{
-              this.horseObject1.animated=  false
-              clearInterval(this.drawHorsesTimeout)
-              clearTimeout(this.horsetimerGroup)
+            if (swip) {
+              if(!this.noVoice){
+                this.m03.currentTime = 0
+              this.m03.play()}
+              console.log('ani start')
+              
+              this.ship1(true)
+              c.style.visibility = 'visible'
+            } else {
+              console.log('ani false')
+              this.ship1(false)
+              c.style.visibility = 'hidden'
             }
             break;
           case 3:
@@ -214,11 +209,7 @@
           default:
             break;
         }
-        this.$nextTick(()=>{
-          this.list[index].show = swip
-        })
         this.list[index].show = swip
-        console.log(this.list)
       },
       setRemUnit() {
         const u_agent = navigator.userAgent
@@ -240,7 +231,7 @@
             this.boxscale = this.bodyHeight / 1396
             this.o = this.bodyHeight
             var offest = (this.bodytWidth / this.bodyHeight)
-            console.log(document.body.clientHeight, this.bodyHeight, this.boxscale,offest,'///')
+            console.log(document.body.clientHeight, this.bodyHeight, this.boxscale, offest, '///')
             if (offest < 1.49 && offest > 1) {
               this.boxscale = this.bodytWidth / 2048
               this.o = 1396 * this.boxscale
@@ -248,13 +239,15 @@
           } else {
             this.boxscale = this.bodytWidth / 2048
             this.o = this.bodytWidth
-            console.log(o)
+
           }
           this.docWidth = 2048 * this.boxscale
           this.docHeight = 1396 * this.boxscale
           this.canvasW = Math.ceil(1430 * this.boxscale)
           this.canvasH = Math.ceil(1315 * this.boxscale)
+          this.titleH = this.docHeight  - this.canvasH
           var s = 10
+          this.dpr = window.devicePixelRatio || 1
           // if(o<800){ s =13}
           if (/Android/.test(u_agent)) {
             this.dpr = 2
@@ -265,12 +258,12 @@
           if (this.dpr >= 2) {
             this.rem = (this.o / this.dpr) / 7.5
             if (this.orienta == 2) {
-              this.rem = (this.o / this.dpr) / 5.2
+              this.rem = (this.o / this.dpr) / 7.2
             }
           } else if (this.dpr == 1) {
             this.rem = this.o / s
           }
-          // console.log(this.boxscale, o, this.dpr, canvasW, canvasH, this.rem)
+          console.log(this.boxscale, this.o, this.dpr,this.rem)
           // docEl.style.fontSize = (this.rem) + 'px'
           document.documentElement.style.fontSize = (this.rem) + 'px'
           // var can = document.querySelectorAll('canvas')
@@ -310,7 +303,7 @@
           return
         }
         let show = false
-        let times = 5
+        let times = 6
         canvasStatic.timeout = setInterval(() => {
           if (times == 0) {
             clearInterval(canvasStatic.timeout)
@@ -322,11 +315,12 @@
         }, 260);
         canvasStatic.ani = true
       },
-      drawHousePromise(){
+      drawHousePromise() {
+        console.log('s', this.horseObject1.animated)
         if (this.horseObject1.animated == true) {
           return
         }
-        let canvasAnimHorse =  document.getElementById('myCanvasAnimHorse')
+        let canvasAnimHorse = document.getElementById('myCanvasAnimHorse')
         let contextAnimHorse = canvasAnimHorse.getContext('2d');
         canvasAnimHorse.style.visibility = 'visible'
         var imageHorse = new Image();
@@ -334,86 +328,151 @@
         contextAnimHorse.drawImage(imageHorse, this.horseObject1.position.points[0][0], this.horseObject1.position.points[0][1], this.horseObject1.width * 0.55, this.horseObject1.height * 0.55);
         // this.showCityAni(canvasAnimHorse, true)
         this.horsetimerGroup = setTimeout(() => {
-            this.drawHorsesTimeout = setInterval(() => {
-                this.canvasClear(canvasAnimHorse);
-                this.drawHorse(this.horseObject1, false, canvasAnimHorse, contextAnimHorse,imageHorse)
-            }, 60);
+          this.drawHorsesTimeout = setInterval(() => {
+            this.canvasClear(canvasAnimHorse);
+            this.drawHorse(this.horseObject1, false, canvasAnimHorse, contextAnimHorse, imageHorse)
+          }, 60);
         }, 1200)
       },
-      drawHorse(object, isInvert, endfun, contextS,imageHorse) {
-
-    // return new Promise((resolve, reject) => {
-
-    if (object.position.currPoint + 1 < object.position.totalPoint) {
-        // console.log(object.position.currPoint, object.position.totalPoint)
-        contextS.save();
-        // contextAnimHorse.position(canvasAnimHorse.width, 0);
-        if (isInvert) {
+      drawHorse(object, isInvert, endfun, contextS, imageHorse) {
+        // return new Promise((resolve, reject) => {
+        if (object.position.currPoint + 1 < object.position.totalPoint) {
+          // console.log(object.position.currPoint, object.position.totalPoint)
+          contextS.save();
+          // contextAnimHorse.position(canvasAnimHorse.width, 0);
+          if (isInvert) {
             contextS.scale(-1, 1);
-        }
-
-        var position = new Array();
-        var scale;
-
-        if (object.position.scales[object.position.currPoint] != object.position.scales[object.position.currPoint + 1]) {
+          }
+          var position = new Array();
+          var scale;
+          if (object.position.scales[object.position.currPoint] != object.position.scales[object.position.currPoint + 1]) {
             if (object.position.scales[object.position.currPoint] > object.position.scales[object.position.currPoint + 1]) {
-                scale = object.position.scales[object.position.currPoint] * (object.position.dur[object.position.currPoint] - object.position.currDur) / object.position.dur[object.position.currPoint];
+              scale = object.position.scales[object.position.currPoint] * (object.position.dur[object.position.currPoint] - object.position.currDur) / object.position.dur[object.position.currPoint];
             } else {
-                scale = object.position.scales[object.position.currPoint + 1] * (object.position.currDur) / object.position.dur[object.position.currPoint];
+              scale = object.position.scales[object.position.currPoint + 1] * (object.position.currDur) / object.position.dur[object.position.currPoint];
             }
             if (scale < 0) {
-                scale = 0;
+              scale = 0;
             }
-        } else {
+          } else {
             scale = 1;
-        }
-        position[0] = (object.position.points[object.position.currPoint][0] * (object.position.dur[object.position.currPoint] - object.position.currDur) + object.position.points[object.position.currPoint + 1][0] * object.position.currDur) / object.position.dur[object.position.currPoint];
-        position[1] = (object.position.points[object.position.currPoint][1] * (object.position.dur[object.position.currPoint] - object.position.currDur) + object.position.points[object.position.currPoint + 1][1] * object.position.currDur) / object.position.dur[object.position.currPoint];
-        contextS.drawImage(imageHorse, position[0], position[1], object.width * scale * 0.55, object.height * scale * 0.55);
-        contextS.restore();
-        // Anim Position control
-        if (object.position.currDur <= object.position.dur[object.position.currPoint]) {
+          }
+          position[0] = (object.position.points[object.position.currPoint][0] * (object.position.dur[object.position.currPoint] - object.position.currDur) + object.position.points[object.position.currPoint + 1][0] * object.position.currDur) / object.position.dur[object.position.currPoint];
+          position[1] = (object.position.points[object.position.currPoint][1] * (object.position.dur[object.position.currPoint] - object.position.currDur) + object.position.points[object.position.currPoint + 1][1] * object.position.currDur) / object.position.dur[object.position.currPoint];
+          contextS.drawImage(imageHorse, position[0], position[1], object.width * scale * 0.55, object.height * scale * 0.55);
+          contextS.restore();
+          // Anim Position control
+          if (object.position.currDur <= object.position.dur[object.position.currPoint]) {
             object.position.currDur++;
-        } else {
+          } else {
             object.position.currDur = 1;
             object.position.currPoint++;
-        }
-        if (object.point[object.position.currPoint] > 0) {
+          }
+          if (object.point[object.position.currPoint] > 0) {
             // if(object.point[object.position.currPoint] == 1){
             //     showCityAni(canvasS, true)
             // }
             object.animating = false;
             object.animated = true;
-
-            
             clearInterval(this.drawHorsesTimeout)
-            
             if (typeof endfun == 'function') {
-                endfun()
+              endfun()
             }
             // resolve()
             // return "ok";
+          }
+        } else {
+          // position[0] = (object.position.points[object.position.totalPoint][0] * (object.position.dur[object.position.totalPoint] - object.position.currDur) + object.position.points[object.position.totalPoint + 1][0] * object.position.currDur) / object.position.dur[object.position.totalPoint];
+          // position[1] = (object.position.points[object.position.totalPoint][1] * (object.position.dur[object.position.totalPoint] - object.position.currDur) + object.position.points[object.position.totalPoint + 1][1] * object.position.currDur) / object.position.dur[object.position.totalPoint];
+          object.animating = false;
+          object.animated = true;
+          console.log('end', object.position.currPoint, object.position.totalPoint)
+          // contextAnimHorse.save();
+          // contextAnimHorse.drawImage(imageHorse, position[0], position[1], object.width * scale * 0.25, object.height * scale * 0.25);
+          // contextAnimHorse.restore();
+          clearInterval(this.drawHorsesTimeout)
+          // showCityAni(canvasAnimHorse, true)
         }
-
-    } else {
-        // position[0] = (object.position.points[object.position.totalPoint][0] * (object.position.dur[object.position.totalPoint] - object.position.currDur) + object.position.points[object.position.totalPoint + 1][0] * object.position.currDur) / object.position.dur[object.position.totalPoint];
-        // position[1] = (object.position.points[object.position.totalPoint][1] * (object.position.dur[object.position.totalPoint] - object.position.currDur) + object.position.points[object.position.totalPoint + 1][1] * object.position.currDur) / object.position.dur[object.position.totalPoint];
-
+        // })
+      },
+      ship1(flag) {
+        let canvasAnimRedPath = document.getElementById('myCanvasAnimRedPath')
+        let contextAnimRedPath = canvasAnimRedPath.getContext('2d');
+        var img = new Image()
+        let h = 50,
+          y = 834,
+          xx = 680,
+          ww = 220
+        var addRadial = () => {
+          contextAnimRedPath.save(); //保存当前绘图状态
+          contextAnimRedPath.beginPath(); //开始创建路径
+          y -= 15
+          h += 15
+          contextAnimRedPath.rect(xx, y, ww, h)
+          contextAnimRedPath.closePath(); //关闭路径
+          contextAnimRedPath.clip();
+          contextAnimRedPath.drawImage(img, 0, 0, this.baseWidth, this.baseHeight);
+          contextAnimRedPath.rect(0, 0, this.baseWidth, this.baseHeight)
+          contextAnimRedPath.restore();
+          if (h < 987) {
+            this.redTimer = setTimeout(() => {
+              addRadial()
+            }, 50);
+          } else {
+            clearTimeout(this.redTimer)
+          }
+        }
+        if (flag == true) {
+          img.src = '/static/img/route.png'
+          img.onload = () => {
+            canvasAnimRedPath.style.visibility = "visible";
+            // console.log('anistart')
+            if (!this.shipPlay) {
+              addRadial()
+              this.drawHousePromise()
+              this.shipPlay = true
+            }
+            // redTimer = setInterval(() => {
+            //     addRadial()
+            //     if (h >= 1000) {
+            //         clearInterval(redTimer)
+            //     }
+            //     y -= 10
+            //     h += 10
+            // }, 50);
+          }
+          // drawHousePromise()
+          // drawHorsesTimeout = setTimeout(function () { ship1(flag); }, 1 / 30 * 1000);
+        } else {
+          this.shipPlay = false
+          this.resetHorseObject(this.horseObject1);
+          clearInterval(this.drawHorsesTimeout)
+          clearTimeout(this.horsetimerGroup)
+          clearTimeout(this.redTimer)
+          document.getElementById('myCanvasAnimRedPath').style.visibility = 'hidden'
+          this.canvasClear(document.getElementById('myCanvasAnimRedPath'));
+          document.getElementById('myCanvasAnimHorse').style.visibility = 'hidden'
+          this.canvasClear(document.getElementById('myCanvasAnimHorse'));
+        }
+      },
+      showall(type) {
+        this.canvasData.forEach((e, index) => {
+          if (type) {
+            this.list[index].show = false
+          } else {
+            this.list[index].show = true
+          }
+          this.showCanvas(index)
+        });
+        this.muteMe()
+      },
+      resetHorseObject(object) {
+        object.currFrame = 0;
+        object.position.currPoint = 0;
+        object.position.currDur = 1;
         object.animating = false;
-        object.animated = true;
-        console.log('end', object.position.currPoint, object.position.totalPoint)
-            // contextAnimHorse.save();
-            // contextAnimHorse.drawImage(imageHorse, position[0], position[1], object.width * scale * 0.25, object.height * scale * 0.25);
-            // contextAnimHorse.restore();
-
-        
-            clearInterval(this.drawHorsesTimeout)
-        
-
-        // showCityAni(canvasAnimHorse, true)
-    }
-    // })
-},
+        object.animated = false;
+      },
       createMap() {
         var divTag = document.createElement('div');
         var canvasBackground = document.createElement('canvas');
@@ -450,7 +509,6 @@
         this.m01 = document.createElement('audio')
         this.m02 = document.createElement('audio')
         this.m03 = document.createElement('audio')
-      
         this.m01.src = '/static/img/vo/Map002-1.mp3'
         this.m02.src = '/static/img/vo/Map002-2.mp3'
         this.m03.src = '/static/img/vo/Map002-3.mp3'
@@ -518,8 +576,8 @@
         canvasAnimGreenPath.height = this.baseHeight;
         canvasAnimBluePath.width = this.baseWidth;
         canvasAnimBluePath.height = this.baseHeight;
-        canvasAnimHorse.width = canvasAnimHorse2.width = divTag.width=this.baseWidth;
-        canvasAnimHorse.height = canvasAnimHorse2.height =divTag.height= this.baseHeight;
+        canvasAnimHorse.width = canvasAnimHorse2.width = divTag.width = this.baseWidth;
+        canvasAnimHorse.height = canvasAnimHorse2.height = divTag.height = this.baseHeight;
         var imageMap = new Image();
         var imageborder = new Image();
         var imageMapDetail = new Image();
@@ -547,41 +605,48 @@
           canvasStatic1.width = this.baseWidth;
           canvasStatic1.height = this.baseHeight;
           contextStatic1.drawImage(imageCapital, 0, 0, this.baseWidth, this.baseHeight);
-          canvasStatic1.style.visibility='hidden'
+          canvasStatic1.style.visibility = 'hidden'
         }
         imageGate.onload = () => {
           canvasStatic2.width = this.baseWidth;
           canvasStatic2.height = this.baseHeight;
           contextStatic2.drawImage(imageGate, 0, 0, this.baseWidth, this.baseHeight);
-          canvasStatic2.style.visibility='hidden'
+          canvasStatic2.style.visibility = 'hidden'
+        }
+        imageborder.onload = () => {
+          canvasStatic3.width = this.baseWidth;
+          canvasStatic3.height = this.baseHeight;
+          contextStatic3.drawImage(imageborder, 0, 0, this.baseWidth, this.baseHeight);
+          canvasStatic3.style.visibility = 'hidden'
         }
         imageHorse.onload = () => {
           var translate = [
-            [700, 754],
-            [790, 205]
+            [660, 754],
+            [700, 455],
+            [790, 185]
             // [-1040, 830],
           ];
-          var scale = [1, 1];
-          var dur = [25, 7];
-          var sharpPoint = [0, 2]
-          this.horseObject1 = this.initHorseObject(translate, scale, dur, sharpPoint,imageHorse);
+          var scale = [1, 1, 0];
+          var dur = [15, 15, 7];
+          var sharpPoint = [0, 0, 2]
+          this.horseObject1 = this.initHorseObject(translate, scale, dur, sharpPoint, imageHorse);
           console.log(this.horseObject1)
         }
         document.getElementById('map_container').append(divTag)
-        this.$nextTick(()=>{
+        this.$nextTick(() => {
           this.zoomObj = new zoom(document.getElementById('canvasInnerDiv'), {
-            width: this.canvasW,
-            height: this.canvasH,
-            top:0,
-            left:0,
+            width: this.baseWidth,
+            height: this.baseHeight,
+            top: 0,
+            left: 0,
+            minScale:this.boxscale
           })
           this.zoomObj.setScale(this.boxscale)
-          this.zoomObj.setTransform(false,0,0)
-          
+          // this.zoomObj.setTransform(false,0,0)
         })
         // console.log(divTag)
       },
-      initHorseObject(translate, scale, dur, sharpPoint,imageHorse) {
+      initHorseObject(translate, scale, dur, sharpPoint, imageHorse) {
         var object = {
           'source': imageHorse,
           'totalFrame': 2,
@@ -605,24 +670,26 @@
         return object;
       },
       canvasClear(canvas) {
-    var context = canvas.getContext('2d');
-    context.save();
-    context.setTransform(1, 0, 0, 1, 0, 0);
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.restore();
-},
-checkans(index){
-  this.currAns = index
-  if(this.rightans == index){
-    this.showWrong= true
-  }else{
-    this.showWrong= false
-  }
-}
+        var context = canvas.getContext('2d');
+        context.save();
+        context.setTransform(1, 0, 0, 1, 0, 0);
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.restore();
+      },
+      checkans(index) {
+        this.currAns = index
+        if (this.rightans == index) {
+          this.showWrong = true
+        } else {
+          this.showWrong = false
+        }
+      },
+      offestx(x) {
+        console.log(x, '////')
+        this.zoomObj.setScale(this.boxscale * (1 + x))
+      }
     }
   };
 </script>
 
-<style>
-  #app {}
-</style>
+

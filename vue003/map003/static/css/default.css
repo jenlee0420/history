@@ -1,7 +1,7 @@
 body {
     margin: 0px;
     padding: 0px;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .main_box {
@@ -38,9 +38,9 @@ body {
 .title_bar {
     color: #FFFFFF;
     /* padding: 5px; */
-    vertical-align: middle;
+    /* vertical-align: middle; */
     /* height: 0.3rem; */
-    flex:1;
+    /* flex:1; */
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -48,7 +48,7 @@ body {
 }
 
 .title_bar span {
-    font-size: 0.4rem;
+    font-size: 0.35rem;
     margin-left: 0.05rem;
 }
 
@@ -151,6 +151,7 @@ body {
     display: flex;
     flex-direction: column;
     background-color: #434399;
+    user-select: none;
 }
 
 .sample_title {

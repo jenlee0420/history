@@ -9,9 +9,9 @@ function Zoom(el, option) {
   }
   option = Object.assign({
     minScale: 0.1,
-    maxScale: 1,
+    maxScale: 2,
     top: 0,
-    left: 0
+    left: 0,
   }, option);
 
   this.el = el;
@@ -31,6 +31,7 @@ function Zoom(el, option) {
   this.top = option.top;
   this.left = option.left;
   this.scale = 1;
+  
 
   // 位移后的回调事件
   this.transformCallback = option.transformCallback
@@ -41,6 +42,8 @@ function Zoom(el, option) {
   this.originLeft = option.left;
   this.originW = this.width;
   this.originH = this.height;
+  this.warpW = option.warpWidth
+  this.warpH = option.warpHeight
   //图片中心点 
   this.centerX = this.left + this.originW / 2;
   this.centerY = this.top + this.originH / 2;
@@ -80,11 +83,17 @@ Zoom.prototype.restView = function () {
 
 Zoom.prototype.init = function () {
 
-
+if('ontouchmove' in window){
   this.el.addEventListener('touchmove', this.touchmoveHandler);
   this.el.addEventListener('touchstart', this.touchmoveHandler);
   this.el.addEventListener('touchend', this.touchEndHandler);
   this.el.addEventListener('touchcancel', this.touchEndHandler);
+}else{
+  this.el.addEventListener('mousedown', this.mouseDownHandler);
+  this.el.addEventListener('mousemove', this.mousemoveHandler);
+  this.el.addEventListener('mouseup', this.touchEndHandler);
+  this.el.addEventListener('mouseleave', this.touchEndHandler);
+}
   // this.el.addEventListener('touchstart',this.dbclickHandler);
   this.el.zoom = this;
 
@@ -116,7 +125,7 @@ Zoom.prototype.init = function () {
 // 	return false;
 // },
 Zoom.prototype.drage = function (touch) {
-  // console.log('drag',this.nomove)
+  console.log('drag','/')
 
   if (this.lastPoint == null) {
     this.lastPoint = {
@@ -184,11 +193,28 @@ Zoom.prototype.touchmoveHandler = function (event) {
     zoom.zoom(touchs);//缩放处理
 
   }
+  return false;
+}
+Zoom.prototype.mouseDownHandler = function (event) {
+  // console.log(event)
+  this.dragStrat = true
+}
+Zoom.prototype.mousemoveHandler = function (event) {
+  // event.stopPropagation();
+  // event.preventDefault();
+  let el = event.currentTarget;
+  let zoom = el.zoom;
+  // console.log(this.dragStrat)
+  if(this.dragStrat){
+    zoom.drage(event);//拖动处理
+  }
+
 
   return false;
 }
 
 Zoom.prototype.touchEndHandler = function (event) {
+  this.dragStrat= false
   let zoom = event.currentTarget.zoom;
 
   zoom.touchState = 0;
@@ -202,15 +228,15 @@ Zoom.prototype.touchEndHandler = function (event) {
 
   if (scale < zoom.minScale) {
     scale = zoom.minScale;
+    zoom.lastPointX = 0
+    zoom.lastPointY =0
   }
   if (scale > zoom.maxScale) {
     scale = zoom.maxScale;
   }
-
   if (scale != zoom.scale) {
     zoom.preSetScale(scale, zoom.lastPointX, zoom.lastPointY);
   }
-
   // if((zoom.left + zoom.width) < minSpace){
   //     console.log("if((zoom.left + zoom.width) < minSpace){")
   //     console.log(zoom.left, - zoom.width , minSpace)
@@ -243,14 +269,13 @@ Zoom.prototype.setTransform = function (needAnimation, originX, originY) {
   
   let distanceX = originX == undefined ? (this.left - this.originLeft) : -originX;
   let distanceY = originY == undefined ? (this.top - this.originTop) : -originY;
-  console.log(this.left, this.originW)
- 
-  // console.log(distanceX, this.left)
-  // if (this.left >0 && distanceX>0){
-  //   this.left
-  //   distanceX=0
-  //   return
-  // }
+
+  if(this.warpW - this.width >= this.left){
+    distanceX = this.warpW - this.width
+  }
+  if(this.warpH - this.height >= this.top){
+    distanceY = this.warpH - this.height
+  }
   if (this.left > 0) {
     distanceX = 0
   }
@@ -260,8 +285,7 @@ Zoom.prototype.setTransform = function (needAnimation, originX, originY) {
   if (this.left >= this.originW *-1) {
     this.left = this.originW
   }
-
-
+  
   let scale = this.scale;
   originX = originX == undefined ? (this.originTop + 'px') : originX;
   originY = originY == undefined ? (this.originLeft + 'px') : originY;
@@ -269,6 +293,7 @@ Zoom.prototype.setTransform = function (needAnimation, originX, originY) {
   this.el.style.transform = 'matrix(' + scale + ',0,0,' + scale + ',' + distanceX + ',' + distanceY + ')';
 
   this.left = distanceX
+
   this.top = distanceY
   if (needAnimation == true) {
     this.el.style.transition = 'all .3s ease-in-out 0s'
@@ -281,18 +306,26 @@ Zoom.prototype.setTransform = function (needAnimation, originX, originY) {
 
 Zoom.prototype.destroy = function () {
 
+  if('ontouchmove' in window){
   this.el.removeEventListener('touchmove', this.touchmoveHandler);
   this.el.removeEventListener('touchstart', this.touchmoveHandler);
   this.el.removeEventListener('touchend', this.touchEndHandler);
   this.el.removeEventListener('touchcancel', this.touchEndHandler);
+  }else{
+    this.el.removeEventListener('mousedown', this.mouseDownHandler);
+  this.el.removeEventListener('mousemove', this.mousemoveHandler);
+  this.el.removeEventListener('mouseup', this.touchEndHandler);
+  this.el.removeEventListener('mouseleave', this.touchEndHandler);
+  }
 
   this.el.zoom = null;
 }
 //初始化放大倍数
 Zoom.prototype.setScale = function (scale, pointX, pointY) {
-  this.nomove = 0
+  this.warpW = scale * this.originW;
+  this.warpH = scale * this.originH;
   this.preSetScale(scale, pointX, pointY);
-  this.setTransform(false);
+  this.setTransform(false,0,0);
 }
 
 Zoom.prototype.preSetScale = function (scale, pointX, pointY) {

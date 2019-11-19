@@ -1,4 +1,4 @@
-
+$(function() {
     $(window).load(function() {
         var main_container = $("#main_container");
         var mp4_container = $("#mp4_container");
@@ -312,3 +312,5 @@
             $(".title_bar").css({ 'height': docHeight - canvasH })
         }
     })
+
+})
