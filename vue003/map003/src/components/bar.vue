@@ -21,7 +21,9 @@
         data() {
             return {
                 dargStart:false,
-                u_agent:''
+                u_agent:'',
+                startx:'',
+                amountW:''
             }
         },
         watch:{
@@ -32,6 +34,7 @@
         },
         mounted(){
             this.u_agent = navigator.userAgent
+            this.amountW = this.$refs.sliderBox.clientWidth - this.$refs.slider.clientWidth; 
         },
         methods:{
             setLoacl(e){
@@ -41,6 +44,10 @@
             },
             moveStart(e){
                 this.dargStart= true
+                if(/iPad|iPhone|Android|Adr/i.test(this.u_agent)){
+                   this.startx = e.touches[0].pageX;
+                }
+                
             },
             move(e){
                 if(this.dargStart){
@@ -49,11 +56,19 @@
                 let distanceX = e.clientX - box.offsetLeft
                 
                 if(/iPad|iPhone|Android|Adr/i.test(this.u_agent)){
-                    distanceX= e.targetTouches[0].clientX - box.offsetLeft
+                    // distanceX= e.targetTouches[0].clientX - box.offsetLeft
+                    distanceX = e.touches[0].pageX - box.offsetLeft; 
                 }
                 if((/Firefox/.test(this.u_agent) || (this.u_agent.indexOf('Trident')>-1 && u_agent.indexOf('rv:11')>-1)) ) {
                     distanceX=(e.pageX) - document.body.clientWidth -box.offsetLeft
                 }
+
+                // 滑动距离小于0 或者大于滑竿的宽度，return掉
+                // console.log(this.amountW,'maxw')
+                // if (distanceX < 0 || distanceX > this.amountW) {
+                //     return;
+                // }
+
                 if(distanceX >=box.clientWidth-slider.clientWidth/2){
                     distanceX=box.clientWidth-slider.clientWidth/2
                 }
