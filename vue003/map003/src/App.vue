@@ -1,8 +1,9 @@
 <template>
   <div id="app">
+    <div v-if="load" id="loading" style="width:820px;"><img src="img/loading.gif"></div>
     <div id="main_container" :style="{'width':docWidth+'px','height':docHeight+'px'}">
       <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
-        <span>隋代運河分佈圖 (581-618 年)</span>
+        <span>隋代運河分佈圖 (581-600 年)</span>
         <div id="soundCon" :class="{'mute':noVoice}" @click="noVoice=!noVoice"> </div>
       </div>
       <div class="main_box">
@@ -25,7 +26,7 @@
           <div id="map_action_container" class="greyContainer" style="margin-bottom: 10px;">
             <div class="blueButton zoom_button" style="width: 2.07em; margin: 5px 10px 3px;" @click="setScaleBtn('de')"><b>-</b></div>
             <!-- 滑块 -->
-            <bar @offestx="offestx" :scaleindex.sync="scaleindex"></bar>
+            <bar @offestx="offestx" @moveOut="moveOut" :scaleindex.sync="scaleindex"></bar>
             <div class="blueButton zoom_button" style="width: 2.07em; margin: 5px 10px 3px;" @click="setScaleBtn('add')"><b>+</b></div>
           </div>
         </div>
@@ -34,7 +35,7 @@
     <modal class="" headTitle="问题" :hideFooter="true" v-if="popWindow" @cancel-event="popWindow=false;list[4].show=false">
       <div slot="modalCont">
         <div class="question">
-          <div>1. 以下哪一個<span class="underline">不是</span>隋煬帝下令建設運河的原因？</div>
+          <div>1. 根據地圖，官倉大多鄰近大興，哪一個官倉離都城較遠？</div>
           <div>
             <span class="item" :class="{'selected':currAns==index}" v-for="(item,index) in questionItem" :key="index" @click="checkans(index)">{{item}}</span>
           </div>
@@ -42,10 +43,10 @@
         </div>
       </div>
     </modal>
-    <modal class="" headTitle="大興（今西安市）" :hideFooter="true" v-if="mapPop" @cancel-event="mapPop=false;list[3].show=false">
-      <div slot="modalCont" style="height:55vh">
+    <modal class="" :width="bodytWidth/1.8" headTitle="大興（今西安市）" :hideFooter="true" v-if="mapPop" @cancel-event="mapPop=false;list[3].show=false">
+      <div slot="modalCont">
         <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d845158.7150065893!2d108.8816973!3d34.161658!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x366379e922ac17b9%3A0x85d466fda794582e!2z5Lit5ZyL6Zmd6KW_55yB6KW_5a6J5biC!5e0!3m2!1szh-TW!2shk!4v1572421815894!5m2!1szh-TW!2shk"
-          width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+          width="100%" :height="bodyHeight/1.8" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
       </div>
     </modal>
   </div>
@@ -61,7 +62,11 @@
       bar
     },
     name: "App",
+    beforeCreate(){
+
+    },
     mounted() {
+      this.load= false
       if("onorientationchange" in window){
         window.addEventListener("orientationchange",this.oriChange,false)
       }else{
@@ -78,15 +83,15 @@
     },
     data() {
       return {
+        load:true,
         noVoice:false,
         zoomObj: null,
         questionItem: [
-          'A. 便利運兵',
-          'B. 增加稅收',
-          'C. 便利糧食運輸',
-          'D. 方便巡視南方',
+          'A. 黎陽倉',
+          'B. 廣通倉',
+          'C. 河陽倉',
         ],
-        rightans: 1,
+        rightans: 2,
         showWrong: 0,
         currAns: null,
         data: [],
@@ -272,8 +277,8 @@
             }else{
               this.rem = (this.o / this.dpr) / 7.5
             }
-          } else if (this.dpr == 1) {
-            this.rem = this.o / s
+          } else  {
+            this.rem = this.o / s /this.dpr
           }
           console.log(this.boxscale, this.o, this.dpr,this.rem)
           document.documentElement.style.fontSize = (this.rem) + 'px'
@@ -677,9 +682,16 @@
         console.log(x, 'xx////')
         this.zoomObj.preSetScale(this.boxscale * (1 + x),0,0)
         this.zoomObj.setTransform(false)
+        
+      },
+      moveOut(x){
+        this.scaleindex = Math.ceil(x*10)
       }
     }
   };
 </script>
-
-
+<style lang="less">
+#app{
+      font-family: Verdana, Arial, sans-serif
+}
+</style>

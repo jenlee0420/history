@@ -85,11 +85,12 @@ border-radius: 0.22em;
     font-size: 1em;
     text-align: left;
     color: #2b3245;
-    border-radius: 0.22em 0.22em 0 0;
+    border-radius: 0.2em 0.2em 0 0;
     box-sizing: border-box;
     padding: .16em .12em;
     display: flex;
     align-items: center;
+font-weight: bold;
     span{
         font-size: .25rem;
     }
@@ -129,9 +130,7 @@ border-radius: 0.22em;
           color: #868992;
           margin-right: 20px;
 
-          &.require {
-            background: url('/static/img/require.png') no-repeat left center;
-          }
+          
         }
 
         .ipt {

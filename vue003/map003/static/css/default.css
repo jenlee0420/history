@@ -209,16 +209,16 @@ div.smallMap {
     background-repeat: no-repeat;
     background-position: center;
     position: absolute;
-    top: 7.5em;
+    top: 4.5em;
     right: 2em;
 }
 
 .rightico {
-    background-image: url('/static/img/right.png');
+    background-image: url('../img/right.png');
 }
 
 .wrongico {
-    background-image: url('/static/img/wrong.png');
+    background-image: url('../img/wrong.png');
 }
 
 .underline {
@@ -250,7 +250,7 @@ div.smallMap {
 
 .question .item {
     margin-bottom: 1.4em;
-    width: 49%;
+    width: 28%;
     display: inline-block;
     cursor: pointer;
 }
@@ -299,3 +299,15 @@ div.smallMap {
     border-radius: 0.06em;
     /* margin-top: 3px */
 }
+
+.modalWindow .mwHeader i {
+    width: 0.45rem;
+    height: 0.45rem;
+    background: url('/static/img/close.png') no-repeat center center;
+    cursor: pointer;
+    background-size: 100%;
+    position: absolute;
+    right: 0.1em;
+    display: block;
+    border-radius: 0 4px 0 0;
+  }
