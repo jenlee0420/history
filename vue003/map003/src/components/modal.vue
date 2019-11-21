@@ -69,15 +69,23 @@ export default {
             }
             this.el.style.left = left + 'px'
             this.el.style.top = top + 'px'
-            
           }
         },
         moveOut(ev){
-          
-          if(ev.target == this.$refs.modalWrap){
-            console.log('out',ev)
-            this.isDown = false
-          }
+          document.body.removeEventListener('mousemove',this.move)
+          document.body.removeEventListener('mouseup',this.moveOut)
+          document.body.removeEventListener('mouseout',this.moveOut)
+          this.isDown = false
+          // if(ev.type == 'mouseup'){
+          //   this.isDown = false
+          // }
+          // if(ev.type == 'mouseout'){
+          //   setTimeout(() => {
+          //     console.log('out',ev)
+          //   this.isDown = false
+          //   }, 1000);
+            
+          // }
           
         }
     },
