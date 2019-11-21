@@ -65,8 +65,8 @@
                     this.distanceX= e.targetTouches[0].clientX - box.offsetLeft
                     // this.distanceX = e.touches[0].pageX - box.offsetLeft; 
                 }
-                if((/Firefox/.test(this.u_agent) || (this.u_agent.indexOf('Trident')>-1 && u_agent.indexOf('rv:11')>-1)) ) {
-                    this.distanceX=(e.pageX) - document.body.clientWidth -box.offsetLeft
+                if((/Firefox/.test(this.u_agent) || (this.u_agent.indexOf('Trident')>-1 && this.u_agent.indexOf('rv:11')>-1)) ) {
+                    this.distanceX=(e.pageX)  -box.offsetLeft
                 }
 
                 // 滑动距离小于0 或者大于滑竿的宽度，return掉
@@ -83,14 +83,17 @@
                 }
                 // slider.style.transformOrigin = 'left';
                 slider.style.left = this.distanceX +'px'
-                console.log(box.clientWidth-slider.clientWidth)
+                // console.log(box.clientWidth-slider.clientWidth)
                 this.$emit('offestx',this.distanceX/box.clientWidth)
                 }
             },
             moveOut(){
-                this.dargStart= false
-                let box = this.$refs.sliderBox
-                this.$emit('moveOut',this.distanceX/box.clientWidth)
+                if(this.dargStart){
+                    this.dargStart= false
+                    let box = this.$refs.sliderBox
+                    console.log('/moveOut')
+                    this.$emit('moveOut',this.distanceX/box.clientWidth)
+                }
             }
         }
     }

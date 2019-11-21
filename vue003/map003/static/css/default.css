@@ -303,7 +303,7 @@ div.smallMap {
 .modalWindow .mwHeader i {
     width: 0.45rem;
     height: 0.45rem;
-    background: url('/static/img/close.png') no-repeat center center;
+    background: url('../img/close.png') no-repeat center center;
     cursor: pointer;
     background-size: 100%;
     position: absolute;

@@ -8,6 +8,7 @@ var imageMap, imageMapDetail, imagedongdu, imageRiver2, imageRiver3, imageRiver4
 var imageCapital, imageGate, imageMainCity, imageRiver, imageControlCity, imageHorse, drawHorsesTimeout, drawHorsesTimeout2;
 var drawRiverTimeout;
 var horseObject1, horseObject2, horseObject3, horseObject4, horseObject5;
+var animatePlay=false
 var redTimer,
     greedTimer,
     timerGroup = [],
@@ -81,33 +82,33 @@ function setRemUnit() {
 
         // $('#debug1').text([boxscale, canvasW, canvasH].join(','))
 
-        // if (/Android/.test(u_agent)) {
-        //     dpr = 2;
-        // }
-        // if (dpr >= 2) {
-        //     dpr = 2;
-        //     rem = o / dpr / 7.5;
-        //     if (orienta == 2) {
-        //         rem = o / dpr / 5.2;
-        //     }
-        // } else if (dpr == 1) {
-        //     rem = o / 11.1;
-        // }
-
         if (/iPad|iPhone|Android|Adr/i.test(u_agent)) {
-            let scale = 1 / dpr;
-            if (orienta == 2) {
-                rem = docEl.clientWidth * dpr / 13;
-            }else{
-                rem = docEl.clientWidth * dpr / 15;
-            }
-            rem = rem * scale
-            // console.log('scale',scale)
-            let vp = document.querySelector('meta[name="viewport"]');
-            vp.setAttribute('content', 'width=' +  dpr*docEl.clientWidth + ',initial-scale=' + scale + ',maximum-scale=1, minimum-scale=1,user-scalable=no');
-        }else{
-            rem = o / 10;
+            dpr = 2;
         }
+        if (dpr >= 2) {
+            dpr = 2;
+            rem = o / dpr / 7.5;
+            if (orienta == 2) {
+                rem = o / dpr / 5.2;
+            }
+        } else  {
+            rem = o / 10 / dpr;
+        }
+
+        // if (/iPad|iPhone|Android|Adr/i.test(u_agent)) {
+        //     let scale = 1 / dpr;
+        //     if (orienta == 2) {
+        //         rem = docEl.clientWidth * dpr / 13;
+        //     }else{
+        //         rem = docEl.clientWidth * dpr / 15;
+        //     }
+        //     rem = rem * scale
+        //     // console.log('scale',scale)
+        //     let vp = document.querySelector('meta[name="viewport"]');
+        //     vp.setAttribute('content', 'width=' +  dpr*docEl.clientWidth + ',initial-scale=' + scale + ',maximum-scale=1, minimum-scale=1,user-scalable=no');
+        // }else{
+        //     rem = o / 10;
+        // }
         console.log(boxscale, o, dpr, canvasW, canvasH, rem);
         docEl.style.fontSize = rem + 'px';
 
@@ -683,6 +684,7 @@ function ship1(flag) {
         resetHorseObject(horseObject2);
         resetHorseObject(horseObject3);
         resetHorseObject(horseObject4);
+        animatePlay = false
     }
 }
 
@@ -741,6 +743,7 @@ function ship2(flag) {
         canvasAnimHorse2.style.visibility = "hidden";
         resetHorseObject(horseObject5);
         canvasClear(canvasAnimHorse2);
+        clearInterval(drawHorsesTimeout2);
     }
 }
 
@@ -1166,7 +1169,7 @@ function drawHorse2() {
 
 function drawHousePromise() {
     // console.log(horseObject4.animated,'4444')
-    if (horseObject4.animated == true) {
+    if (animatePlay == true) {
         return;
     }
     canvasAnimHorse.style.visibility = 'visible';
@@ -1180,7 +1183,6 @@ function drawHousePromise() {
     }, 1200);
 
     horsetimerGroup[1] = setTimeout(function () {
-        console.log('path2');
         drawHorsesTimeout = setInterval(function () {
             canvasClear(canvasAnimHorse);
             drawHorse(horseObject2, false, canvasAnimHorse, contextAnimHorse);
@@ -1196,7 +1198,7 @@ function drawHousePromise() {
         drawHorsesTimeout = setInterval(function () {
             canvasClear(canvasAnimHorse);
             var endfun = function endfun() {
-                horsetimerGroup[2] = setTimeout(function () {
+                horsetimerGroup[4] = setTimeout(function () {
                     canvasClear(canvasAnimHorse);
                     waveSound.pause();
                 }, 1000);
@@ -1257,6 +1259,7 @@ function drawHorse(object, isInvert, endfun, contextS) {
                 clearInterval(drawHorsesTimeout);
             }
             if (typeof endfun == 'function') {
+                console.log('end')
                 endfun();
             }
             // resolve()

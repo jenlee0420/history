@@ -1,10 +1,10 @@
 <template>
     <transition name="ease">
-        <div class="modalWrap">
-            <div class="modalWindow" :style="{width:width}">
-                <div class="mwHeader">
+        <div class="modalWrap" ref="modalWrap">
+            <div class="modalWindow" :style="{width:width}" ref="modalWindow">
+                <div class="mwHeader" @mousedown="startDrag">
                     <span>{{headTitle}}</span>
-                    <i @click="cancelEvent"></i>
+                    <i @click.stop="cancelEvent"></i>
                 </div>
                 <div class="mwCont">
                     <slot name="modalCont"></slot>
@@ -28,6 +28,11 @@ export default {
     },
     data() {
         return {
+          el:null,
+          isDown:false,
+          distanceX:'',
+          distanceY:'',
+          outwindow:false
         }
     },
     methods: {
@@ -36,6 +41,44 @@ export default {
         },
         cancelEvent() {
             this.$emit('cancel-event');
+        },
+        startDrag(event){
+          this.el = this.$refs.modalWindow
+          this.isDown = true
+          this.distanceX = event.clientX - this.el.offsetLeft
+          this.distanceY = event.clientY - this.el.offsetTop
+          document.body.addEventListener('mousemove',this.move)
+          document.body.addEventListener('mouseup',this.moveOut)
+          document.body.addEventListener('mouseout',this.moveOut)
+        },
+        move(ev){
+          if(this.isDown){
+            let left = ev.clientX - this.distanceX
+            let top = ev.clientY - this.distanceY
+            if(left <=0){
+              left =0
+            }
+            if(top<=0){
+              top=0
+            }
+            if(left >=document.body.offsetWidth-this.el.offsetWidth){
+              left = document.body.offsetWidth-this.el.offsetWidth
+            }
+            if(top >=document.body.offsetHeight-this.el.offsetHeight){
+              top = document.body.offsetHeight-this.el.offsetHeight
+            }
+            this.el.style.left = left + 'px'
+            this.el.style.top = top + 'px'
+            
+          }
+        },
+        moveOut(ev){
+          
+          if(ev.target == this.$refs.modalWrap){
+            console.log('out',ev)
+            this.isDown = false
+          }
+          
         }
     },
     filters:{
@@ -64,11 +107,11 @@ export default {
 }
 
 .modalWindow {
-  width: 73vw;
+  // max-width: 73vw;
   height: auto;
   min-height: 210px;
   background: #fff;
-  position: relative;
+  position: absolute;
   border-radius: 4px;
   z-index: 99;
   display: flex;
@@ -77,6 +120,7 @@ export default {
 border: .07em solid #ff9900;
 border-radius: 0.22em;
   font-size: 1em;
+  user-select: none;
 
   .mwHeader {
     background: #ffedd2;
@@ -85,31 +129,17 @@ border-radius: 0.22em;
     font-size: 1em;
     text-align: left;
     color: #2b3245;
-    border-radius: 0.2em 0.2em 0 0;
+    border-radius: 0.15em 0.15em 0 0;
     box-sizing: border-box;
     padding: .16em .12em;
     display: flex;
     align-items: center;
 font-weight: bold;
+cursor: move;
     span{
         font-size: .25rem;
     }
-    i {
-      width: 0.45rem;
-      height: 0.45rem;
-      background: url('/static/img/close.png') no-repeat center center;
-      cursor: pointer;
-      background-size: 100%;
-      position: absolute;
-    //   top: 0;
-      right: 0.1em;
-      display: block;
-      border-radius: 0 4px 0 0;
-
-    //   &:hover {
-    //     background: url('/static/img/icon/closeAct.png') no-repeat center center;
-    //   }
-    }
+    
   }
 
   .mwCont {

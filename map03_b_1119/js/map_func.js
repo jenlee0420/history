@@ -146,7 +146,7 @@ function bind_map_func(div, mp4div) {
         } else {
             target.toggleClass("clicked");
             arr[action] = target.hasClass("clicked") ? 1 : 0;
-            console.log($(e.delegateTarget).data());
+            // console.log($(e.delegateTarget).data());
             createMap(arr, $(e.delegateTarget).data("scale"));
             setSound(arr[action], action);
         }
@@ -196,7 +196,7 @@ function bind_ques(div, rightIndex) {
     div.on('click', '.item', function (e) {
         $(".ansBox").removeClass('rightico wrongico');
         $(e.target).addClass('selected').siblings().removeClass('selected');
-        console.log(e.target.innerHTML, $(e.target).innerHTML);
+        // console.log(e.target.innerHTML, $(e.target).innerHTML);
         if (e.target.innerHTML.indexOf('B') > -1) {
             $(".ansBox").show().addClass('rightico');
         } else {
