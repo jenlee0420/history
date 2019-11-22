@@ -3,7 +3,7 @@
     <div v-if="load" id="loading" style="width:820px;"><img src="img/loading.gif"></div>
     <div id="main_container" :style="{'width':docWidth+'px','height':docHeight+'px'}">
       <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
-        <span>開皇年間官倉分佈圖 (581-600 年)</span>
+        <span>隋代運河分佈圖 (581-600 年)</span>
         <div id="soundCon" :class="{'mute':noVoice}" @click="noVoice=!noVoice"> </div>
       </div>
       <div class="main_box">
@@ -46,7 +46,7 @@
     <modal class="" :width="bodytWidth/1.8" headTitle="大興（今西安市）" :hideFooter="true" v-if="mapPop" @cancel-event="mapPop=false;list[3].show=false">
       <div slot="modalCont">
         <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d845158.7150065893!2d108.8816973!3d34.161658!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x366379e922ac17b9%3A0x85d466fda794582e!2z5Lit5ZyL6Zmd6KW_55yB6KW_5a6J5biC!5e0!3m2!1szh-TW!2shk!4v1572421815894!5m2!1szh-TW!2shk"
-         :width="bodytWidth/1.8" :height="bodyHeight/1.8" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+          width="100%" :height="bodyHeight/1.8" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
       </div>
     </modal>
   </div>
@@ -163,7 +163,6 @@
               this.scaleindex = 10
             }
         } else {
-          console.log('de')
           this.scaleindex--
             if (this.scaleindex <= 0) {
               this.scaleindex = 0
@@ -264,6 +263,7 @@
           this.canvasW = Math.ceil(1430 * this.boxscale)
           this.canvasH = Math.ceil(1315 * this.boxscale)
           this.titleH = this.docHeight  - this.canvasH
+          var s = 10
           this.dpr = window.devicePixelRatio || 1
           // if(o<800){ s =13}
           if (/Android/.test(u_agent)) {
@@ -271,13 +271,14 @@
           }
           if (this.dpr >= 2) {
             this.dpr = 2
+            
             if (this.orienta == 2) {
               this.rem = (this.o / this.dpr) / 5.2
             }else{
               this.rem = (this.o / this.dpr) / 7.5
             }
           } else  {
-            this.rem = this.o / 10 / this.dpr
+            this.rem = this.o / s /this.dpr
           }
           console.log(this.boxscale, this.o, this.dpr,this.rem)
           document.documentElement.style.fontSize = (this.rem) + 'px'
@@ -616,7 +617,7 @@
           this.horseObject1 = this.initHorseObject(translate, scale, dur, sharpPoint, imageHorse);
           console.log(this.horseObject1)
         }
-        document.getElementById('map_container').appendChild(divTag)
+        document.getElementById('map_container').append(divTag)
         this.$nextTick(() => {
           this.setZoom()
         })
@@ -685,7 +686,6 @@
       },
       moveOut(x){
         this.scaleindex = Math.ceil(x*10)
-        
       }
     }
   };
