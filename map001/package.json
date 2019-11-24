@@ -9,8 +9,6 @@
   },
   "dependencies": {
     "core-js": "^3.3.2",
-    "less": "^3.10.3",
-    "less-loader": "^5.0.0",
     "vue": "^2.6.10"
   },
   "devDependencies": {
@@ -20,12 +18,14 @@
     "babel-eslint": "^10.0.3",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
-    "vue-template-compiler": "^2.6.10"
+    "vue-template-compiler": "^2.6.10",
+    "less": "^3.10.3",
+    "less-loader": "^5.0.0"
   },
   "eslintConfig": {
-    "root": true,
+    "root": false,
     "env": {
-      "node": true
+      "node": false
     },
     "extends": [
       "plugin:vue/essential",
