@@ -312,5 +312,6 @@ div.smallMap {
     display: block;
     border-radius: 0 4px 0 0;
     top:0;
-    bottom:0
+    bottom:0;
+    margin:auto;
   }

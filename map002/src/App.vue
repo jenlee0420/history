@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <div v-if="load" id="loading" style="width:820px;"><img src="img/loading.gif"></div>
-    <div id="main_container" :style="{'width':docWidth+'px','height':docHeight+'px'}">
+    <div v-if="load" id="loading" style="width:820px;"><img src="static/img/loading.gif"></div>
+    <div v-else id="main_container" :style="{'width':docWidth+'px','height':docHeight+'px'}">
       <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
         <span>隋代運河分佈圖 (581-600 年)</span>
         <div id="soundCon" :class="{'mute':noVoice}" @click="noVoice=!noVoice"> </div>
@@ -33,15 +33,14 @@
       </div>
     </div>
     <modal class="" headTitle="问题" :hideFooter="true" v-if="popWindow" @cancel-event="popWindow=false;list[4].show=false">
-      <div slot="modalCont">
-        <div class="question">
+      <div slot="modalCont"  class="question">
+        
           <div>1. 根據地圖，官倉大多鄰近大興，哪一個官倉離都城較遠？</div>
           <div>
             <span class="item" :class="{'selected':currAns==index}" v-for="(item,index) in questionItem" :key="index" @click="checkans(index)">{{item}}</span>
           </div>
           <div class="ansBox" :class="showWrong==false?'wrongico':'rightico'" v-if="currAns!=null"></div>
         </div>
-      </div>
     </modal>
     <modal class="" :width="bodytWidth/1.8" headTitle="大興（今西安市）" :hideFooter="true" v-if="mapPop" @cancel-event="mapPop=false;list[3].show=false">
       <div slot="modalCont">
@@ -65,8 +64,11 @@
     beforeCreate(){
 
     },
-    mounted() {
+    created () {
       this.load= false
+    },
+    mounted() {
+      if(!this.load){
       if("onorientationchange" in window){
         window.addEventListener("orientationchange",this.oriChange,false)
       }else{
@@ -80,6 +82,7 @@
       document.getElementById('map_container').addEventListener("touchstart", this.bodyScroll, {
             passive: false //  禁止 passive 效果
         })
+      }
     },
     data() {
       return {
@@ -91,7 +94,7 @@
           'B. 廣通倉',
           'C. 河陽倉',
         ],
-        rightans: 2,
+        rightans: 0,
         showWrong: 0,
         currAns: null,
         data: [],
@@ -216,6 +219,7 @@
             this.mapPop = swip
             break;
           case 4:
+            this.currAns=null
             this.popWindow = swip
             break;
           default:

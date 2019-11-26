@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <div class="pos_a">{{debug}}</div>
     <div v-if="load" id="loading" style="width:820px;"><img :src="require('../static/img/loading.gif')"></div>
     <div  id="main_container" :style="{'width':docWidth+'px','height':docHeight+'px','display':load?'none':'block'}">
       <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
@@ -168,7 +169,9 @@
         borderAni: true,
         pathObject: {},
         chenTimer:null,
-        lin2timer:null
+        lin2timer:null,
+        scaleZoom:0,
+        debug:''
       }
     },
     watch:{
@@ -177,6 +180,15 @@
           // console.log(this.imgCount)
           this.load= false
         }
+      },
+      zoomObj:{
+        handler(n, o) {
+          // console.log(n,o,'scale')
+          // this.debug = n.scale+"---"
+          this.scaleZoom =parseFloat((n.scale / n.maxScale) * 10) 
+          console.log(this.scaleZoom,'----',n.scale,n.maxScale)
+        },
+        deep: true
       }
     },
     methods: {
@@ -187,18 +199,21 @@
         // console.log('////')
         // this.scalePic(0.5,false)
         if (type == 'add') {
-          this.scaleindex++
-            if (this.scaleindex > 10) {
-              this.scaleindex = 10
-            }
+          this.scaleindex+=1
         } else {
-          this.scaleindex--
-            if (this.scaleindex <= 0) {
-              this.scaleindex = 0
-            }
+          this.scaleindex-=1
+        }
+        if (this.scaleindex > 10) {
+          this.scaleindex = 10
+        }
+        if (this.scaleindex <= 0) {
+          this.scaleindex = 0
         }
         console.log(this.boxscale, this.scaleindex)
-        this.zoomObj.preSetScale(this.boxscale * (1 + this.scaleindex * 0.1), 0, 0)
+        this.setScale(this.scaleindex)
+      },
+      setScale(scaleindex){
+        this.zoomObj.preSetScale(this.boxscale * (1 + scaleindex * 0.1), 0, 0)
         this.zoomObj.setTransform(true)
       },
       muteMe() {
@@ -913,6 +928,7 @@
         top: 0,
         left: 0,
         minScale: this.boxscale,
+        maxScale: this.boxscale * 10,
         warpWidth: this.boxscale * this.baseWidth,
         warpHeight: this.boxscale * this.baseHeight
       })

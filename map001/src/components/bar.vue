@@ -30,7 +30,6 @@
         watch:{
             scaleindex(n){
                 this.$refs.slider.style.left = (n*10) +'%'
-                console.log(n,'///')
             }
         },
         mounted(){
