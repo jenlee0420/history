@@ -160,24 +160,31 @@ Zoom.prototype.zoom = function(touchs) {
     let y2 = t2.pageY;
 
     let d = this.getTouchsDistance(t1, t2);
-
     if (this.touchState == 0) {
         this.lastSapce = d;
         this.touchState = 1;
-
+        
         this.pointX = (x2 + (x1 - x2) / 2 - this.left) / this.scale;
         this.pointY = (y2 + (y1 - y2) / 2 - this.top) / this.scale;
 
 
 
     } else if (this.touchState == 1) {
-
+        
         let scaleChange = ((d / this.lastSapce) - 1) * 2;
 
         let scale = this.scale + scaleChange / 2;
+        
+        // this.setScale(scale, this.pointX, this.pointY);
 
-        this.setScale(scale, this.pointX, this.pointY);
-
+        
+        if ((d < this.lastSapce && this.scale==this.minScale)){
+            return
+        }else{
+            if (this.scale >= this.minScale && this.scale <= this.maxScale){
+                this.setScale(scale, this.pointX, this.pointY);
+            }
+        }
         this.lastSapce = d;
     }
 }
@@ -198,8 +205,10 @@ Zoom.prototype.touchmoveHandler = function(event) {
     if (touchs.length == 1) {
         zoom.drage(touchs[0]); //拖动处理
     } else if (touchs.length >= 2) {    
+
         zoom.zoom(touchs); //缩放处理
         zoom.lastPoint = null; //终止拖动事件
+        
       
     }
     return false;

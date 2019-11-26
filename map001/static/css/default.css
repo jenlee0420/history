@@ -242,7 +242,6 @@ div.smallMap {
     font-size: .34rem;
     padding-bottom: 0;
     width: 28em;
-    height: 6em;
 }
 
 .question div:nth-child(2) {
@@ -311,5 +310,8 @@ div.smallMap {
     position: absolute;
     right: 0.1em;
     display: block;
-    top:0.1em;
+    border-radius: 0 4px 0 0;
+    top:0;
+    bottom:0;
+    margin:auto;
   }

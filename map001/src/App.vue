@@ -1,7 +1,8 @@
 <template>
   <div id="app">
-    <div v-if="load" id="loading" style="width:820px;"><img src="img/loading.gif"></div>
-    <div id="main_container" :style="{'width':docWidth+'px','height':docHeight+'px'}">
+    <div class="pos_a">{{debug}}</div>
+    <div v-if="load" id="loading" style="width:820px;"><img :src="require('../static/img/loading.gif')"></div>
+    <div  id="main_container" :style="{'width':docWidth+'px','height':docHeight+'px','display':load?'none':'block'}">
       <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
         <span>隋滅陳路線圖（588－589年）</span>
         <div id="soundCon" :class="{'mute':noVoice}" @click="noVoice=!noVoice"> </div>
@@ -37,7 +38,7 @@
         </div>
       </div>
     </div>
-    <modal class="" headTitle="问题" :hideFooter="true" v-if="popWindow" @cancel-event="popWindow=false;list[4].show=false">
+    <modal class="" headTitle="问题" :hideFooter="true" v-if="popWindow" @cancel-event="popWindow=false;list[6].show=false">
       <div slot="modalCont">
         <div class="question">
           <div>1. 隋軍要突破陳的防線，必先要突破哪一河流的天險？</div>
@@ -48,10 +49,10 @@
         </div>
       </div>
     </modal>
-    <modal class="" :width="bodytWidth/1.8" headTitle="建康（今南京市）" :hideFooter="true" v-if="mapPop" @cancel-event="mapPop=false;list[3].show=false">
+    <modal class=""  headTitle="建康（今南京市）" :hideFooter="true" v-if="mapPop" @cancel-event="mapPop=false;list[5].show=false">
       <div slot="modalCont">
         <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1738801.539539802!2d119.2476953!3d31.6585725!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x35b58c9b668dcd83%3A0x8ffbb60b79df1b06!2z5Lit5ZyL5rGf6JiH55yB5Y2X5Lqs5biC!5e0!3m2!1szh-TW!2shk!4v1572421682457!5m2!1szh-TW!2shk"
-          width="100%" :height="bodyHeight/1.8" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+          :width="bodytWidth/1.8" :height="bodyHeight/1.8" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
       </div>
     </modal>
   </div>
@@ -69,7 +70,7 @@
     name: "App",
     beforeCreate() {},
     mounted() {
-      this.load = false
+      this.createMap()
       if ("onorientationchange" in window) {
         window.addEventListener("orientationchange", this.oriChange, false)
       } else {
@@ -79,7 +80,7 @@
       this.zoomObj = require('./js/zoom.js')
       this.setRemUnit()
       this.initCanvas()
-      this.createMap()
+      
       document.getElementById('map_container').addEventListener("touchstart", this.bodyScroll, {
         passive: false //  禁止 passive 效果
       })
@@ -91,7 +92,7 @@
         zoomObj: null,
         questionItem: [
           'A. 漢水',
-          'B. 漢水',
+          'B. 長江',
           'C. 淮河',
         ],
         rightans: 1,
@@ -99,7 +100,7 @@
         currAns: null,
         data: [],
         mapPop: false,
-        imgList: ['static/img/map.png', 'static/img/mapDetail.png'],
+        imgCount: 0,
         list: [{
           ico: require('../static/img/icon/capital_icon.png'),
           text: '首都',
@@ -145,6 +146,10 @@
         docWidth: '',
         docHeight: '',
         horseObject1: {},
+        horseObject2: {},
+        horseObject3: {},
+        horseObject4: {},
+        horseObject5: {},
         scaleindex: 0,
         ele: null,
         popWindow: false,
@@ -163,6 +168,27 @@
         prevorienta: '',
         borderAni: true,
         pathObject: {},
+        chenTimer:null,
+        lin2timer:null,
+        scaleZoom:0,
+        debug:''
+      }
+    },
+    watch:{
+      imgCount(n){
+        if(this.imgCount>=9){
+          // console.log(this.imgCount)
+          this.load= false
+        }
+      },
+      zoomObj:{
+        handler(n, o) {
+          // console.log(n,o,'scale')
+          // this.debug = n.scale+"---"
+          this.scaleZoom =parseFloat((n.scale / n.maxScale) * 10) 
+          console.log(this.scaleZoom,'----',n.scale,n.maxScale)
+        },
+        deep: true
       }
     },
     methods: {
@@ -173,18 +199,21 @@
         // console.log('////')
         // this.scalePic(0.5,false)
         if (type == 'add') {
-          this.scaleindex++
-            if (this.scaleindex > 10) {
-              this.scaleindex = 10
-            }
+          this.scaleindex+=1
         } else {
-          this.scaleindex--
-            if (this.scaleindex <= 0) {
-              this.scaleindex = 0
-            }
+          this.scaleindex-=1
+        }
+        if (this.scaleindex > 10) {
+          this.scaleindex = 10
+        }
+        if (this.scaleindex <= 0) {
+          this.scaleindex = 0
         }
         console.log(this.boxscale, this.scaleindex)
-        this.zoomObj.preSetScale(this.boxscale * (1 + this.scaleindex * 0.1), 0, 0)
+        this.setScale(this.scaleindex)
+      },
+      setScale(scaleindex){
+        this.zoomObj.preSetScale(this.boxscale * (1 + scaleindex * 0.1), 0, 0)
         this.zoomObj.setTransform(true)
       },
       muteMe() {
@@ -197,7 +226,6 @@
       showCanvas(index) {
         let c = document.getElementById(this.canvasData[index])
         let swip = !this.list[index].show
-        // console.log(swip)
         this.muteMe()
         switch (index) {
           case 0:
@@ -218,32 +246,39 @@
             c.style.visibility = swip ? 'visible' : 'hidden'
             break;
           case 3:
+            console.log(swip)
             if (swip) {
               if (!this.noVoice) {
                 this.m03.currentTime = 0
                 this.m03.play()
                 this.drawGreenPath(true)
+                this.lin2timer = setTimeout(() => {
+                  this.drawGreenPath2(true)
+                },2300)
+                this.drawHousePromise(true)
               }
             } else {
               this.drawGreenPath(false)
+              this.drawGreenPath2(false)
+              this.drawHousePromise(false)
+              clearTimeout(this.lin2timer)
             }
-            c.style.visibility = swip ? 'visible' : 'hidden'
             break;
           case 4:
-            console.log(swip,'4')
             if (swip && !this.noVoice) {
               this.m04.currentTime = 0
               this.m04.play()
               this.license.currentTime = 0
-              this.license.volume = 0.1
+              this.license.volume = 0.2
               this.license.play()
             }
             if (swip) {
-              setTimeout(() => {
+              this.chenTimer = setTimeout(() => {
                 this.borderAni = false
-              }, 3000);
+              }, 10000);
             } else {
               this.borderAni = true
+              clearTimeout(this.chenTimer)
             }
             break;
           case 5:
@@ -251,6 +286,7 @@
             break;
           case 6:
             this.popWindow = swip
+            this.currAns=null
             break;
           default:
             break;
@@ -338,64 +374,105 @@
         }, 260);
         canvasStatic.ani = true
       },
-      drawHousePromise() {
-        if (this.horseObject1.animated == true) {
-          return
-        }
+      drawHousePromise(flag) {
         this.canvasAnimHorse = document.getElementById('myCanvasAnimHorse')
         let contextAnimHorse = this.canvasAnimHorse.getContext('2d');
-        this.canvasAnimHorse.style.visibility = 'visible'
-        var imageHorse = new Image();
-        imageHorse.src = "static/img/rices.png";
-        contextAnimHorse.drawImage(imageHorse, this.horseObject1.position.points[0][0], this.horseObject1.position.points[0][1], this.horseObject1.width * 0.55, this.horseObject1.height * 0.55);
-        // this.showCityAni(canvasAnimHorse, true)
-        this.horsetimerGroup = setTimeout(() => {
-          this.drawHorse(this.horseObject1, false, false, contextAnimHorse, imageHorse)
-        }, 500)
-      },
-      drawHorse(object, isInvert, endfun, contextS, imageHorse) {
-        if (object.position.currPoint + 1 < object.position.totalPoint) {
-          contextS.save();
-          if (isInvert) {
-            contextS.scale(-1, 1);
-          }
-          var position = new Array();
-          var scale;
-          if (object.position.scales[object.position.currPoint] != object.position.scales[object.position.currPoint + 1]) {
-            if (object.position.scales[object.position.currPoint] > object.position.scales[object.position.currPoint + 1]) {
-              scale = object.position.scales[object.position.currPoint] * (object.position.dur[object.position.currPoint] - object.position.currDur) / object.position.dur[object.position.currPoint];
-            } else {
-              scale = object.position.scales[object.position.currPoint + 1] * (object.position.currDur) / object.position.dur[object.position.currPoint];
-            }
-            if (scale < 0) {
-              scale = 0;
-            }
-          } else {
-            scale = 1;
-          }
-          position[0] = (object.position.points[object.position.currPoint][0] * (object.position.dur[object.position.currPoint] - object.position.currDur) + object.position.points[object.position.currPoint + 1][0] * object.position.currDur) / object.position.dur[object.position.currPoint];
-          position[1] = (object.position.points[object.position.currPoint][1] * (object.position.dur[object.position.currPoint] - object.position.currDur) + object.position.points[object.position.currPoint + 1][1] * object.position.currDur) / object.position.dur[object.position.currPoint];
-          contextS.drawImage(imageHorse, position[0], position[1], object.width * scale * 0.55, object.height * scale * 0.55);
-          contextS.restore();
-          // Anim Position control
-          if (object.position.currDur <= object.position.dur[object.position.currPoint]) {
-            object.position.currDur++;
-          } else {
-            object.position.currDur = 1;
-            object.position.currPoint++;
-          }
-          console.log('//')
-          // resolve()
-          // return "ok";
-        } else {
-          object.animating = false;
-          object.animated = true;
-          clearTimeout(this.drawHorsesTimeout)
+        if(flag){
+        if (this.horseObject5.animated == true) {
+          return
         }
-        this.drawHorsesTimeout = setTimeout(() => {
+        
+        this.canvasAnimHorse.style.visibility = 'visible'
+
+        // contextAnimHorse.drawImage(this.horseObject1.source, this.horseObject1.position.points[0][0], this.horseObject1.position.points[0][1], this.horseObject1.width * 0.55, this.horseObject1.height * 0.55);
+        // this.showCityAni(canvasAnimHorse, true)
+        // this.horsetimerGroup = setTimeout(() => {
+          this.drawHorsesTimeout = setInterval(() => {
+            this.canvasClear(this.canvasAnimHorse);
+            this.drawHorse(this.horseObject1, contextAnimHorse, this.horseObject1.source).then((res)=>{
+              clearInterval(this.drawHorsesTimeout)
+              this.drawHorsesTimeout = setInterval(() => {
+                this.canvasClear(this.canvasAnimHorse);
+                this.drawHorse(this.horseObject2, contextAnimHorse, this.horseObject2.source).then((res)=>{
+                  clearInterval(this.drawHorsesTimeout)
+                  this.drawHorsesTimeout = setInterval(() => {
+                    this.canvasClear(this.canvasAnimHorse);
+                    this.drawHorse(this.horseObject3, contextAnimHorse, this.horseObject3.source).then((res)=>{
+                      clearInterval(this.drawHorsesTimeout)
+                      this.drawHorsesTimeout = setInterval(() => {
+                        this.canvasClear(this.canvasAnimHorse);
+                        this.drawHorse(this.horseObject4, contextAnimHorse, this.horseObject4.source).then((res)=>{
+                          clearInterval(this.drawHorsesTimeout)
+                           this.drawHorsesTimeout = setInterval(() => {
+                            this.canvasClear(this.canvasAnimHorse);
+                            this.drawHorse(this.horseObject5, contextAnimHorse, this.horseObject5.source).then((res)=>{
+                              clearInterval(this.drawHorsesTimeout)
+                              
+                            })
+                          }, 60);
+                        })
+                      }, 60);
+                    })
+                  }, 60);
+                })
+              }, 60);
+            })
+          }, 60);
+        // }, 500)
+        }else{
+          clearInterval(this.drawHorsesTimeout)
+          // clearTimeout(this.horsetimerGroup)
           this.canvasClear(this.canvasAnimHorse);
-          this.drawHorse(object, false, false, contextS, imageHorse)
-        }, 60);
+          this.canvasAnimHorse.style.visibility = 'hidden'
+          this.resetHorseObject(this.horseObject1)
+          this.resetHorseObject(this.horseObject2)
+          this.resetHorseObject(this.horseObject3)
+          this.resetHorseObject(this.horseObject4)
+          this.resetHorseObject(this.horseObject5)
+        }
+      },
+      drawHorse(object, contextS, imageHorse) {
+        return new Promise((resolve,rej)=>{
+          if (object.position.currPoint + 1 < object.position.totalPoint) {
+            contextS.save();
+            var position = new Array();
+            var scale;
+            if (object.position.scales[object.position.currPoint] != object.position.scales[object.position.currPoint + 1]) {
+              if (object.position.scales[object.position.currPoint] > object.position.scales[object.position.currPoint + 1]) {
+                scale = object.position.scales[object.position.currPoint] * (object.position.dur[object.position.currPoint] - object.position.currDur) / object.position.dur[object.position.currPoint];
+              } else {
+                scale = object.position.scales[object.position.currPoint + 1] * (object.position.currDur) / object.position.dur[object.position.currPoint];
+              }
+              if (scale < 0) {
+                scale = 0;
+              }
+            } else {
+              scale = 1;
+            }
+            position[0] = (object.position.points[object.position.currPoint][0] * (object.position.dur[object.position.currPoint] - object.position.currDur) + object.position.points[object.position.currPoint + 1][0] * object.position.currDur) / object.position.dur[object.position.currPoint];
+            position[1] = (object.position.points[object.position.currPoint][1] * (object.position.dur[object.position.currPoint] - object.position.currDur) + object.position.points[object.position.currPoint + 1][1] * object.position.currDur) / object.position.dur[object.position.currPoint];
+            contextS.drawImage(imageHorse, position[0], position[1], object.width * scale * 0.55, object.height * scale * 0.55);
+            contextS.restore();
+            // Anim Position control
+            if (object.position.currDur <= object.position.dur[object.position.currPoint]) {
+              object.position.currDur++;
+            } else {
+              object.position.currDur = 1;
+              object.position.currPoint++;
+            }
+            // return "ok";
+            
+          } else {
+            resolve('//')
+            object.animating = false;
+            object.animated = true;
+          }
+          // this.drawHorsesTimeout = setTimeout(() => {
+          //   this.canvasClear(this.canvasAnimHorse);
+          //   this.drawHorse(object, contextS, imageHorse)
+          // }, 60);
+        })
+        
         // })
       },
       ship1(flag) {
@@ -449,7 +526,6 @@
         }
       },
       drawGreenPath(flag) {
-        let greenPathObject = this.greenObject
         let canvasAnimPath = document.getElementById('myCanvasAnimGreenPath')
         let contextAnimPath = canvasAnimPath.getContext('2d');
         let pathObject = this.pathObject
@@ -460,13 +536,14 @@
             contextAnimPath.beginPath();
             contextAnimPath.rect(pathObject.mask1.currOriginX, pathObject.mask1.currOriginY, pathObject.mask1.width, pathObject.mask1.height);
             if (pathObject.mask1.width >= 590) {
-              this.drawGreenPath2('rect')
-              if (pathObject.mask2.width >= 370) {
+                
+              if (pathObject.mask2.width >= 580) {
+                //
                 contextAnimPath.rect(pathObject.mask3.currOriginX, pathObject.mask3.currOriginY, pathObject.mask3.width, pathObject.mask3.height);
                 if (pathObject.mask3.currOriginX >= 153) {
-                  contextAnimPath.fillRect(pathObject.mask4.currOriginX, pathObject.mask4.currOriginY, pathObject.mask4.width, pathObject.mask4.height);
-                  if (pathObject.mask4.currOriginX >= 1070) {
-                    contextAnimPath.fillRect(pathObject.mask5.currOriginX, pathObject.mask5.currOriginY, pathObject.mask5.width, pathObject.mask5.height);
+                  contextAnimPath.rect(pathObject.mask4.currOriginX, pathObject.mask4.currOriginY, pathObject.mask4.width, pathObject.mask4.height);
+                  if (pathObject.mask4.currOriginX >= 1060) {
+                    contextAnimPath.rect(pathObject.mask5.currOriginX, pathObject.mask5.currOriginY, pathObject.mask5.width, pathObject.mask5.height);
                     if (pathObject.mask5.currOriginX <= 1070) {
                       contextAnimPath.rect(pathObject.mask7.currOriginX, pathObject.mask7.currOriginY, pathObject.mask7.width, pathObject.mask7.height);
                     }
@@ -474,19 +551,14 @@
                 }
               }
             }
-            // contextAnimPath.clip();
+            contextAnimPath.clip();
             contextAnimPath.drawImage(pathObject.source, pathObject.originX, pathObject.originY, pathObject.width, pathObject.height);
-            
             if (pathObject.mask1.width <= 590) {
               // pathObject.mask1.currOriginX += pathObject.mask1.shiftX;
               pathObject.mask1.width += pathObject.mask1.shiftX;
             } else {
-              // contextAnimPath2.clip();
-              // contextAnimPath2.drawImage(pathObject.mask2.source, pathObject.originX, pathObject.originY, pathObject.width, pathObject.height);
-              // contextAnimPath.restore();
-              if (pathObject.mask2.width < 386) {
-                // pathObject.mask2.width += pathObject.mask2.shiftX;
-                this.drawGreenPath2()
+              if (pathObject.mask2.width < 580) {
+                  //
               } else {
                 contextAnimPath.drawImage(pathObject.mask3.source, pathObject.originX, pathObject.originY, pathObject.width, pathObject.height);
                 if (pathObject.mask3.width < 153) {
@@ -495,11 +567,12 @@
                   contextAnimPath.drawImage(pathObject.mask4.source, pathObject.originX, pathObject.originY, pathObject.width, pathObject.height);
                   if (pathObject.mask4.height < 20) {
                     pathObject.mask4.height += 2;
-                  } else if (pathObject.mask4.currOriginX <= 1070) {
+                  } else if (pathObject.mask4.currOriginX <= 1060) {
                     pathObject.mask4.currOriginX += 2;
-                    pathObject.mask4.height += 1.5;
-                  } else if (pathObject.mask5.currOriginX > 1070) {
-                    pathObject.mask5.currOriginX -= 5;
+                    pathObject.mask4.height += 3;
+                  } else if (pathObject.mask5.currOriginX > 1060) {
+                    pathObject.mask5.currOriginX -= 6;
+                    pathObject.mask4.height += 2;
                   } else {
                     contextAnimPath.drawImage(pathObject.mask7.source, pathObject.originX, pathObject.originY, pathObject.width, pathObject.height);
                     if (pathObject.mask5.currOriginX <= 1070) {
@@ -520,9 +593,6 @@
           pathObject.mask1.currOriginX = pathObject.mask1.originX;
           pathObject.mask1.currOriginY = pathObject.mask1.originY;
           pathObject.mask1.width = 1;
-          pathObject.mask2.currOriginX = pathObject.mask2.originX;
-          pathObject.mask2.currOriginY = pathObject.mask2.originY;
-          pathObject.mask2.width = 1;
           pathObject.mask3.currOriginX = pathObject.mask3.originX;
           pathObject.mask3.currOriginY = pathObject.mask3.originY;
           pathObject.mask3.width = 1;
@@ -537,27 +607,36 @@
           clearTimeout(pathObject.timeout);
         }
       },
-      drawGreenPath2(type) {
-        let greenPathObject = this.greenObject
+      drawGreenPath2(flag) {
+
         let canvasAnimPath2 = document.getElementById('myCanvasAnimGreenPath2')
         let contextAnimPath2 = canvasAnimPath2.getContext('2d');
         let pathObject = this.pathObject
-        // if(type=='rect'){
-          console.log('eee')
-        // this.canvasClear(canvasAnimPath2);
-        contextAnimPath2.save();
-        contextAnimPath2.beginPath();
-        contextAnimPath2.rect(pathObject.mask2.currOriginX, pathObject.mask2.currOriginY, pathObject.mask2.width, pathObject.mask2.height);
-        // }else{
-           console.log('clip')
-        // contextAnimPath2.clip();
-        contextAnimPath2.drawImage(pathObject.source, pathObject.originX, pathObject.originY, pathObject.width, pathObject.height);
+        if (flag == true) {
+          console.log('visible')
+          if(pathObject.mask2.width <= 580){
+              this.canvasClear(canvasAnimPath2);
+              contextAnimPath2.save();
+              contextAnimPath2.beginPath();
+              contextAnimPath2.rect(pathObject.mask2.currOriginX, pathObject.mask2.currOriginY, pathObject.mask2.width, pathObject.mask2.height);
+              contextAnimPath2.clip();
+              contextAnimPath2.drawImage(pathObject.mask2.source, pathObject.originX, pathObject.originY, pathObject.width, pathObject.height);
+              contextAnimPath2.restore();
+              pathObject.mask2.width += pathObject.mask2.shiftX;
         
-        ///
-        pathObject.mask2.width += pathObject.mask2.shiftX;
-        contextAnimPath2.restore();
         canvasAnimPath2.style.visibility = "visible";
-        // }
+         pathObject.mask2.timeout = setTimeout(() => {
+              this.drawGreenPath2(flag);
+            }, 30);
+          }
+        }else{
+          console.log('hidden')
+          canvasAnimPath2.style.visibility = "hidden";
+          clearTimeout(pathObject.mask2.timeout)
+          pathObject.mask2.currOriginX = pathObject.mask2.originX;
+          pathObject.mask2.currOriginY = pathObject.mask2.originY;
+          pathObject.mask2.width = 1;
+        }
       
     },
     showall(type) {
@@ -629,12 +708,12 @@
       canvasAnimGreenPath.style.position = "absolute";
       canvasAnimGreenPath2.style.position = "absolute";
       canvasAnimHorse.style.position = "absolute";
-      canvasStatic1.style.zIndex = "3";
-      canvasStatic2.style.zIndex = "3";
-      canvasStatic4.style.zIndex = "2";
+      canvasStatic1.style.zIndex = "4";
+      canvasStatic2.style.zIndex = "4";
+      canvasStatic4.style.zIndex = "4";
       canvasStatic5.style.zIndex = "2";
-      canvasAnimGreenPath.style.zIndex = "6";
-      canvasAnimGreenPath2.style.zIndex = "6";
+      canvasAnimGreenPath.style.zIndex = "2";
+      canvasAnimGreenPath2.style.zIndex = "2";
       canvasAnimHorse.style.zIndex = "6";
       canvasAnimGreenPath.width = this.baseWidth;
       canvasAnimGreenPath.height = this.baseHeight;
@@ -673,20 +752,24 @@
         canvasStatic1.height = this.baseHeight;
         contextStatic1.drawImage(imageCapital, 0, 0, this.baseWidth, this.baseHeight);
         canvasStatic1.style.visibility = 'hidden'
+        this.imgCount ++
       }
       imageGate.onload = () => {
         canvasStatic2.width = this.baseWidth;
         canvasStatic2.height = this.baseHeight;
         contextStatic2.drawImage(imageGate, 0, 0, this.baseWidth, this.baseHeight);
         canvasStatic2.style.visibility = 'hidden'
+        this.imgCount ++
       }
       imageMainCity.onload = () => {
         canvasStatic4.width = this.baseWidth;
         canvasStatic4.height = this.baseHeight;
         contextStatic4.drawImage(imageMainCity, 0, 0, this.baseWidth, this.baseHeight);
         canvasStatic4.style.visibility = 'hidden'
+        this.imgCount ++
       }
       route1.onload = () => {
+        this.imgCount ++
         this.pathObject = {
           'source': route1,
           'originX': 0,
@@ -707,6 +790,7 @@
         }
       }
       route2.onload = () => {
+        this.imgCount ++
         this.pathObject.mask2 = {
           'source': route2,
           'originX': 356,
@@ -715,11 +799,12 @@
           'height': 170,
           'currOriginX': 356,
           'currOriginY': 550,
-          'shiftX': 10,
+          'shiftX': 15,
           'shiftY': 0
         }
       }
       route3.onload = () => {
+        this.imgCount ++
         this.pathObject.mask3 = {
           'source': route3,
           'originX': 900,
@@ -728,11 +813,12 @@
           'height': 57,
           'currOriginX': 900,
           'currOriginY': 484,
-          'shiftX': 10,
+          'shiftX': 6,
           'shiftY': 0
         }
       }
       route4.onload = () => {
+        this.imgCount ++
         this.pathObject.mask4 = {
           'source': route4,
           'originX': 1060,
@@ -757,6 +843,7 @@
         }
       }
       route5.onload = () => {
+        this.imgCount ++
         this.pathObject.mask7 = {
           'source': route5,
           'originX': 1070,
@@ -770,16 +857,60 @@
         }
       }
       imageHorse.onload = () => {
+        this.imgCount ++
         var translate = [
-          [660, 754],
-          [700, 455],
-          [790, 185]
+          [130, 655],
+          [300, 650],
+          [490, 810],
+          [630, 680],
+          [730, 690]
           // [-1040, 830],
         ];
-        var scale = [1, 1, 0];
-        var dur = [15, 15, 7];
-        var sharpPoint = [0, 0, 2]
+        var scale = [1, 1, 1,1,0];
+        var dur = [10, 10, 10,10,5];
+        var sharpPoint = [0, 0, 0,0,2]
         this.horseObject1 = this.initHorseObject(translate, scale, dur, sharpPoint, imageHorse);
+
+        var translate = [
+          [360, 510],
+          [480, 580],
+          [750, 730],
+        ];
+        var scale = [1, 1,0];
+        var dur = [10,10,10];
+        var sharpPoint = [0, 0,2]
+        this.horseObject2 = this.initHorseObject(translate, scale, dur, sharpPoint, imageHorse);
+
+        var translate = [
+          [860, 480],
+          [900, 450],
+          [1080, 480],
+        ];
+        var scale = [1,1,0];
+        var dur = [5,5,5];
+        var sharpPoint = [0,0,2]
+        this.horseObject3 = this.initHorseObject(translate, scale, dur, sharpPoint, imageHorse);
+
+        var translate = [
+          [1060, 380],
+          [1100, 400],
+          [1010, 480],
+        ];
+        var scale = [1,1,0];
+        var dur = [5,5,10];
+        var sharpPoint = [0,0,2]
+        this.horseObject4 = this.initHorseObject(translate, scale, dur, sharpPoint, imageHorse);
+
+        var translate = [
+          [1060, 380],
+          [1130, 400],
+          [1130, 580],
+          [1300, 720],
+        ];
+        var scale = [1,1,1,0];
+        var dur = [5,10,15,10];
+        var sharpPoint = [0,0,0,2]
+        this.horseObject5 = this.initHorseObject(translate, scale, dur, sharpPoint, imageHorse);
       }
       // document.getElementById('map_container').append(divTag)   
       // divTag.append(divTag)
@@ -797,6 +928,7 @@
         top: 0,
         left: 0,
         minScale: this.boxscale,
+        maxScale: this.boxscale * 10,
         warpWidth: this.boxscale * this.baseWidth,
         warpHeight: this.boxscale * this.baseHeight
       })
@@ -808,8 +940,8 @@
         'source': imageHorse,
         'totalFrame': 2,
         'currFrame': 0,
-        'width': 180,
-        'height': 160,
+        'width': 400,
+        'height': 200,
         'point': sharpPoint,
         'position': {
           'points': translate,

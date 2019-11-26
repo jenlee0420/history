@@ -1,5 +1,5 @@
 module.exports = {
-    publicPath: "/",
+    publicPath: "./",
     outputDir: "dist",
     assetsDir: "assets",
     indexPath: "index.html",
@@ -18,8 +18,6 @@ module.exports = {
         proxy: null
     },
     lintOnSave: false,
-    chainWebpack: config => {
-        config.resolve.alias.set("@", resolve("src"));
-    },
+
 
 }
