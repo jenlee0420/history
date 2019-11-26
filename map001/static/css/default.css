@@ -311,4 +311,6 @@ div.smallMap {
     right: 0.1em;
     display: block;
     border-radius: 0 4px 0 0;
+    top:0;
+    bottom:0
   }
