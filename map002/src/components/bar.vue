@@ -1,5 +1,5 @@
 <template>
-<div class="bar" ref="sliderBox" >
+<div class="bar" ref="sliderBox">
     <span class="squ" ref="slider" 
     @mousedown="moveStart" 
     @mousemove="move"
@@ -30,7 +30,6 @@
         watch:{
             scaleindex(n){
                 this.$refs.slider.style.left = (n*10) +'%'
-                console.log(n,'///')
             }
         },
         mounted(){
@@ -51,7 +50,16 @@
                 document.body.addEventListener('mousemove',(e)=>{
                     this.move(e)
                 })
-                document.body.addEventListener('mouseup',(e)=>{
+                let box=document.getElementById('app')
+                let timer=null
+                box.addEventListener('mouseout',(e)=>{
+                    timer=null
+                    timer=setTimeout(() => {
+                        this.moveOut()
+                    }, 200);
+                    
+                })
+                document.body.addEventListener('mouseoup',(e)=>{
                     this.moveOut(e)
                 })
             },
@@ -65,8 +73,8 @@
                     this.distanceX= e.targetTouches[0].clientX - box.offsetLeft
                     // this.distanceX = e.touches[0].pageX - box.offsetLeft; 
                 }
-                if((/Firefox/.test(this.u_agent) || (this.u_agent.indexOf('Trident')>-1 && u_agent.indexOf('rv:11')>-1)) ) {
-                    this.distanceX=(e.pageX) - document.body.clientWidth -box.offsetLeft
+                if((/Firefox/.test(this.u_agent) || (this.u_agent.indexOf('Trident')>-1 && this.u_agent.indexOf('rv:11')>-1)) ) {
+                    this.distanceX=(e.pageX)  -box.offsetLeft
                 }
 
                 // 滑动距离小于0 或者大于滑竿的宽度，return掉
@@ -83,14 +91,17 @@
                 }
                 // slider.style.transformOrigin = 'left';
                 slider.style.left = this.distanceX +'px'
-                console.log(box.clientWidth-slider.clientWidth)
-                this.$emit('offestx',this.distanceX/box.clientWidth)
+                // console.log(box.clientWidth-slider.clientWidth)
+                this.$emit('offestx',(this.distanceX/box.clientWidth * 10))
                 }
             },
             moveOut(){
+                document.body.removeEventListener('mousemove',(e)=>{
+                    this.move(e)
+                })
                 this.dargStart= false
-                let box = this.$refs.sliderBox
-                this.$emit('moveOut',this.distanceX/box.clientWidth)
+                // let box = this.$refs.sliderBox
+                // this.$emit('moveOut',this.distanceX/box.clientWidth)    
             }
         }
     }

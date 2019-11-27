@@ -241,6 +241,8 @@ div.smallMap {
     padding: .3rem;
     font-size: .34rem;
     padding-bottom: 0;
+    width:28em;
+    height: 6em;
 }
 
 .question div:nth-child(2) {
@@ -303,11 +305,14 @@ div.smallMap {
 .modalWindow .mwHeader i {
     width: 0.45rem;
     height: 0.45rem;
-    background: url('/static/img/close.png') no-repeat center center;
+    background: url('../img/close.png') no-repeat center center;
     cursor: pointer;
     background-size: 100%;
     position: absolute;
     right: 0.1em;
     display: block;
     border-radius: 0 4px 0 0;
+    margin:auto;
+    top:0;
+    bottom:0
   }

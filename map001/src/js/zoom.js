@@ -127,7 +127,6 @@ Zoom.prototype.init = function() {
     // 	return false;
     // },
 Zoom.prototype.drage = function(touch) {
-    console.log('drag', '/')
 
     if (this.lastPoint == null) {
         this.lastPoint = {
@@ -179,6 +178,8 @@ Zoom.prototype.zoom = function(touchs) {
 
         
         if ((d < this.lastSapce && this.scale==this.minScale)){
+            return
+        }else if ((d > this.lastSapce && this.scale==this.maxScale)){
             return
         }else{
             if (this.scale >= this.minScale && this.scale <= this.maxScale){
@@ -287,7 +288,7 @@ Zoom.prototype.setTransform = function(needAnimation, originX, originY) {
 
     let distanceX = originX == undefined ? (this.left - this.originLeft) : -originX;
     let distanceY = originY == undefined ? (this.top - this.originTop) : -originY;
-    console.log(this.warpW, this.width)
+    // console.log(this.warpW, this.width)
     if (this.warpW - this.width >= this.left) {
         distanceX = this.warpW - this.width
 
@@ -351,7 +352,7 @@ Zoom.prototype.preSetScale = function(scale, pointX, pointY) {
     }
 
     if (pointX == undefined) {
-      console.log(this.originW,'原始')
+    //   console.log(this.originW,'原始')
         this.left = this.centerX - this.originW / 2 - this.originW / 2 * (scale - 1);
         this.top = this.centerY - this.originH / 2 - this.originH / 2 * (scale - 1);
 

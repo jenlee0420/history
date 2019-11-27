@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <div class="pos_a">{{debug}}</div>
+    <!-- <div class="pos_a" style="font-size:0.5rem">{{debug}}</div> -->
     <div v-if="load" id="loading" style="width:820px;"><img :src="require('../static/img/loading.gif')"></div>
     <div  id="main_container" :style="{'width':docWidth+'px','height':docHeight+'px','display':load?'none':'block'}">
       <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
-        <span>隋滅陳路線圖（588－589年）</span>
+        <span>隋滅陳路線圖 (588-589 年)</span>
         <div id="soundCon" :class="{'mute':noVoice}" @click="noVoice=!noVoice"> </div>
       </div>
       <div class="main_box">
@@ -32,7 +32,7 @@
           <div id="map_action_container" class="greyContainer" style="margin-bottom: 10px;">
             <div class="blueButton zoom_button" style="width: 2.07em; margin: 5px 10px 3px;" @click="setScaleBtn('de')"><b>-</b></div>
             <!-- 滑块 -->
-            <bar @offestx="offestx" @moveOut="moveOut" :scaleindex.sync="scaleindex"></bar>
+            <bar @offestx="setScale" @moveOut="moveOut" :scaleindex.sync="scaleindex"></bar>
             <div class="blueButton zoom_button" style="width: 2.07em; margin: 5px 10px 3px;" @click="setScaleBtn('add')"><b>+</b></div>
           </div>
         </div>
@@ -161,6 +161,7 @@
         license: null,
         horsetimerGroup: null,
         drawHorsesTimeout: null,
+        drawHorsesTimeout2: null,
         redTimer: null,
         shipPlay: false,
         titleH: 70,
@@ -183,10 +184,8 @@
       },
       zoomObj:{
         handler(n, o) {
-          // console.log(n,o,'scale')
-          // this.debug = n.scale+"---"
-          this.scaleZoom =parseFloat((n.scale / n.maxScale) * 10) 
-          console.log(this.scaleZoom,'----',n.scale,n.maxScale)
+          this.scaleindex =(((n.scale- n.minScale) / (n.maxScale - n.minScale)) * 10 )
+          this.debug = n.scale+"---"+n.maxScale+'--'+this.scaleindex
         },
         deep: true
       }
@@ -196,24 +195,23 @@
         event.preventDefault();
       },
       setScaleBtn(type) {
-        // console.log('////')
-        // this.scalePic(0.5,false)
+        this.scaleZoom =(this.scaleindex)
         if (type == 'add') {
-          this.scaleindex+=1
+          this.scaleZoom+=1
         } else {
-          this.scaleindex-=1
+          this.scaleZoom-=1
         }
-        if (this.scaleindex > 10) {
-          this.scaleindex = 10
+        if (this.scaleZoom > 10) {
+          this.scaleZoom = 10
         }
-        if (this.scaleindex <= 0) {
-          this.scaleindex = 0
+        if (this.scaleZoom <= 0) {
+          this.scaleZoom = 0
         }
-        console.log(this.boxscale, this.scaleindex)
-        this.setScale(this.scaleindex)
+        // console.log(this.scaleZoom,'scaleZoom')
+        this.setScale(this.scaleZoom)
       },
       setScale(scaleindex){
-        this.zoomObj.preSetScale(this.boxscale * (1 + scaleindex * 0.1), 0, 0)
+        this.zoomObj.preSetScale(scaleindex/10*(this.zoomObj.maxScale-this.zoomObj.minScale) + this.zoomObj.minScale, 0, 0)
         this.zoomObj.setTransform(true)
       },
       muteMe() {
@@ -246,17 +244,19 @@
             c.style.visibility = swip ? 'visible' : 'hidden'
             break;
           case 3:
-            console.log(swip)
+    
             if (swip) {
               if (!this.noVoice) {
                 this.m03.currentTime = 0
                 this.m03.play()
-                this.drawGreenPath(true)
-                this.lin2timer = setTimeout(() => {
-                  this.drawGreenPath2(true)
-                },2300)
-                this.drawHousePromise(true)
               }
+               if(this.pathObject.playing !=true){          
+                  this.drawGreenPath(true)
+                  this.lin2timer = setTimeout(() => {
+                    this.drawGreenPath2(true)
+                  },2300)
+                  this.drawHousePromise(true)
+               }
             } else {
               this.drawGreenPath(false)
               this.drawGreenPath2(false)
@@ -299,7 +299,6 @@
         }, 100)
       },
       setRemUnit() {
-        console.log('1')
         const u_agent = navigator.userAgent
         if (window.orientation === 0 || window.orientation === 180) {
           //竖屏
@@ -312,7 +311,7 @@
         var selffun = () => {
           this.bodyHeight = window.innerHeight
           this.bodytWidth = window.innerWidth
-          console.log(u_agent, this.bodyHeight, this.bodytWidth)
+          // console.log(u_agent, this.bodyHeight, this.bodytWidth)
           if (this.bodytWidth > this.bodyHeight) {
             this.boxscale = this.bodyHeight / 1396
             this.o = this.bodyHeight
@@ -378,50 +377,44 @@
         this.canvasAnimHorse = document.getElementById('myCanvasAnimHorse')
         let contextAnimHorse = this.canvasAnimHorse.getContext('2d');
         if(flag){
-        if (this.horseObject5.animated == true) {
-          return
-        }
-        
-        this.canvasAnimHorse.style.visibility = 'visible'
+          if (this.horseObject5.animated == true) {
+            return
+          }
+          this.canvasAnimHorse.style.visibility = 'visible'
 
-        // contextAnimHorse.drawImage(this.horseObject1.source, this.horseObject1.position.points[0][0], this.horseObject1.position.points[0][1], this.horseObject1.width * 0.55, this.horseObject1.height * 0.55);
-        // this.showCityAni(canvasAnimHorse, true)
-        // this.horsetimerGroup = setTimeout(() => {
-          this.drawHorsesTimeout = setInterval(() => {
-            this.canvasClear(this.canvasAnimHorse);
-            this.drawHorse(this.horseObject1, contextAnimHorse, this.horseObject1.source).then((res)=>{
-              clearInterval(this.drawHorsesTimeout)
-              this.drawHorsesTimeout = setInterval(() => {
-                this.canvasClear(this.canvasAnimHorse);
-                this.drawHorse(this.horseObject2, contextAnimHorse, this.horseObject2.source).then((res)=>{
-                  clearInterval(this.drawHorsesTimeout)
-                  this.drawHorsesTimeout = setInterval(() => {
-                    this.canvasClear(this.canvasAnimHorse);
-                    this.drawHorse(this.horseObject3, contextAnimHorse, this.horseObject3.source).then((res)=>{
-                      clearInterval(this.drawHorsesTimeout)
-                      this.drawHorsesTimeout = setInterval(() => {
-                        this.canvasClear(this.canvasAnimHorse);
-                        this.drawHorse(this.horseObject4, contextAnimHorse, this.horseObject4.source).then((res)=>{
-                          clearInterval(this.drawHorsesTimeout)
-                           this.drawHorsesTimeout = setInterval(() => {
-                            this.canvasClear(this.canvasAnimHorse);
-                            this.drawHorse(this.horseObject5, contextAnimHorse, this.horseObject5.source).then((res)=>{
-                              clearInterval(this.drawHorsesTimeout)
-                              
-                            })
-                          }, 60);
-                        })
-                      }, 60);
-                    })
-                  }, 60);
-                })
-              }, 60);
-            })
-          }, 60);
+          // contextAnimHorse.drawImage(this.horseObject1.source, this.horseObject1.position.points[0][0], this.horseObject1.position.points[0][1], this.horseObject1.width * 0.55, this.horseObject1.height * 0.55);
+          // this.showCityAni(canvasAnimHorse, true)
+          // this.horsetimerGroup = setTimeout(() => {
+            this.drawHorsesTimeout2 = setInterval(() => {
+              this.canvasClear(this.canvasAnimHorse);
+              if(this.horseObject1.animated == false){
+                this.drawHorse(this.horseObject1, contextAnimHorse, this.horseObject1.source)
+              }else{
+                if(this.horseObject2.animated == false){
+                  this.drawHorse(this.horseObject2, contextAnimHorse, this.horseObject2.source)
+                }else{
+                  if(this.horseObject3.animated == false){
+                    this.drawHorse(this.horseObject3, contextAnimHorse, this.horseObject3.source)
+                  }else{
+                    if(this.horseObject4.animated == false){
+                      this.drawHorse(this.horseObject4, contextAnimHorse, this.horseObject4.source)
+                    }else{
+                      if(this.horseObject5.animated == false){
+                      this.drawHorse(this.horseObject5, contextAnimHorse, this.horseObject5.source)
+                      }
+                    }
+                  }
+                }
+              }
+            }, 60);
         // }, 500)
         }else{
-          clearInterval(this.drawHorsesTimeout)
+          
+          // for(var i= 0; i<this.drawHorsesTimeout2.length;i++){
+          //     clearInterval(this.drawHorsesTimeout2[i])
+          // }
           // clearTimeout(this.horsetimerGroup)
+          clearInterval(this.drawHorsesTimeout2)
           this.canvasClear(this.canvasAnimHorse);
           this.canvasAnimHorse.style.visibility = 'hidden'
           this.resetHorseObject(this.horseObject1)
@@ -531,6 +524,7 @@
         let pathObject = this.pathObject
         if (flag == true) {
           if (pathObject.mask7.height < 350) {
+            pathObject.playing = true
             this.canvasClear(canvasAnimPath);
             contextAnimPath.save();
             contextAnimPath.beginPath();
@@ -604,6 +598,7 @@
           pathObject.mask7.currOriginX = pathObject.mask7.originX;
           pathObject.mask7.currOriginY = pathObject.mask7.originY;
           pathObject.mask7.height = 1;
+          pathObject.playing= false
           clearTimeout(pathObject.timeout);
         }
       },
@@ -613,7 +608,6 @@
         let contextAnimPath2 = canvasAnimPath2.getContext('2d');
         let pathObject = this.pathObject
         if (flag == true) {
-          console.log('visible')
           if(pathObject.mask2.width <= 580){
               this.canvasClear(canvasAnimPath2);
               contextAnimPath2.save();
@@ -630,7 +624,6 @@
             }, 30);
           }
         }else{
-          console.log('hidden')
           canvasAnimPath2.style.visibility = "hidden";
           clearTimeout(pathObject.mask2.timeout)
           pathObject.mask2.currOriginX = pathObject.mask2.originX;
@@ -642,7 +635,6 @@
     showall(type) {
       this.canvasData.forEach((e, index) => {
         if (type) {
-          console.log(type,index)
           this.list[index].show = false
         } else {
           this.list[index].show = true
@@ -657,6 +649,7 @@
       object.position.currDur = 1;
       object.animating = false;
       object.animated = false;
+      object.times=null
     },
     createMap() {
       var divTag = this.$refs.canvasInnerDiv
@@ -786,7 +779,8 @@
             'shiftX': 10,
             'shiftY': 0
           },
-          'timeout': null
+          'timeout': null,
+          'playing':false
         }
       }
       route2.onload = () => {
@@ -928,7 +922,7 @@
         top: 0,
         left: 0,
         minScale: this.boxscale,
-        maxScale: this.boxscale * 10,
+        // maxScale: this.boxscale * 10,
         warpWidth: this.boxscale * this.baseWidth,
         warpHeight: this.boxscale * this.baseHeight
       })
@@ -973,11 +967,10 @@
         this.showWrong = false
       }
     },
-    offestx(x) {
-      console.log(x, 'xx////')
-      this.zoomObj.preSetScale(this.boxscale * (1 + x), 0, 0)
-      this.zoomObj.setTransform(false)
-    },
+    // offestx(x) {
+    //   this.zoomObj.preSetScale(this.boxscale * (1 + x), 0, 0)
+    //   this.zoomObj.setTransform(false)
+    // },
     moveOut(x) {
       this.scaleindex = Math.ceil(x * 10)
     },

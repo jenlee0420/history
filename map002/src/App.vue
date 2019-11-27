@@ -1,13 +1,16 @@
 <template>
   <div id="app">
+    <div class="pos_a" style="font-size:0.5rem" id="debug">{{debug}}</div>
     <div v-if="load" id="loading" style="width:820px;"><img src="static/img/loading.gif"></div>
-    <div v-else id="main_container" :style="{'width':docWidth+'px','height':docHeight+'px'}">
+    <div id="main_container" :style="{'width':docWidth+'px','height':docHeight+'px','display':load?'none':'block'}">
       <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
-        <span>隋代運河分佈圖 (581-600 年)</span>
+        <span>開皇年間官倉分佈圖 (581-600 年)</span>
         <div id="soundCon" :class="{'mute':noVoice}" @click="noVoice=!noVoice"> </div>
       </div>
       <div class="main_box">
         <div id="map_container" class="modal_content" ref="map_container" :style="{'width':canvasW+'px','height':canvasH+'px'}">
+          <div  id="canvasInnerDiv" ref="canvasInnerDiv">
+          </div>
         </div>
         <div id="menu_container" style="float: right;">
           <div id="action_container" class="greyContainer" style="padding: 1px 0.03em 0.03em; height: auto; flex: 1 1 0%;">
@@ -26,7 +29,7 @@
           <div id="map_action_container" class="greyContainer" style="margin-bottom: 10px;">
             <div class="blueButton zoom_button" style="width: 2.07em; margin: 5px 10px 3px;" @click="setScaleBtn('de')"><b>-</b></div>
             <!-- 滑块 -->
-            <bar @offestx="offestx" @moveOut="moveOut" :scaleindex.sync="scaleindex"></bar>
+            <bar @offestx="setScale" @moveOut="moveOut" :scaleindex.sync="scaleindex"></bar>
             <div class="blueButton zoom_button" style="width: 2.07em; margin: 5px 10px 3px;" @click="setScaleBtn('add')"><b>+</b></div>
           </div>
         </div>
@@ -42,10 +45,10 @@
           <div class="ansBox" :class="showWrong==false?'wrongico':'rightico'" v-if="currAns!=null"></div>
         </div>
     </modal>
-    <modal class="" :width="bodytWidth/1.8" headTitle="大興（今西安市）" :hideFooter="true" v-if="mapPop" @cancel-event="mapPop=false;list[3].show=false">
+    <modal class=""  headTitle="大興（今西安市）" :hideFooter="true" v-if="mapPop" @cancel-event="mapPop=false;list[3].show=false">
       <div slot="modalCont">
         <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d845158.7150065893!2d108.8816973!3d34.161658!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x366379e922ac17b9%3A0x85d466fda794582e!2z5Lit5ZyL6Zmd6KW_55yB6KW_5a6J5biC!5e0!3m2!1szh-TW!2shk!4v1572421815894!5m2!1szh-TW!2shk"
-          width="100%" :height="bodyHeight/1.8" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+          :width="bodytWidth/1.8" :height="bodyHeight/1.8" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
       </div>
     </modal>
   </div>
@@ -68,6 +71,7 @@
       this.load= false
     },
     mounted() {
+      this.createMap()
       if(!this.load){
       if("onorientationchange" in window){
         window.addEventListener("orientationchange",this.oriChange,false)
@@ -78,7 +82,7 @@
       this.zoomObj = require('./js/zoom.js')
       this.setRemUnit()
       this.initCanvas()
-      this.createMap()
+      
       document.getElementById('map_container').addEventListener("touchstart", this.bodyScroll, {
             passive: false //  禁止 passive 效果
         })
@@ -150,7 +154,26 @@
         shipPlay: false,
         titleH:70,
         canvasAnimHorse:null,
-        prevorienta:''
+        prevorienta:'',
+        scaleZoom:0,
+        imgCount:0,
+        debug:''
+      }
+    },
+    watch:{
+      imgCount(n){
+        if(this.imgCount>=5){
+          console.log(this.imgCount)
+          this.load= false
+        }
+      },
+      zoomObj:{
+        handler(n, o) {
+        
+          this.scaleindex =(((n.scale- n.minScale) / (n.maxScale - n.minScale)) * 10 )
+          // this.debug = n.lastSapce+"---"+n.minScale+'--'+n.scale
+        },
+        deep: true
       }
     },
     methods: {
@@ -158,21 +181,23 @@
         event.preventDefault();
       },
       setScaleBtn(type) {
-        // console.log('////')
-        // this.scalePic(0.5,false)
+        this.scaleZoom =(this.scaleindex)
         if (type == 'add') {
-          this.scaleindex++
-            if (this.scaleindex > 10) {
-              this.scaleindex = 10
-            }
+          this.scaleZoom+=1
         } else {
-          this.scaleindex--
-            if (this.scaleindex <= 0) {
-              this.scaleindex = 0
-            }
+          this.scaleZoom-=1
         }
-        console.log(this.boxscale, this.scaleindex)
-        this.zoomObj.preSetScale(this.boxscale * (1 + this.scaleindex * 0.1), 0, 0)
+        if (this.scaleZoom > 10) {
+          this.scaleZoom = 10
+        }
+        if (this.scaleZoom <= 0) {
+          this.scaleZoom = 0
+        }
+        // console.log(this.scaleZoom,'scaleZoom')
+        this.setScale(this.scaleZoom)
+      },
+      setScale(scaleindex){
+        this.zoomObj.preSetScale(scaleindex/10*(this.zoomObj.maxScale-this.zoomObj.minScale) + this.zoomObj.minScale, 0, 0)
         this.zoomObj.setTransform(true)
       },
       muteMe() {
@@ -463,7 +488,7 @@
         object.animated = false;
       },
       createMap() {
-        var divTag = document.createElement('div');
+        var divTag = this.$refs.canvasInnerDiv
         var canvasBackground = document.createElement('canvas');
         var canvasTop = document.createElement('canvas');
         var canvasStatic1 = document.createElement('canvas');
@@ -584,31 +609,39 @@
           canvasTop.width = this.baseWidth;
           canvasTop.height = this.baseHeight;
           contextTop.drawImage(imageMapDetail, 0, 0, this.baseWidth, this.baseHeight);
+          this.imgCount++
+          
         }
         imageMap.onload = () => {
           canvasBackground.width = this.baseWidth;
           canvasBackground.height = this.baseHeight;
           contextBackground.drawImage(imageMap, 0, 0, this.baseWidth, this.baseHeight);
+          this.imgCount++
+          
         }
         imageCapital.onload = () => {
           canvasStatic1.width = this.baseWidth;
           canvasStatic1.height = this.baseHeight;
           contextStatic1.drawImage(imageCapital, 0, 0, this.baseWidth, this.baseHeight);
           canvasStatic1.style.visibility = 'hidden'
+          this.imgCount++
         }
         imageGate.onload = () => {
           canvasStatic2.width = this.baseWidth;
           canvasStatic2.height = this.baseHeight;
           contextStatic2.drawImage(imageGate, 0, 0, this.baseWidth, this.baseHeight);
           canvasStatic2.style.visibility = 'hidden'
+          this.imgCount++
         }
         imageborder.onload = () => {
           canvasStatic3.width = this.baseWidth;
           canvasStatic3.height = this.baseHeight;
           contextStatic3.drawImage(imageborder, 0, 0, this.baseWidth, this.baseHeight);
           canvasStatic3.style.visibility = 'hidden'
+          this.imgCount++
         }
         imageHorse.onload = () => {
+          this.imgCount++
           var translate = [
             [660, 754],
             [700, 455],
@@ -619,9 +652,8 @@
           var dur = [15, 15, 7];
           var sharpPoint = [0, 0, 2]
           this.horseObject1 = this.initHorseObject(translate, scale, dur, sharpPoint, imageHorse);
-          console.log(this.horseObject1)
         }
-        document.getElementById('map_container').append(divTag)
+        // document.getElementById('map_container').appendChild(divTag)
         this.$nextTick(() => {
           this.setZoom()
         })
@@ -641,7 +673,6 @@
           warpHeight:this.boxscale*this.baseHeight
         })
         this.zoomObj.setScale(this.boxscale)
-        
           // this.zoomObj.setTransform(false,0,0)
       },
       initHorseObject(translate, scale, dur, sharpPoint, imageHorse) {
@@ -682,12 +713,12 @@
           this.showWrong = false
         }
       },
-      offestx(x) {
-        console.log(x, 'xx////')
-        this.zoomObj.preSetScale(this.boxscale * (1 + x),0,0)
-        this.zoomObj.setTransform(false)
+      // offestx(x) {
+      //   console.log(x, 'xx////')
+      //   this.zoomObj.preSetScale(this.boxscale * (1 + x),0,0)
+      //   this.zoomObj.setTransform(false)
         
-      },
+      // },
       moveOut(x){
         this.scaleindex = Math.ceil(x*10)
       }

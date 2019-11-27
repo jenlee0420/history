@@ -1,5 +1,5 @@
 <template>
-<div class="bar" ref="sliderBox" >
+<div class="bar" ref="sliderBox">
     <span class="squ" ref="slider" 
     @mousedown="moveStart" 
     @mousemove="move"
@@ -50,6 +50,15 @@
                 document.body.addEventListener('mousemove',(e)=>{
                     this.move(e)
                 })
+                let box=document.getElementById('app')
+                let timer=null
+                box.addEventListener('mouseout',(e)=>{
+                    timer=null
+                    timer=setTimeout(() => {
+                        this.moveOut()
+                    }, 200);
+                    
+                })
                 document.body.addEventListener('mouseup',(e)=>{
                     this.moveOut(e)
                 })
@@ -83,16 +92,17 @@
                 // slider.style.transformOrigin = 'left';
                 slider.style.left = this.distanceX +'px'
                 // console.log(box.clientWidth-slider.clientWidth)
-                this.$emit('offestx',this.distanceX/box.clientWidth)
+                this.$emit('offestx',(this.distanceX/box.clientWidth * 10))
                 }
             },
             moveOut(){
-                if(this.dargStart){
+                    document.body.removeEventListener('mousemove',(e)=>{
+                        this.move(e)
+                    })
                     this.dargStart= false
-                    let box = this.$refs.sliderBox
-                    console.log('/moveOut')
-                    this.$emit('moveOut',this.distanceX/box.clientWidth)
-                }
+                    // let box = this.$refs.sliderBox
+                    // this.$emit('moveOut',this.distanceX/box.clientWidth)
+            
             }
         }
     }
