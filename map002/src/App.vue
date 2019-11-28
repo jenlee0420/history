@@ -7,7 +7,7 @@
         <span>開皇年間官倉分佈圖 (581-600 年)</span>
         <div id="soundCon" :class="{'mute':noVoice}" @click="noVoice=!noVoice"> </div>
       </div>
-      <div class="main_box">
+      <div class="main_box" id="main_box">
         <div id="map_container" class="modal_content" ref="map_container" :style="{'width':canvasW+'px','height':canvasH+'px'}">
           <div  id="canvasInnerDiv" ref="canvasInnerDiv">
           </div>
@@ -68,11 +68,9 @@
 
     },
     created () {
-      this.load= false
     },
     mounted() {
       this.createMap()
-      if(!this.load){
       if("onorientationchange" in window){
         window.addEventListener("orientationchange",this.oriChange,false)
       }else{
@@ -83,10 +81,10 @@
       this.setRemUnit()
       this.initCanvas()
       
-      document.getElementById('map_container').addEventListener("touchstart", this.bodyScroll, {
+      document.getElementById('main_box').addEventListener("touchmove", this.bodyScroll, {
             passive: false //  禁止 passive 效果
         })
-      }
+
     },
     data() {
       return {
@@ -163,8 +161,7 @@
     watch:{
       imgCount(n){
         if(this.imgCount>=5){
-          console.log(this.imgCount)
-          this.load= false
+          this.load = false
         }
       },
       zoomObj:{
@@ -198,7 +195,7 @@
       },
       setScale(scaleindex){
         this.zoomObj.preSetScale(scaleindex/10*(this.zoomObj.maxScale-this.zoomObj.minScale) + this.zoomObj.minScale, 0, 0)
-        this.zoomObj.setTransform(true)
+        this.zoomObj.setTransform(false)
       },
       muteMe() {
         this.m01.pause()
@@ -259,7 +256,6 @@
         },100)
       },
       setRemUnit() {
-        console.log('1')
         const u_agent = navigator.userAgent
         if (window.orientation === 0 || window.orientation === 180) {
           //竖屏

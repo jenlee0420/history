@@ -347,8 +347,11 @@ Zoom.prototype.setScale = function(scale, pointX, pointY) {
 }
 
 Zoom.prototype.preSetScale = function(scale, pointX, pointY) {
-    if (scale < 0.1) {
-        scale = 0.1;
+    if (scale < this.minScale) {
+        scale = this.minScale;
+    }
+    if (scale > this.maxScale) {
+        scale = this.maxScale;
     }
 
     if (pointX == undefined) {

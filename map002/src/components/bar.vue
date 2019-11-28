@@ -1,14 +1,15 @@
 <template>
 <div class="bar" ref="sliderBox">
-    <span class="squ" ref="slider" 
+    <div class="squ" ref="slider"
     @mousedown="moveStart" 
-    @mousemove="move"
+   
     @mouseup="moveOut"
 
     @touchstart="moveStart" 
-    @touchmove="move"
+    
     @touchend="moveOut"
-    ></span>
+    >
+    <span ></span></div>
 </div>
 </template>
 
@@ -43,13 +44,15 @@
                 this.dargStart= false
             },
             moveStart(e){
+                let slider=this.$refs.slider
                 this.dargStart= true
+                // alert('d')
                 if(/iPad|iPhone|Android|Adr/i.test(this.u_agent)){
-                   this.startx = e.touches[0].pageX;
+                    var ev = e || window.event;
+                    var touch = ev.targetTouches[0];
+                    this.startx = touch.clientX - slider.offsetLeft;
                 }
-                document.body.addEventListener('mousemove',(e)=>{
-                    this.move(e)
-                })
+                
                 let box=document.getElementById('app')
                 let timer=null
                 box.addEventListener('mouseout',(e)=>{
@@ -59,9 +62,20 @@
                     }, 200);
                     
                 })
-                document.body.addEventListener('mouseoup',(e)=>{
+                box.addEventListener('mousemove',(e)=>{
+                    this.move(e)
+                })
+                box.addEventListener('mouseoup',(e)=>{
                     this.moveOut(e)
                 })
+                box.addEventListener('touchmove',(e)=>{
+                   
+                    this.move(e)
+                })
+                box.addEventListener('touchend',(e)=>{
+                    this.moveOut(e)
+                })
+                
             },
             move(e){
                 if(this.dargStart){
@@ -70,8 +84,8 @@
                 this.distanceX = e.clientX - box.offsetLeft
                 
                 if(/iPad|iPhone|Android|Adr/i.test(this.u_agent)){
-                    this.distanceX= e.targetTouches[0].clientX - box.offsetLeft
-                    // this.distanceX = e.touches[0].pageX - box.offsetLeft; 
+                    this.distanceX  = e.targetTouches[0].clientX - this.startx;
+                    // this.distanceX= e.targetTouches[0].clientX - box.offsetLeft
                 }
                 if((/Firefox/.test(this.u_agent) || (this.u_agent.indexOf('Trident')>-1 && this.u_agent.indexOf('rv:11')>-1)) ) {
                     this.distanceX=(e.pageX)  -box.offsetLeft
@@ -114,10 +128,20 @@
         border: 1px solid #aaaaaa;
         background-color: #fff;
         position: relative;
+        .squbox{
+            width: 0.3rem !important;
+            height: 0.3rem !important;
+            background-color: rgba(200, 200, 200, 0.3);
+            position:absolute;
+            top: -52%;
+            left: 0%;
+        }
         .squ{
             width: 0.2rem !important;
             height: 0.2rem !important;
-            top: -31%;
+            top: 0;
+            bottom:0;
+            margin: auto;
             margin-left: -.08em;
             display: inline-block;
             background-color: #e6e6e6;
