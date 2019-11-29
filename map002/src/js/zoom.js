@@ -352,6 +352,9 @@ Zoom.prototype.preSetScale = function(scale, pointX, pointY) {
     if (scale < this.minScale) {
         scale = this.minScale;
     }
+    if (scale > this.maxScale) {
+        scale = this.maxScale;
+    }
 
     if (pointX == undefined) {
     //   console.log(this.originW,'原始')

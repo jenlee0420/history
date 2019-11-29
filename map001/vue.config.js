@@ -1,3 +1,4 @@
+
 module.exports = {
     publicPath: "./",
     outputDir: "dist",
@@ -8,7 +9,16 @@ module.exports = {
     lintOnSave: true,
     runtimeCompiler: false,
     transpileDependencies: [],
-    productionSourceMap: false,
+    productionSourceMap: true,
+    configureWebpack: config => {
+        config.output.devtoolModuleFilenameTemplate = info => {
+            const resPath = info.resourcePath
+            if ((/\.vue$/.test(resPath) && !/type=script/.test(info.identifier)) || /node_modules/.test(resPath)) {
+                return `webpack:///${resPath}?${info.hash}`
+            }
+            return `webpack:///${resPath.replace('./src', 'my-code/src')}`
+        }
+        },
     crossorigin: undefined,
     integrity: false,
     devServer: {//代理
@@ -18,6 +28,4 @@ module.exports = {
         proxy: null
     },
     lintOnSave: false,
-
-
 }

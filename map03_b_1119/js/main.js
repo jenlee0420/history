@@ -216,8 +216,8 @@ $(function() {
                                 }).addClass("icon"), "糧食儲存")
                             ),
                             $("<div />").addClass("sample blueButton action googlemap").data({
-                                "action": "8",
-                                "path": "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d845158.7150065893!2d108.8816973!3d34.161658!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x366379e922ac17b9%3A0x85d466fda794582e!2z5Lit5ZyL6Zmd6KW_55yB6KW_5a6J5biC!5e0!3m2!1szh-TW!2shk!4v1570607554797!5m2!1szh-TW!2shk",
+                               "action": "8",
+                                "path": "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d27045078.880210858!2d91.51231386387506!3d34.161658!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x366379e922ac17b9%3A0x85d466fda794582e!2z5Lit5ZyL6Zmd6KW_55yB6KW_5a6J5biC!5e0!3m2!1szh-TW!2shk!4v1574835171285!5m2!1szh-TW!2shk",
                                 "title": "大興（今西安市）"
                             }).append(
                                 $("<span />").append($("<img />", {
