@@ -81,7 +81,7 @@
       this.setRemUnit()
       this.initCanvas()
       
-      document.getElementById('map_container').addEventListener("touchstart", this.bodyScroll, {
+      document.getElementById('map_container').addEventListener("touchmove", this.bodyScroll, {
         passive: false //  禁止 passive 效果
       })
     },

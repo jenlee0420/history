@@ -154,6 +154,10 @@ body {
     flex-direction: column;
     background-color: #434399;
     user-select: none;
+    -webkit-user-select:none;
+	-moz-user-select:none;
+	-o-user-select:none;
+    
 }
 
 .sample_title {
