@@ -19,8 +19,10 @@
           <div id="action_container" class="greyContainer" style="padding: 1px 0.03em 0.03em; height: auto; flex: 1 1 0%;">
             <div class="sample_title">圖例</div>
             <div class="sample blueButton action" :class="{'clicked':item.show}" v-for="(item,index) in list" :key="index" @click="showCanvas(index)">
-              <span>
-                                                    <img :src="item.ico" class="icon fix_height">{{item.text}}</span>
+              <div class="iconItem">
+                 <span class="icon"><img :src="item.ico"></span>
+                 <span>{{item.text}}</span>
+                 </div>
             </div>
           </div>
           <div class="greyContainer">
@@ -212,7 +214,7 @@
       },
       setScale(scaleindex){
         this.zoomObj.preSetScale(scaleindex/10*(this.zoomObj.maxScale-this.zoomObj.minScale) + this.zoomObj.minScale, 0, 0)
-        this.zoomObj.setTransform(true)
+        this.zoomObj.setTransform(false)
       },
       muteMe() {
         this.m01.pause()
@@ -1031,5 +1033,25 @@
       width: 1430px;
       height: 1316px;
     }
+    .iconItem{
+      display: flex;
+      align-items: center;
+      height: 0.52rem;
+      line-height: 0;
+      .icon{
+        padding: 0;
+        width: 1.81em;
+          height: 1.2em;
+          display: inline-block;
+          padding-right: 0.3em;
+          padding-left: 0.42em;
+        img{
+          width: 100%;
+          height: 100%;
+          object-fit:contain;
+        }
+      }
+    }
   }
+  
 </style>
