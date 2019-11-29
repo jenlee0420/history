@@ -251,6 +251,9 @@
               if (!this.noVoice) {
                 this.m03.currentTime = 0
                 this.m03.play()
+                this.license.currentTime = 0
+                this.license.volume = 0.2
+                this.license.play()
               }
                if(this.pathObject.playing !=true){          
                   this.drawGreenPath(true)
@@ -270,9 +273,6 @@
             if (swip && !this.noVoice) {
               this.m04.currentTime = 0
               this.m04.play()
-              this.license.currentTime = 0
-              this.license.volume = 0.2
-              this.license.play()
             }
             if (swip) {
               this.chenTimer = setTimeout(() => {
@@ -402,7 +402,9 @@
                       this.drawHorse(this.horseObject4, contextAnimHorse, this.horseObject4.source)
                     }else{
                       if(this.horseObject5.animated == false){
-                      this.drawHorse(this.horseObject5, contextAnimHorse, this.horseObject5.source)
+                        this.drawHorse(this.horseObject5, contextAnimHorse, this.horseObject5.source)
+                      }else{
+                        this.license.pause()
                       }
                     }
                   }
@@ -1042,13 +1044,20 @@
         padding: 0;
         width: 1.81em;
           height: 1.2em;
-          display: inline-block;
-          padding-right: 0.3em;
-          padding-left: 0.42em;
+         line-height: 1.2em;
+             position: relative;
+    margin-right: 0.3em;
+    margin-left: 0.42em;
         img{
-          width: 100%;
-          height: 100%;
-          object-fit:contain;
+          max-width: 100%;
+          max-height: 100%;
+              position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+          // object-fit:contain;
         }
       }
     }

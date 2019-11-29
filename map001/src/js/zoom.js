@@ -9,7 +9,7 @@ function Zoom(el, option) {
     }
     option = Object.assign({
         minScale: 0.1,
-        maxScale: 2,
+        maxScale: 1,
         top: 0,
         left: 0,
     }, option);
