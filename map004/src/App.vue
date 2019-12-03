@@ -834,11 +834,11 @@ export default {
           height: this.baseHeight,
           mask1: {
             originX: 266,
-            originY: 556,
+            originY: 526,
             width: 257,
             height: 1,
             currOriginX: 266,
-            currOriginY: 556,
+            currOriginY: 526,
             shiftX: 8,
             shiftY: 0
           },
