@@ -1306,3 +1306,12 @@ function drawHorse(object, isInvert, endfun, contextS) {
     }
     // })
 };
+vvv().then((res)=>{
+    console.log(res)
+})
+function vvv(params) {
+    return new Promise((res,rej)=>{
+        console.log('success')
+        res('ok')
+    })
+}

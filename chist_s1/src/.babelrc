@@ -1,5 +1,12 @@
  {
      "presets": [
+         [
+            "@babel/env",
+            {
+                "useBuiltIns": "usage",
+                "corejs": 3
+            }
+        ],
          ["es2015", {
              "modules": false
          }],
@@ -12,12 +19,11 @@
     //           "async": true
     //       }]
     //   ]
-    , "plugins": [
-        ["transform-runtime", {
-                "polyfill": false,
-            "regenerator": true,
-            "moduleName": "babel-runtime"
-        }]
+    ,
+    "plugins": [
+        [
+            "@babel/plugin-transform-runtime"
+        ]
     ]
     //  ,"plugins": ["transform-async-to-generator"]
     // , "plugins": ["syntax-async-functions"]
