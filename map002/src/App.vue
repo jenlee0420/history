@@ -26,12 +26,13 @@
               <div class="blueButton action_all " @click="showall(false)">全部隱藏</div>
             </div>
           </div>
-          <div id="map_action_container" class="greyContainer" style="margin-bottom: 10px;">
-            <div class="blueButton zoom_button" style="width: 2.07em; margin: 5px 10px 3px;" @click="setScaleBtn('de')"><b>-</b></div>
+          
+            
             <!-- 滑块 -->
-            <bar @offestx="setScale" @moveOut="moveOut" :scaleindex.sync="scaleindex"></bar>
-            <div class="blueButton zoom_button" style="width: 2.07em; margin: 5px 10px 3px;" @click="setScaleBtn('add')"><b>+</b></div>
-          </div>
+            <!-- <bar1 min="0" max="100" step="10" v-model="slider2"/> -->
+            <bar @offestx="setScale" @moveOut="moveOut" :scaleindex.sync="scaleindex" />
+            
+          <!-- </div> -->
         </div>
       </div>
     </div>
@@ -58,10 +59,12 @@
   import zoom from './js/zoom.js'
   import modal from "./components/modal";
   import bar from "./components/bar";
+  import bar1 from "./components/bar1";
   export default {
     components: {
       modal,
-      bar
+      bar,
+      bar1,
     },
     name: "App",
     beforeCreate(){
@@ -88,6 +91,7 @@
     },
     data() {
       return {
+        slider2: "0",
         load:true,
         noVoice:false,
         zoomObj: null,
@@ -177,22 +181,7 @@
       bodyScroll(event) {
         event.preventDefault();
       },
-      setScaleBtn(type) {
-        this.scaleZoom =(this.scaleindex)
-        if (type == 'add') {
-          this.scaleZoom+=1
-        } else {
-          this.scaleZoom-=1
-        }
-        if (this.scaleZoom > 10) {
-          this.scaleZoom = 10
-        }
-        if (this.scaleZoom <= 0) {
-          this.scaleZoom = 0
-        }
-        // console.log(this.scaleZoom,'scaleZoom')
-        this.setScale(this.scaleZoom)
-      },
+      
       setScale(scaleindex){
         this.zoomObj.preSetScale(scaleindex/10*(this.zoomObj.maxScale-this.zoomObj.minScale) + this.zoomObj.minScale, 0, 0)
         this.zoomObj.setTransform(false)
