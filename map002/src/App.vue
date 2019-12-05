@@ -71,7 +71,15 @@
 
     },
     created () {
-    },
+    const that = this
+    that.timer = setInterval(function () {
+        console.log(document.readyState)
+        if (document.readyState === 'complete') {
+            that.load = false;
+            window.clearInterval(that.timer)
+        }
+    }, 500)
+  },
     mounted() {
       this.createMap()
       if("onorientationchange" in window){
@@ -163,11 +171,7 @@
       }
     },
     watch:{
-      imgCount(n){
-        if(this.imgCount>=5){
-          this.load = false
-        }
-      },
+      
       zoomObj:{
         handler(n, o) {
         
@@ -594,14 +598,14 @@
           canvasTop.width = this.baseWidth;
           canvasTop.height = this.baseHeight;
           contextTop.drawImage(imageMapDetail, 0, 0, this.baseWidth, this.baseHeight);
-          this.imgCount++
+
           
         }
         imageMap.onload = () => {
           canvasBackground.width = this.baseWidth;
           canvasBackground.height = this.baseHeight;
           contextBackground.drawImage(imageMap, 0, 0, this.baseWidth, this.baseHeight);
-          this.imgCount++
+
           
         }
         imageCapital.onload = () => {
@@ -609,24 +613,23 @@
           canvasStatic1.height = this.baseHeight;
           contextStatic1.drawImage(imageCapital, 0, 0, this.baseWidth, this.baseHeight);
           canvasStatic1.style.visibility = 'hidden'
-          this.imgCount++
+
         }
         imageGate.onload = () => {
           canvasStatic2.width = this.baseWidth;
           canvasStatic2.height = this.baseHeight;
           contextStatic2.drawImage(imageGate, 0, 0, this.baseWidth, this.baseHeight);
           canvasStatic2.style.visibility = 'hidden'
-          this.imgCount++
         }
         imageborder.onload = () => {
           canvasStatic3.width = this.baseWidth;
           canvasStatic3.height = this.baseHeight;
           contextStatic3.drawImage(imageborder, 0, 0, this.baseWidth, this.baseHeight);
           canvasStatic3.style.visibility = 'hidden'
-          this.imgCount++
+
         }
         imageHorse.onload = () => {
-          this.imgCount++
+
           var translate = [
             [660, 754],
             [700, 455],
