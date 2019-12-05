@@ -73,6 +73,16 @@ export default {
   },
   name: "App",
   beforeCreate() {},
+  created () {
+    const that = this
+    that.timer = setInterval(function () {
+        console.log(document.readyState)
+        if (document.readyState === 'complete') {
+            that.load = false;
+            window.clearInterval(that.timer)
+        }
+    }, 500)
+  },
   mounted() {
     this.createMap();
     if ("onorientationchange" in window) {
@@ -187,12 +197,6 @@ export default {
     };
   },
   watch: {
-    imgCount(n) {
-      if (this.imgCount >=2) {
-        // console.log(this.imgCount)
-        this.load = false;
-      }
-    },
     zoomObj: {
       handler(n, o) {
         this.scaleindex =
@@ -306,6 +310,18 @@ export default {
           break;
       }
       this.list[index].show = swip;
+      this.conflict()
+    },
+    conflict(){
+      let swip1 = this.list[1].show
+      let swip3 = this.list[3].show
+      document.getElementById('myCanvasStatic4').style.visibility = swip1?'visible':'hidden';
+      if(this.list[2].show){
+        document.getElementById('myCanvasStatic4').style.visibility = 'visible'
+      }
+      if(swip3){
+        document.getElementById('myCanvasStatic4').style.visibility = 'visible'
+      }
     },
     oriChange() {
       setTimeout(() => {
@@ -416,7 +432,7 @@ export default {
       // Variable init
       divTag.appendChild(canvasStatic1);
       divTag.appendChild(canvasStatic2);
-      // divTag.appendChild(canvasStatic4);
+      divTag.appendChild(canvasStatic4);
       // divTag.appendChild(canvasStatic5);
       // divTag.appendChild(canvasAnimGreenPath2);
       // divTag.appendChild(canvasAnimGreenPath);
@@ -450,7 +466,7 @@ export default {
       canvasAnimHorse.height = this.baseHeight;
       var imageMap = new Image();
       var imageMapDetail = new Image();
-      var imageCapital = new Image();
+      var imageHuren = new Image();
       var imageGate = new Image();
       var imageMainCity = new Image();
       var imageHorse = new Image();
@@ -461,25 +477,24 @@ export default {
       var route5 = new Image();
       // imageMap.src = require("../static/img/map.png");
       // imageMapDetail.src = require("../static/img/mapDetail.png");
-      // imageCapital.src = require("../static/img/capital.png");
+      imageHuren.src = require("../static/img/Huren_1.png");
       imageMainCity.src = require("../static/img/capital.png");
       imageHorse.src = require("../static/img/horse.png");
       // imageGate.src = require("../static/img/gate.png");
       // route1.src = require("../static/img/route.png");
 
-      // imageCapital.onload = () => {
-      //   canvasStatic1.width = this.baseWidth;
-      //   canvasStatic1.height = this.baseHeight;
-      //   contextStatic1.drawImage(
-      //     imageCapital,
-      //     0,
-      //     0,
-      //     this.baseWidth,
-      //     this.baseHeight
-      //   );
-      //   canvasStatic1.style.visibility = "hidden";
-      //   this.imgCount++;
-      // };
+      imageHuren.onload = () => {
+        canvasStatic4.width = this.baseWidth;
+        canvasStatic4.height = this.baseHeight;
+        contextStatic4.drawImage(
+          imageHuren,
+          0,
+          0,
+          this.baseWidth,
+          this.baseHeight
+        );
+        canvasStatic4.style.visibility = "hidden";
+      };
       // imageGate.onload = () => {
       //   canvasStatic2.width = this.baseWidth;
       //   canvasStatic2.height = this.baseHeight;
@@ -498,11 +513,9 @@ export default {
         canvasStatic1.height = this.baseHeight;
         contextStatic1.drawImage(imageMainCity, 0, 0, this.baseWidth, this.baseHeight);
         canvasStatic1.style.visibility = 'hidden'
-        this.imgCount ++
       }
      
       imageHorse.onload = () => {
-        this.imgCount++;
         contextAnimHorse.width = this.baseWidth;
         contextAnimHorse.height = this.baseHeight;
         canvasAnimHorse.style.visibility = 'hidden'

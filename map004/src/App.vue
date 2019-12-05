@@ -4,14 +4,15 @@
     <div v-if="load" id="loading" style="width:820px;"><img :src="require('../static/img/loading.gif')"></div>
     <div  id="main_container" :style="{'width':docWidth+'px','height':docHeight+'px','display':load?'none':'block'}">
       <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
-        <span>隋滅陳路線圖 (588-589 年)</span>
+        <span>李淵進軍路線圖 (617-618 年)</span>
         <div id="soundCon" :class="{'mute':noVoice}" @click="noVoice=!noVoice"> </div>
       </div>
       <div class="main_box">
         <div id="map_container" class="modal_content" ref="map_container" :style="{'width':canvasW+'px','height':canvasH+'px'}">
           <div class="mapBackground" id="canvasInnerDiv" ref="canvasInnerDiv">
             <div class="detail_div pos_a map"></div>
-            <div class="taiyuan_div pos_a map"></div>
+            <div class="border_div pos_a map"></div>
+            <!-- <div class="taiyuan_div pos_a map" v-if="maincityAni"></div> -->
             <div class="main_city_div pos_a map" v-if="maincityAni"></div>
             <div class="canal_div pos_a map" v-if="canalAni"></div>
             <div class="canalName_div pos_a map" v-if="canalAni"></div>
@@ -75,6 +76,16 @@ export default {
   },
   name: "App",
   beforeCreate() {},
+  created () {
+    const that = this
+    that.timer = setInterval(function () {
+        console.log(document.readyState)
+        if (document.readyState === 'complete') {
+            that.load = false;
+            window.clearInterval(that.timer)
+        }
+    }, 500)
+  },
   mounted() {
     this.createMap();
     if ("onorientationchange" in window) {
@@ -95,6 +106,7 @@ export default {
   },
   data() {
     return {
+      timer:null,
       load: true,
       noVoice: false,
       zoomObj: null,
@@ -179,9 +191,9 @@ export default {
         "myCanvasStatic1",
         false,
         "myCanvasStatic2",
-        "myCanvasStatic3",
-        "myCanvasStatic4",
-        false,false
+        false,
+        false,
+        false,"myCanvasStatic4"
       ],
       m01: null,
       m02: null,
@@ -210,12 +222,6 @@ export default {
     };
   },
   watch: {
-    imgCount(n) {
-      if (this.imgCount >= 2) {
-        // console.log(this.imgCount)
-        this.load = false;
-      }
-    },
     zoomObj: {
       handler(n, o) {
         this.scaleindex =
@@ -277,6 +283,7 @@ export default {
           break;
         case 1:
           this.maincityAni = swip;
+          // document.getElementById(this.canvasData[6]).style.visibility = swip?'visible':'hidden';
           break;
         case 2:
           if (swip && !this.noVoice) {
@@ -324,6 +331,7 @@ export default {
             this.drawHousePromise(false);
             clearTimeout(this.lin2timer);
           }
+          this.showCityAni(c, swip);
           break;
         case 7:
           this.mapPop = swip;
@@ -336,6 +344,15 @@ export default {
           break;
       }
       this.list[index].show = swip;
+      this.conflict()
+    },
+    conflict(){
+      let swip1 = this.list[1].show
+      let swip6 = this.list[6].show
+      document.getElementById(this.canvasData[6]).style.visibility = swip1?'visible':'hidden';
+      if(swip6){
+        document.getElementById(this.canvasData[6]).style.visibility = 'visible'
+      }
     },
     oriChange() {
       setTimeout(() => {
@@ -770,7 +787,7 @@ export default {
       canvasAnimHorse.width = this.baseWidth;
       canvasAnimHorse.height = this.baseHeight;
       var imageMap = new Image();
-      var imageMapDetail = new Image();
+      var imageTaiyuan = new Image();
       var imageCapital = new Image();
       var imageGate = new Image();
       var imageMainCity = new Image();
@@ -781,7 +798,7 @@ export default {
       var route4 = new Image();
       var route5 = new Image();
       imageMap.src = require("../static/img/map.png");
-      imageMapDetail.src = require("../static/img/mapDetail.png");
+      imageTaiyuan.src = require("../static/img/main_city1.png");
       imageCapital.src = require("../static/img/capital.png");
       imageMainCity.src = require("../static/img/main_city.png");
       imageHorse.src = require("../static/img/horse.png");
@@ -791,6 +808,19 @@ export default {
       // route3.src = require('../static/img/route3.png');
       // route4.src = require('../static/img/route4.png');
       // route5.src = require('../static/img/route5.png');
+      
+      imageTaiyuan.onload = () => {
+        canvasStatic4.width = this.baseWidth;
+        canvasStatic4.height = this.baseHeight;
+        contextStatic4.drawImage(
+          imageTaiyuan,
+          0,
+          0,
+          this.baseWidth,
+          this.baseHeight
+        );
+        canvasStatic4.style.visibility = "hidden";
+      }
       imageCapital.onload = () => {
         canvasStatic1.width = this.baseWidth;
         canvasStatic1.height = this.baseHeight;
@@ -972,6 +1002,9 @@ export default {
     background-size: cover;
   }
 
+.border_div{
+  background-image: url("../static/img/border.png");
+}
   .canal_div {
     background-image: url("../static/img/canal.png");
   }
