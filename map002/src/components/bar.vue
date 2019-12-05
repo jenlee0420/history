@@ -11,11 +11,12 @@
       <div
         class="squ"
         ref="slider"
-        @mousedown="moveStart"
+        
+      ></div>
+      <!-- @mousedown="moveStart"
         @mouseup="moveOut"
         @touchstart="moveStart"
-        @touchend="moveOut"
-      ></div>
+        @touchend="moveOut" -->
     </div>
     <div
       class="blueButton zoom_button"
@@ -49,11 +50,15 @@ export default {
   },
   mounted() {
     this.u_agent = navigator.userAgent;
-    this.amountW =
-      this.$refs.sliderBox.clientWidth - this.$refs.slider.clientWidth;
+    // this.amountW =this.$refs.sliderBox.clientWidth - this.$refs.slider.clientWidth;
+    let slider = this.$refs.slider;
+    let box = this.$refs.sliderBox;
+    slider.addEventListener('mousedown',this.moveStart)
+    slider.addEventListener('mouseup',this.moveOut)
+    slider.addEventListener('touchstart',this.moveStart)
+    slider.addEventListener('touchend',this.moveOut)
     document.getElementById("app").addEventListener("touchstart", e => {
-      let slider = this.$refs.slider;
-      let box = this.$refs.sliderBox;
+      
       var touch = e.targetTouches[0];
       this.startArea = false;
 
