@@ -8,15 +8,11 @@
       <b>-</b>
     </div>
     <div class="bar" ref="sliderBox">
-      <div
-        class="squ"
-        ref="slider"
-        
-      ></div>
+      <div class="squ" ref="slider"></div>
       <!-- @mousedown="moveStart"
         @mouseup="moveOut"
         @touchstart="moveStart"
-        @touchend="moveOut" -->
+      @touchend="moveOut"-->
     </div>
     <div
       class="blueButton zoom_button"
@@ -53,12 +49,19 @@ export default {
     // this.amountW =this.$refs.sliderBox.clientWidth - this.$refs.slider.clientWidth;
     let slider = this.$refs.slider;
     let box = this.$refs.sliderBox;
-    slider.addEventListener('mousedown',this.moveStart)
-    slider.addEventListener('mouseup',this.moveOut)
-    slider.addEventListener('touchstart',this.moveStart)
-    slider.addEventListener('touchend',this.moveOut)
-    document.getElementById("app").addEventListener("touchstart", e => {
-      
+    if ("ontouchmove" in window) {
+      slider.addEventListener("touchstart", this.moveStart);
+      slider.addEventListener("touchend", this.moveOut);
+      document.getElementById("app").addEventListener("touchstart", this.appTouchStart);
+    } else {
+      slider.addEventListener("mousedown", this.moveStart, false);
+      slider.addEventListener("mouseup", this.moveOut);
+    }
+  },
+  methods: {
+    appTouchStart(e) {
+      let slider = this.$refs.slider;
+      let box = this.$refs.sliderBox;
       var touch = e.targetTouches[0];
       this.startArea = false;
 
@@ -72,9 +75,7 @@ export default {
         // console.log('eer',touch.clientX,(box.offsetLeft+slider.offsetLeft))
         this.dargStart = true;
       }
-    });
-  },
-  methods: {
+    },
     setScaleBtn(type) {
       this.dargStart = false;
       this.scaleZoom = this.scaleindex;
@@ -109,27 +110,32 @@ export default {
         this.startx = touch.clientX - slider.offsetLeft;
       }
 
-      let box = document.getElementById("app");
+      let appbox = document.getElementById("app");
       let timer = null;
-      box.addEventListener("mouseout", e => {
-        timer = null;
-        timer = setTimeout(() => {
-          this.moveOut();
-        }, 200);
-      });
-      box.addEventListener("mousemove", e => {
-        this.move(e);
-      });
-      box.addEventListener("mouseoup", e => {
-        this.moveOut(e);
-      });
-      box.addEventListener("touchmove", e => {
-        this.move(e);
-      });
-      box.addEventListener("touchend", e => {
-        this.startArea = false;
-        this.moveOut(e);
-      });
+      if ("ontouchmove" in window) {
+        appbox.addEventListener("touchmove", e => {
+          this.move(e);
+        });
+        appbox.addEventListener("touchend", e => {
+          this.startArea = false;
+          this.moveOut(e);
+        });
+      }else{
+        appbox.addEventListener("mouseout", e => {
+          timer = null;
+          timer = setTimeout(() => {
+            this.moveOut();
+          }, 200);
+        });
+        appbox.addEventListener("mousemove", e => {
+          this.move(e);
+        });
+        appbox.addEventListener("mouseoup", e => {
+          this.moveOut(e);
+        });
+      }
+      
+      
     },
     move(e) {
       if (this.dargStart) {
@@ -169,6 +175,9 @@ export default {
     },
     moveOut() {
       document.body.removeEventListener("mousemove", e => {
+        this.move(e);
+      });
+      document.body.removeEventListener("touchmove", e => {
         this.move(e);
       });
       this.dargStart = false;

@@ -31,12 +31,9 @@
               <div class="blueButton action_all " @click="showall(false)">全部隱藏</div>
             </div>
           </div>
-          <div id="map_action_container" class="greyContainer" style="margin-bottom: 10px;">
-            <div class="blueButton zoom_button" style="width: 2.07em; margin: 5px 10px 3px;" @click="setScaleBtn('de')"><b>-</b></div>
-            <!-- 滑块 -->
-            <bar @offestx="setScale" @moveOut="moveOut" :scaleindex.sync="scaleindex"></bar>
-            <div class="blueButton zoom_button" style="width: 2.07em; margin: 5px 10px 3px;" @click="setScaleBtn('add')"><b>+</b></div>
-          </div>
+          <!-- 滑块 -->
+          <bar @offestx="setScale" @moveOut="moveOut" :scaleindex.sync="scaleindex" />
+
         </div>
       </div>
     </div>
@@ -71,6 +68,16 @@
     },
     name: "App",
     beforeCreate() {},
+    created () {
+    const that = this
+    that.timer = setInterval(function () {
+        console.log(document.readyState)
+        if (document.readyState === 'complete') {
+            that.load = false;
+            window.clearInterval(that.timer)
+        }
+    }, 10)
+    },
     mounted() {
       this.createMap()
       if ("onorientationchange" in window) {
@@ -102,7 +109,6 @@
         currAns: null,
         data: [],
         mapPop: false,
-        imgCount: 0,
         list: [{
           ico: require('../static/img/icon/capital_icon.png'),
           text: '首都',
@@ -178,12 +184,6 @@
       }
     },
     watch:{
-      imgCount(n){
-        if(this.imgCount>=9){
-          // console.log(this.imgCount)
-          this.load= false
-        }
-      },
       zoomObj:{
         handler(n, o) {
           this.scaleindex =(((n.scale- n.minScale) / (n.maxScale - n.minScale)) * 10 )
@@ -195,22 +195,6 @@
     methods: {
       bodyScroll(event) {
         event.preventDefault();
-      },
-      setScaleBtn(type) {
-        this.scaleZoom =(this.scaleindex)
-        if (type == 'add') {
-          this.scaleZoom+=1
-        } else {
-          this.scaleZoom-=1
-        }
-        if (this.scaleZoom > 10) {
-          this.scaleZoom = 10
-        }
-        if (this.scaleZoom <= 0) {
-          this.scaleZoom = 0
-        }
-        // console.log(this.scaleZoom,'scaleZoom')
-        this.setScale(this.scaleZoom)
       },
       setScale(scaleindex){
         this.zoomObj.preSetScale(scaleindex/10*(this.zoomObj.maxScale-this.zoomObj.minScale) + this.zoomObj.minScale, 0, 0)
@@ -472,56 +456,7 @@
         
         // })
       },
-      ship1(flag) {
-        let CanvasAnimGreenPath = document.getElementById('myCanvasAnimGreenPath')
-        let contextAnimGreenPath = CanvasAnimGreenPath.getContext('2d');
-        var img = new Image()
-        let h = 50,
-          y = 834,
-          xx = 680,
-          ww = 220
-        var addRadial = () => {
-          contextAnimGreenPath.save(); //保存当前绘图状态
-          contextAnimGreenPath.beginPath(); //开始创建路径
-          y -= 15
-          h += 15
-          contextAnimGreenPath.rect(xx, y, ww, h)
-          contextAnimGreenPath.closePath(); //关闭路径
-          contextAnimGreenPath.clip();
-          contextAnimGreenPath.drawImage(img, 0, 0, this.baseWidth, this.baseHeight);
-          contextAnimGreenPath.rect(0, 0, this.baseWidth, this.baseHeight)
-          contextAnimGreenPath.restore();
-          if (h < 987) {
-            this.redTimer = setTimeout(() => {
-              addRadial()
-            }, 50);
-          } else {
-            clearTimeout(this.redTimer)
-          }
-        }
-        if (flag == true) {
-          img.src = 'static/img/route.png'
-          img.onload = () => {
-            CanvasAnimGreenPath.style.visibility = "visible";
-            // console.log('anistart')
-            if (!this.shipPlay) {
-              addRadial()
-              this.drawHousePromise()
-              this.shipPlay = true
-            }
-          }
-        } else {
-          this.shipPlay = false
-          this.resetHorseObject(this.horseObject1);
-          clearInterval(this.drawHorsesTimeout)
-          clearTimeout(this.horsetimerGroup)
-          clearTimeout(this.redTimer)
-          document.getElementById('myCanvasAnimRedPath').style.visibility = 'hidden'
-          this.canvasClear(document.getElementById('myCanvasAnimRedPath'));
-          document.getElementById('myCanvasAnimHorse').style.visibility = 'hidden'
-          this.canvasClear(document.getElementById('myCanvasAnimHorse'));
-        }
-      },
+     
       drawGreenPath(flag) {
         let canvasAnimPath = document.getElementById('myCanvasAnimGreenPath')
         let contextAnimPath = canvasAnimPath.getContext('2d');
@@ -749,24 +684,20 @@
         canvasStatic1.height = this.baseHeight;
         contextStatic1.drawImage(imageCapital, 0, 0, this.baseWidth, this.baseHeight);
         canvasStatic1.style.visibility = 'hidden'
-        this.imgCount ++
       }
       imageGate.onload = () => {
         canvasStatic2.width = this.baseWidth;
         canvasStatic2.height = this.baseHeight;
         contextStatic2.drawImage(imageGate, 0, 0, this.baseWidth, this.baseHeight);
         canvasStatic2.style.visibility = 'hidden'
-        this.imgCount ++
       }
       imageMainCity.onload = () => {
         canvasStatic4.width = this.baseWidth;
         canvasStatic4.height = this.baseHeight;
         contextStatic4.drawImage(imageMainCity, 0, 0, this.baseWidth, this.baseHeight);
         canvasStatic4.style.visibility = 'hidden'
-        this.imgCount ++
       }
       route1.onload = () => {
-        this.imgCount ++
         this.pathObject = {
           'source': route1,
           'originX': 0,
@@ -788,7 +719,6 @@
         }
       }
       route2.onload = () => {
-        this.imgCount ++
         this.pathObject.mask2 = {
           'source': route2,
           'originX': 356,
@@ -802,7 +732,6 @@
         }
       }
       route3.onload = () => {
-        this.imgCount ++
         this.pathObject.mask3 = {
           'source': route3,
           'originX': 900,
@@ -816,7 +745,6 @@
         }
       }
       route4.onload = () => {
-        this.imgCount ++
         this.pathObject.mask4 = {
           'source': route4,
           'originX': 1060,
@@ -841,7 +769,6 @@
         }
       }
       route5.onload = () => {
-        this.imgCount ++
         this.pathObject.mask7 = {
           'source': route5,
           'originX': 1070,
@@ -855,7 +782,6 @@
         }
       }
       imageHorse.onload = () => {
-        this.imgCount ++
         var translate = [
           [130, 655],
           [300, 650],
