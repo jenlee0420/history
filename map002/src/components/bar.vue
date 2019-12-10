@@ -60,6 +60,8 @@ export default {
   },
   methods: {
     appTouchStart(e) {
+      let slider = this.$refs.slider;
+      let box = this.$refs.sliderBox;
       var touch = e.targetTouches[0];
       this.startArea = false;
 
@@ -108,27 +110,27 @@ export default {
         this.startx = touch.clientX - slider.offsetLeft;
       }
 
-      let box = document.getElementById("app");
+      let appbox = document.getElementById("app");
       let timer = null;
       if ("ontouchmove" in window) {
-        box.addEventListener("touchmove", e => {
+        appbox.addEventListener("touchmove", e => {
           this.move(e);
         });
-        box.addEventListener("touchend", e => {
+        appbox.addEventListener("touchend", e => {
           this.startArea = false;
           this.moveOut(e);
         });
       }else{
-        box.addEventListener("mouseout", e => {
+        appbox.addEventListener("mouseout", e => {
           timer = null;
           timer = setTimeout(() => {
             this.moveOut();
           }, 200);
         });
-        box.addEventListener("mousemove", e => {
+        appbox.addEventListener("mousemove", e => {
           this.move(e);
         });
-        box.addEventListener("mouseoup", e => {
+        appbox.addEventListener("mouseoup", e => {
           this.moveOut(e);
         });
       }
