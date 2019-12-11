@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import VueSlider from 'vue-slider-component'
 export default {
   name: "bar",
   props: ["scaleindex"],
@@ -100,11 +101,10 @@ export default {
       this.dargStart = false;
     },
     moveStart(e) {
-      e.preventDefault();
       let slider = this.$refs.slider;
       this.dargStart = true;
       // alert('d')
-      if (/iPad|iPhone|Android|Adr/i.test(this.u_agent)) {
+      if (/iPad|iPhone|Macintosh|Android|Adr/i.test(this.u_agent)) {
         var ev = e || window.event;
         var touch = ev.targetTouches[0];
         this.startx = touch.clientX - slider.offsetLeft;
@@ -139,6 +139,7 @@ export default {
     },
     move(e) {
       if (this.dargStart) {
+        e.preventDefault();
         let box = this.$refs.sliderBox;
         let slider = this.$refs.slider;
         this.distanceX = e.clientX - box.offsetLeft;
