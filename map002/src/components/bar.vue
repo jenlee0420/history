@@ -214,9 +214,9 @@ export default {
   }
 }
 .slider{
-  width: 50%;
-  height: 0.52rem;
-  display: inherit;
+  width: 50%!important;
+  height: 0.52rem!important;
+  display: inherit!important;
   .range-slider-rail{
      width: 100%;
   height: 0.15em;
