@@ -91,7 +91,7 @@
       this.zoomObj = require('./js/zoom.js')
       this.setRemUnit()
       this.initCanvas()
-      
+      console.log(navigator.platform,'platform')
       document.getElementById('main_box').addEventListener("touchmove", this.bodyScroll, {
             passive: false //  禁止 passive 效果
         })

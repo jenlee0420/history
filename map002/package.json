@@ -19,6 +19,7 @@
     "node-sass": "^4.13.0",
     "vue": "^2.5.2",
     "vue-custom-range-slider": "^0.2.1",
+    "vue-range-slider": "^0.6.0",
     "vue-router": "^3.0.1",
     "vue-slider-component": "^3.1.0"
   },
