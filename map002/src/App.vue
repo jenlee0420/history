@@ -37,14 +37,22 @@
       </div>
     </div>
     <modal class="" headTitle="问题" :hideFooter="true" v-if="popWindow" @cancel-event="popWindow=false;list[4].show=false">
-      <div slot="modalCont"  class="question">
-        
+      <div slot="modalCont" >
+        <div  class="question" >
           <div>1. 根據地圖，官倉大多鄰近大興，哪一個官倉離都城較遠？</div>
           <div>
             <span class="item" :class="{'selected':currAns==index}" v-for="(item,index) in questionItem" :key="index" @click="checkans(index)">{{item}}</span>
           </div>
           <div class="ansBox" :class="showWrong==false?'wrongico':'rightico'" v-if="currAns!=null"></div>
-        </div>
+          </div>
+          <div  class="question" >
+          <div>2. 地圖所顯示的官倉，均置於哪一河流的河岸附近？</div>
+          <div>
+            <span class="item" :class="{'selected':currAns2==index}" v-for="(item,index) in questionItem2" :key="index" @click="checkans2(index)">{{item}}</span>
+          </div>
+          <div class="ansBox" :class="showWrong2==false?'wrongico':'rightico'" v-if="currAns2!=null"></div>
+          </div>
+      </div>
     </modal>
     <modal class=""  headTitle="大興（今西安市）" :hideFooter="true" v-if="mapPop" @cancel-event="mapPop=false;list[3].show=false">
       <div slot="modalCont">
@@ -107,10 +115,17 @@
           'A. 黎陽倉',
           'B. 廣通倉',
           'C. 河陽倉',
+        ],questionItem2: [
+          'A. 淮河',
+          'B. 長江',
+          'C. 黃河',
         ],
         rightans: 0,
+        rightans: 2,
         showWrong: 0,
         currAns: null,
+        showWrong2: 0,
+        currAns2: null,
         data: [],
         mapPop: false,
         imgList: ['static/img/map.png', 'static/img/mapDetail.png'],
@@ -699,6 +714,14 @@
           this.showWrong = true
         } else {
           this.showWrong = false
+        }
+      },
+      checkans2(index) {
+        this.currAns2 = index
+        if (this.rightans2 == index) {
+          this.showWrong2 = true
+        } else {
+          this.showWrong2 = false
         }
       },
       // offestx(x) {
