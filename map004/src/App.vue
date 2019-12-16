@@ -36,23 +36,32 @@
               <div class="blueButton action_all " @click="showall(false)">全部隱藏</div>
             </div>
           </div>
-          <div id="map_action_container" class="greyContainer" style="margin-bottom: 10px;">
-            <div class="blueButton zoom_button" style="width: 2.07em; margin: 5px 10px 3px;" @click="setScaleBtn('de')"><b>-</b></div>
-            <!-- 滑块 -->
-            <bar @offestx="setScale" @moveOut="moveOut" :scaleindex.sync="scaleindex"></bar>
-            <div class="blueButton zoom_button" style="width: 2.07em; margin: 5px 10px 3px;" @click="setScaleBtn('add')"><b>+</b></div>
-          </div>
+          
+          <!-- 滑块 -->
+          <bar @offestx="setScale" @moveOut="moveOut" :scaleindex.sync="scaleindex" />
+
         </div>
       </div>
     </div>
     <modal class="" headTitle="问题" :hideFooter="true" v-if="popWindow" @cancel-event="popWindow=false;list[8].show=false">
       <div slot="modalCont">
-        <div class="question">
+        <div>
+          <div class="question">
           <div>1. 李淵攻取大興，佔領附近的哪些設施，以獲得大量糧食？</div>
           <div>
             <span class="item" :class="{'selected':currAns==index}" v-for="(item,index) in questionItem" :key="index" @click="checkans(index)">{{item}}</span>
           </div>
           <div class="ansBox" :class="showWrong==false?'wrongico':'rightico'" v-if="currAns!=null"></div>
+        </div>
+
+        <div class="question">
+          <div>2. 根據地圖顯示，哪一段隋代運河鄰近李淵的進軍路線？</div>
+          <div>
+            <span class="item" :class="{'selected':currAns2==index}" v-for="(item,index) in questionItem2" :key="index" @click="checkans2(index)">{{item}}</span>
+          </div>
+          <div class="ansBox" :class="showWrong2==false?'wrongico':'rightico'" v-if="currAns2!=null"></div>
+        </div>
+
         </div>
       </div>
     </modal>
@@ -114,6 +123,11 @@ export default {
       rightans: 2,
       showWrong: 0,
       currAns: null,
+      questionItem2: ["A. 江南河", "B. 廣通渠", "C. 通濟渠"],
+      rightans2: 1,
+      showWrong2: 0,
+      currAns2: null,
+      
       data: [],
       mapPop: false,
       imgCount: 0,
@@ -339,6 +353,7 @@ export default {
         case 8:
           this.popWindow = swip;
           this.currAns = null;
+          this.currAns2 = null;
           break;
         default:
           break;
@@ -949,6 +964,14 @@ export default {
         this.showWrong = true;
       } else {
         this.showWrong = false;
+      }
+    },
+    checkans2(index) {
+      this.currAns2 = index;
+      if (this.rightans2 == index) {
+        this.showWrong2 = true;
+      } else {
+        this.showWrong2 = false;
       }
     },
     // offestx(x) {

@@ -39,13 +39,23 @@
     </div>
     <modal class="" headTitle="问题" :hideFooter="true" v-if="popWindow" @cancel-event="popWindow=false;list[6].show=false">
       <div slot="modalCont">
-        <div class="question">
+        <div>
+          <div class="question">
           <div>1. 隋軍要突破陳的防線，必先要突破哪一河流的天險？</div>
           <div>
             <span class="item" :class="{'selected':currAns==index}" v-for="(item,index) in questionItem" :key="index" @click="checkans(index)">{{item}}</span>
           </div>
           <div class="ansBox" :class="showWrong==false?'wrongico':'rightico'" v-if="currAns!=null"></div>
         </div>
+        <div class="question">
+          <div>2. 以下哪一個要邑並不是隋軍渡過長江後的攻擊目標？</div>
+          <div>
+            <span class="item" :class="{'selected':currAns2==index}" v-for="(item,index) in questionItem2" :key="index" @click="checkans2(index)">{{item}}</span>
+          </div>
+          <div class="ansBox" :class="showWrong2==false?'wrongico':'rightico'" v-if="currAns2!=null"></div>
+        </div>
+        </div>
+        
       </div>
     </modal>
     <modal class=""  headTitle="建康（今南京市）" :hideFooter="true" v-if="mapPop" @cancel-event="mapPop=false;list[5].show=false">
@@ -107,6 +117,14 @@
         rightans: 1,
         showWrong: 0,
         currAns: null,
+        questionItem2: [
+          'A. 襄陽',
+          'B. 江夏',
+          'C. 會稽',
+        ],
+        rightans2:0,
+        showWrong2: 0,
+        currAns2: null,
         data: [],
         mapPop: false,
         list: [{
@@ -273,6 +291,7 @@
           case 6:
             this.popWindow = swip
             this.currAns=null
+            this.currAns2=null
             break;
           default:
             break;
@@ -895,6 +914,14 @@
         this.showWrong = true
       } else {
         this.showWrong = false
+      }
+    },
+    checkans2(index) {
+      this.currAns2 = index
+      if (this.rightans2 == index) {
+        this.showWrong2 = true
+      } else {
+        this.showWrong2 = false
       }
     },
     // offestx(x) {

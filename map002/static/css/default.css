@@ -212,7 +212,7 @@ div.smallMap {
     background-repeat: no-repeat;
     background-position: center;
     position: absolute;
-    top: 4.5em;
+    top: 3em;
     right: 2em;
 }
 
@@ -246,6 +246,7 @@ div.smallMap {
     padding-bottom: 0;
     width:28em;
     height: 6em;
+    position: relative;
 }
 
 .question div:nth-child(2) {

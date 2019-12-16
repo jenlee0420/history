@@ -4,7 +4,7 @@
     <div v-if="load" id="loading" style="width:820px;"><img :src="require('../static/img/loading.gif')"></div>
     <div  id="main_container" :style="{'width':docWidth+'px','height':docHeight+'px','display':load?'none':'block'}">
       <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
-        <span>隋滅陳路線圖 (588-589 年)</span>
+        <span>安史之亂初期形勢圖（755 — 756 年）</span>
         <div id="soundCon" :class="{'mute':noVoice}" @click="noVoice=!noVoice"> </div>
       </div>
       <div class="main_box">
@@ -14,6 +14,10 @@
             <div class="border_div pos_a map"></div>
             <div class="map1_div pos_a map" v-if="map1"></div>
             <div class="map2_div pos_a map" v-if="map2"></div>
+            <div class="map3_div pos_a map" v-if="map3"></div>
+            <div class="map4_div pos_a map" v-if="map3"></div>
+            <div class="map5_div pos_a map" v-if="map3"></div>
+            <div class="map6_div pos_a map" v-if="map3"></div>
           </div>
         </div>
         <div id="menu_container" style="float: right;">
@@ -41,14 +45,14 @@
       <div slot="modalCont">
         <div>
           <div class="question">
-          <div>1. 十大兵鎮主要集中在唐中央的_______邊境。</div>
+          <div>1. 安史之亂的主要戰役均在________流域爆發？</div>
           <div>
             <span class="item" :class="{'selected':currAns==index}" v-for="(item,index) in questionItem" :key="index" @click="checkans(index)">{{item}}</span>
           </div>
           <div class="ansBox" :class="showWrong==false?'wrongico':'rightico'" v-if="currAns!=null"></div>
         </div>
         <div class="question">
-          <div>2. 參考地圖標示，共有多少個兵鎮由漢人出任節度使？</div>
+          <div>2. 根據地圖所示，太子李亨逃到哪地之後，便與唐玄宗分途出走？</div>
           <div>
             <span class="item" :class="{'selected':currAns2==index}" v-for="(item,index) in questionItem2" :key="index" @click="checkans2(index)">{{item}}</span>
           </div>
@@ -57,9 +61,9 @@
         </div>
       </div>
     </modal>
-    <modal class=""  headTitle="唐中央—長安（今西安）" :hideFooter="true" v-if="mapPop" @cancel-event="mapPop=false;list[4].show=false">
+    <modal class=""  headTitle="潼關（今潼關縣）" :hideFooter="true" v-if="mapPop" @cancel-event="mapPop=false;list[4].show=false">
       <div slot="modalCont">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d845158.7150065893!2d108.8816973!3d34.161658!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x366379e922ac17b9%3A0x85d466fda794582e!2z5Lit5ZyL6Zmd6KW_55yB6KW_5a6J5biC!5e0!3m2!1szh-TW!2shk!4v1572422373514!5m2!1szh-TW!2shk"
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d24391698.658870567!2d88.08445695333559!3d39.812602407163745!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x367b0b524187602d%3A0x46eb1c4574ba3cab!2z5Lit5ZyL6Zmd6KW_55yB5rit5Y2X5biC5r286Zec57ij!5e0!3m2!1szh-TW!2shk!4v1575949123730!5m2!1szh-TW!2shk"
           :width="bodytWidth/1.8" :height="bodyHeight/1.8" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
       </div>
     </modal>
@@ -111,12 +115,12 @@ export default {
       load: true,
       noVoice: false,
       zoomObj: null,
-      questionItem: ["A. 南方", "B. 北方", "C. 東方"],
-      rightans: 1,
+      questionItem: ["A. 長江", "B. 淮河", "C. 黃河"],
+      rightans: 2,
       showWrong: 0,
       currAns: null,
-      questionItem2: ["A. 5個", "B. 6個", "C. 7個"],
-      rightans2: 0,
+      questionItem2: ["A. 靈武", "B. 馬嵬驛", "C. 潼關"],
+      rightans2: 1,
       showWrong2: 0,
       currAns2: null,
       data: [],
@@ -124,28 +128,43 @@ export default {
       imgCount: 0,
       list: [
         {
-          ico: require("../static/img/icon/hanren_icon.png"),
-          text: "漢人節度使",
+          ico: require("../static/img/icon/capital_icon.png"),
+          text: "首都",
           show: false
         },
         {
-          ico: require("../static/img/icon/huren_icon.png"),
-          text: "胡人節度使",
+          ico: require("../static/img/icon/gate_icon.png"),
+          text: "關口",
+          show: false
+        },
+        {
+          ico: require("../static/img/icon/main_city_icon.png"),
+          text: "要邑及運河",
+          show: false
+        },
+        {
+          ico: require("../static/img/icon/control city_icon.png"),
+          text: "安祿山控制的三鎮",
+          show: false
+        },
+        {
+          ico: require("../static/img/icon/route_red_icon.png"),
+          text: "安史進軍路線",
+          show: false
+        },
+        {
+          ico: require("../static/img/icon/route_green_icon.png"),
+          text: "唐玄宗逃走路線",
+          show: false
+        },
+        {
+          ico: require("../static/img/icon/route_blue_icon.png"),
+          text: "太子李亨逃走路線",
           show: false
         },
         {
           ico: require("../static/img/icon/capital_icon.png"),
-          text: "唐中央",
-          show: false
-        },
-        {
-          ico: require("../static/img/icon/military_icon.png"),
-          text: "安祿山的兵力",
-          show: false
-        },
-        {
-          ico: require("../static/img/icon/capital_icon.png"),
-          text: "唐中央—長安（今西安）",
+          text: "潼關（今潼關縣）",
           type: "map",
           show: false
         },
@@ -178,9 +197,9 @@ export default {
       ele: null,
       popWindow: false,
       canvasData: [
+        'myCanvasStatic1',
         false,
         false,
-        "myCanvasStatic1",
         "myCanvasStatic2"
       ],
       m01: null,
@@ -198,6 +217,7 @@ export default {
       prevorienta: "",
       map1: false,
       map2: false,
+      map3:false,
       pathObject: {},
       chenTimer: null,
       lin2timer: null,
@@ -219,22 +239,7 @@ export default {
     bodyScroll(event) {
       event.preventDefault();
     },
-    setScaleBtn(type) {
-      this.scaleZoom = this.scaleindex;
-      if (type == "add") {
-        this.scaleZoom += 1;
-      } else {
-        this.scaleZoom -= 1;
-      }
-      if (this.scaleZoom > 10) {
-        this.scaleZoom = 10;
-      }
-      if (this.scaleZoom <= 0) {
-        this.scaleZoom = 0;
-      }
-      // console.log(this.scaleZoom,'scaleZoom')
-      this.setScale(this.scaleZoom);
-    },
+    
     setScale(scaleindex) {
       this.zoomObj.preSetScale(
         (scaleindex / 10) * (this.zoomObj.maxScale - this.zoomObj.minScale) +
@@ -259,29 +264,31 @@ export default {
       this.muteMe();
       switch (index) {
         case 0:
+          //首都
           if (swip && !this.noVoice) {
             this.m01.currentTime = 0;
             this.m01.play();
           }
-          this.map1 = swip;
+          this.showCityAni(c, swip);
           break;
         case 1:
+          //关口
           if (swip && !this.noVoice) {
             this.m02.currentTime = 0;
             this.m02.play();
           }
-          this.map2 = swip;
+          this.map1 = swip;
           break;
         case 2:
-          if (swip && !this.noVoice) {
-            this.m03.currentTime = 0;
-            this.m03.play();
-          }
-          this.drawHousePromise(swip)
-          this.showCityAni(c, swip);
+          //要邑和运河
+          // c.style.visibility = swip?'visible':'hidden'
+          this.map3=swip
+          // this.drawHousePromise(swip)
+          // this.showCityAni(c, swip);
           
           break;
         case 3:
+          //安祿山控制的三鎮
           if (swip && !this.noVoice) {
             this.m04.currentTime = 0;
             this.m04.play();
@@ -289,25 +296,26 @@ export default {
           c.style.visibility = swip?'visible':'hidden'
           // this.grainstoreAni = swip;
           break;
-        //case 4:
-          // if (swip) {
-          //   if (!this.noVoice) {
-          //     this.m06.currentTime = 0;
-          //     this.m06.play();
-          //     this.license.currentTime = 0;
-          //     this.license.volume = 0.2;
-          //     this.license.play();
-          //   }
-          //   if (this.pathObject.playing != true) {
-          //     this.drawGreenPath(true);
-          //     this.drawHousePromise(true);
-          //   }
-          // } else {
-          //   this.drawGreenPath(false);
-          //   this.drawHousePromise(false);
-          //   clearTimeout(this.lin2timer);
-          // }
-         // break;
+        
+        case 4:
+          if (swip) {
+            if (!this.noVoice) {
+              this.m04.currentTime = 0;
+              this.m04.play();
+              this.license.currentTime = 0;
+              this.license.volume = 0.2;
+              this.license.play();
+            }
+            if (this.pathObject.playing != true) {
+              this.drawGreenPath(true);
+              this.drawHousePromise(true);
+            }
+          } else {
+            this.drawGreenPath(false);
+            this.drawHousePromise(false);
+            clearTimeout(this.lin2timer);
+          }
+         break;
         case 4:
           this.mapPop = swip;
           break;
@@ -435,17 +443,20 @@ export default {
       this.m05 = document.createElement("audio");
       this.m06 = document.createElement("audio");
       this.license = document.createElement("audio");
-      this.m01.src = require("../static/img/vo/Map006-1.mp3");
-      this.m02.src = require("../static/img/vo/Map006-2.mp3");
-      this.m03.src = require("../static/img/vo/Map006-3.mp3");
-      this.m04.src = require("../static/img/vo/Map006-4.mp3");
+      this.m01.src = require("../static/img/vo/MAP007-1.mp3");
+      this.m02.src = require("../static/img/vo/MAP007-2.mp3");
+      this.m03.src = require("../static/img/vo/MAP007-4.mp3");
+      this.m04.src = require("../static/img/vo/MAP007-5.mp3");
+      this.m05.src = require("../static/img/vo/MAP007-6.mp3");
+      this.m06.src = require("../static/img/vo/MAP007-7.mp3");
+
       // Variable init
       divTag.appendChild(canvasStatic1);
       divTag.appendChild(canvasStatic2);
       divTag.appendChild(canvasStatic4);
       // divTag.appendChild(canvasStatic5);
       // divTag.appendChild(canvasAnimGreenPath2);
-      // divTag.appendChild(canvasAnimGreenPath);
+      divTag.appendChild(canvasAnimGreenPath);
       divTag.appendChild(canvasAnimHorse);
       canvasStatic1.id = "myCanvasStatic1";
       canvasStatic2.id = "myCanvasStatic2";
@@ -474,9 +485,9 @@ export default {
       canvasAnimGreenPath2.height = this.baseHeight;
       canvasAnimHorse.width = this.baseWidth;
       canvasAnimHorse.height = this.baseHeight;
-      var imageMap = new Image();
-      var imageMapDetail = new Image();
-      var imageHuren = new Image();
+
+      var controlCity = new Image();
+      var controlCity2 = new Image();
       var imageGate = new Image();
       var imageMainCity = new Image();
       var imageHorse = new Image();
@@ -487,53 +498,94 @@ export default {
       var route5 = new Image();
       // imageMap.src = require("../static/img/map.png");
       // imageMapDetail.src = require("../static/img/mapDetail.png");
-      imageHuren.src = require("../static/img/Huren_1.png");
+      controlCity.src = require("../static/img/control_city.png");
+      controlCity2.src = require("../static/img/control_city_f.png");
       imageMainCity.src = require("../static/img/capital.png");
       imageHorse.src = require("../static/img/horse.png");
       // imageGate.src = require("../static/img/gate.png");
-      // route1.src = require("../static/img/route.png");
+      route1.src = require("../static/img/route1a_red.png");
+      route2.src = require("../static/img/route1b_red.png");
+      route3.src = require("../static/img/route2a_green.png");
+      route4.src = require("../static/img/route2b_green.png");
 
-      imageHuren.onload = () => {
-        canvasStatic4.width = this.baseWidth;
-        canvasStatic4.height = this.baseHeight;
-        contextStatic4.drawImage(
-          imageHuren,
+      //画圈
+      this.drwaCircle(canvasStatic2)
+      controlCity.onload = () => {
+        contextStatic2.drawImage(
+          controlCity,
           0,
           0,
           this.baseWidth,
           this.baseHeight
         );
-        canvasStatic4.style.visibility = "hidden";
+        // canvasStatic2.style.visibility = "hidden";
       };
-      // imageGate.onload = () => {
-      //   canvasStatic2.width = this.baseWidth;
-      //   canvasStatic2.height = this.baseHeight;
-      //   contextStatic2.drawImage(
-      //     imageGate,
-      //     0,
-      //     0,
-      //     this.baseWidth,
-      //     this.baseHeight
-      //   );
-      //   canvasStatic2.style.visibility = "hidden";
-      //   this.imgCount++;
-      // };
+      controlCity2.onload = () => {
+        contextStatic2.drawImage(
+          controlCity2,
+          0,
+          0,
+          this.baseWidth,
+          this.baseHeight
+        );
+      };
+      
       imageMainCity.onload = () => {
         canvasStatic1.width = this.baseWidth;
         canvasStatic1.height = this.baseHeight;
         contextStatic1.drawImage(imageMainCity, 0, 0, this.baseWidth, this.baseHeight);
         canvasStatic1.style.visibility = 'hidden'
       }
-     
-      imageHorse.onload = () => {
-        contextAnimHorse.width = this.baseWidth;
-        contextAnimHorse.height = this.baseHeight;
-        canvasAnimHorse.style.visibility = 'hidden'
-        this.horseObject1 = this.initHorseObject(imageHorse)
-
+     route1.onload = () => {
+        this.imgCount++;
+        this.pathObject = {
+          source: route1,
+          originX: 0,
+          originY: 0,
+          width: this.baseWidth,
+          height: this.baseHeight,
+          mask1: {
+            originX: 706,
+            originY: 221,
+            width: 411,
+            height: 1,
+            currOriginX: 706,
+            currOriginY: 221,
+            shiftX: 8,
+            shiftY: 0
+          },
+          timeout: null,
+          playing: false
+        };
       };
-      //画圈
-      this.drwaCircle(canvasStatic2)
+      route2.onload = () => {
+        this.pathObject.mask2 = {
+          source: route2,
+          originX: 699,
+            originY: 818,
+            width: 1,
+            height: 162,
+            currOriginX: 699,
+            currOriginY: 818,
+            shiftX: 8,
+            shiftY: 0
+        }
+        
+      };
+      imageHorse.onload = () => {
+        var translate = [[414, 222], [774, 497], [572, 748],[410,824]];
+        var scale = [1, 1, 1,0];
+        var dur = [20, 15, 10,10];
+        var sharpPoint = [0, 0, 0,2];
+        this.horseObject1 = this.initHorseObject(
+          translate,
+          scale,
+          dur,
+          sharpPoint,
+          imageHorse
+        );
+      };
+      
       // document.getElementById('map_container').append(divTag)
       // divTag.append(divTag)
       this.$nextTick(() => {
@@ -651,13 +703,29 @@ export default {
   }
 
   .map1_div {
-    background-image: url("../static/img/Hanren.png");
+    background-image: url("../static/img/gate.png");
   }
   .map2_div {
-    background-image: url("../static/img/Huren.png");
+    background-image: url("../static/img/control_city.png");
   }
+  .map3_div {
+    background-image: url("../static/img/river.png");
+  }
+    .map4_div {
+    background-image: url("../static/img/main_city.png");
+  }
+    .map5_div {
+    background-image: url("../static/img/main_city1.png");
+  }
+     .map6_div {
+    background-image: url("../static/img/main_city2.png");
+  }
+       .map7_div {
+    background-image: url("../static/img/main_city2.png");
+  }
+  
    .border_div {
-    background-image: url("../static/img/border.png");
+    // background-image: url("../static/img/border.png");
   }
 
   #canvasInnerDiv {

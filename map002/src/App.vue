@@ -121,7 +121,7 @@
           'C. 黃河',
         ],
         rightans: 0,
-        rightans: 2,
+        rightans2: 2,
         showWrong: 0,
         currAns: null,
         showWrong2: 0,
@@ -250,6 +250,7 @@
             break;
           case 4:
             this.currAns=null
+            this.currAns2=null
             this.popWindow = swip
             break;
           default:
