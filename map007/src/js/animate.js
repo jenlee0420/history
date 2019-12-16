@@ -27,7 +27,7 @@ const animate = {
         let contextAnimPath = canvasAnimPath.getContext("2d");
         let pathObject = this.pathObject;
         if (flag == true) {
-          if (pathObject.mask2.width < 262) {
+          if (pathObject.mask2.currOriginX > 431) {
             pathObject.playing = true;
             this.canvasClear(canvasAnimPath);
             contextAnimPath.save();
@@ -38,7 +38,8 @@ const animate = {
               pathObject.mask1.width,
               pathObject.mask1.height
             );
-            if(pathObject.mask1.height >= 635){
+            if(pathObject.mask1.height > 635){
+               
                 contextAnimPath.rect(
                     pathObject.mask2.currOriginX,
                     pathObject.mask2.currOriginY,
@@ -54,12 +55,14 @@ const animate = {
               pathObject.width,
               pathObject.height
             );
-            if (pathObject.mask1.height <= 635) {
+            if (pathObject.mask1.height < 635) {
               // pathObject.mask1.currOriginX += pathObject.mask1.shiftX;
               pathObject.mask1.height += pathObject.mask1.shiftX;
             }else{
+                
                 contextAnimPath.drawImage(pathObject.mask2.source, pathObject.originX, pathObject.originY, pathObject.width, pathObject.height);
-                if(pathObject.mask2.width<262){
+                if(pathObject.mask2.currOriginX>431){
+                    pathObject.mask2.currOriginX -= pathObject.mask2.shiftX;
                     pathObject.mask2.width += pathObject.mask2.shiftX;
                 }
             }
@@ -113,73 +116,90 @@ const animate = {
     },
     drawHorse(object, contextS, imageHorse) {
         return new Promise((resolve, rej) => {
-
+          if (object.position.currPoint + 1 < object.position.totalPoint) {
             contextS.save();
             var position = new Array();
             var scale;
             if (object.currFrame < object.totalFrame - 1) {
-                object.currFrame++;
+              object.currFrame++;
             } else {
-                object.currFrame = 0;
+              object.currFrame = 0;
             }
-
+            if (
+              object.position.scales[object.position.currPoint] !=
+              object.position.scales[object.position.currPoint + 1]
+            ) {
+              if (
+                object.position.scales[object.position.currPoint] >
+                object.position.scales[object.position.currPoint + 1]
+              ) {
+                scale =
+                  (object.position.scales[object.position.currPoint] *
+                    (object.position.dur[object.position.currPoint] -
+                      object.position.currDur)) /
+                  object.position.dur[object.position.currPoint];
+              } else {
+                scale =
+                  (object.position.scales[object.position.currPoint + 1] *
+                    object.position.currDur) /
+                  object.position.dur[object.position.currPoint];
+              }
+              if (scale < 0) {
+                scale = 0;
+              }
+            } else {
+              scale = 1;
+            }
+            position[0] =
+              (object.position.points[object.position.currPoint][0] *
+                (object.position.dur[object.position.currPoint] -
+                  object.position.currDur) +
+                object.position.points[object.position.currPoint + 1][0] *
+                  object.position.currDur) /
+              object.position.dur[object.position.currPoint];
+            position[1] =
+              (object.position.points[object.position.currPoint][1] *
+                (object.position.dur[object.position.currPoint] -
+                  object.position.currDur) +
+                object.position.points[object.position.currPoint + 1][1] *
+                  object.position.currDur) /
+              object.position.dur[object.position.currPoint];
+  
             contextS.drawImage(
-                imageHorse,
-                object.currFrame * object.width,
-                0,
-                object.width,
-                object.height,
-                760,
-                678,
-                object.width * 0.35,
-                object.height * 0.35);
-            contextS.drawImage(
-                imageHorse,
-                object.currFrame * object.width,
-                0,
-                object.width,
-                object.height,
-                850,
-                528,
-                object.width * 0.35,
-                object.height * 0.35);
-            contextS.drawImage(
-                imageHorse,
-                object.currFrame * object.width,
-                0,
-                object.width,
-                object.height,
-                948,
-                430,
-                object.width * 0.35,
-                object.height * 0.35);
-            contextS.drawImage(
-                imageHorse,
-                object.currFrame * object.width,
-                0,
-                object.width,
-                object.height,
-                1128,
-                360,
-                object.width * 0.35,
-                object.height * 0.35);
+              imageHorse,
+              object.currFrame * object.width,
+              0,
+              object.width,
+              object.height,
+              position[0],
+              position[1],
+              object.width * scale * 0.53,
+              object.height * scale * 0.53);
             contextS.restore();
             // Anim Position control
             if (
-                object.position.currDur <=
-                object.position.dur[object.position.currPoint]
+              object.position.currDur <=
+              object.position.dur[object.position.currPoint]
             ) {
-                object.position.currDur++;
+              object.position.currDur++;
             } else {
-                object.position.currDur = 1;
-                object.position.currPoint++;
+              object.position.currDur = 1;
+              object.position.currPoint++;
             }
             // return "ok";
-
+          } else {
+            resolve("//");
+            object.animating = false;
+            object.animated = true;
+          }
+          // this.drawHorsesTimeout = setTimeout(() => {
+          //   this.canvasClear(this.canvasAnimHorse);
+          //   this.drawHorse(object, contextS, imageHorse)
+          // }, 60);
         });
-
+  
         // })
-    },
+      },
 
     drwaCircle(canvasStatic2) {
         var contextStatic2 = canvasStatic2.getContext("2d");

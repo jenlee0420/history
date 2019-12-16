@@ -82,15 +82,15 @@ export default {
   },
   name: "App",
   beforeCreate() {},
-  created () {
-    const that = this
-    that.timer = setInterval(function () {
-        console.log(document.readyState)
-        if (document.readyState === 'complete') {
-            that.load = false;
-            window.clearInterval(that.timer)
-        }
-    }, 500)
+  created() {
+    const that = this;
+    that.timer = setInterval(function() {
+      console.log(document.readyState);
+      if (document.readyState === "complete") {
+        that.load = false;
+        window.clearInterval(that.timer);
+      }
+    }, 500);
   },
   mounted() {
     this.createMap();
@@ -196,12 +196,7 @@ export default {
       scaleindex: 0,
       ele: null,
       popWindow: false,
-      canvasData: [
-        'myCanvasStatic1',
-        false,
-        false,
-        "myCanvasStatic2"
-      ],
+      canvasData: ["myCanvasStatic1", false, false, "myCanvasStatic2"],
       m01: null,
       m02: null,
       m03: null,
@@ -217,7 +212,7 @@ export default {
       prevorienta: "",
       map1: false,
       map2: false,
-      map3:false,
+      map3: false,
       pathObject: {},
       chenTimer: null,
       lin2timer: null,
@@ -239,7 +234,7 @@ export default {
     bodyScroll(event) {
       event.preventDefault();
     },
-    
+
     setScale(scaleindex) {
       this.zoomObj.preSetScale(
         (scaleindex / 10) * (this.zoomObj.maxScale - this.zoomObj.minScale) +
@@ -282,10 +277,10 @@ export default {
         case 2:
           //要邑和运河
           // c.style.visibility = swip?'visible':'hidden'
-          this.map3=swip
+          this.map3 = swip;
           // this.drawHousePromise(swip)
           // this.showCityAni(c, swip);
-          
+
           break;
         case 3:
           //安祿山控制的三鎮
@@ -293,10 +288,10 @@ export default {
             this.m04.currentTime = 0;
             this.m04.play();
           }
-          c.style.visibility = swip?'visible':'hidden'
+          c.style.visibility = swip ? "visible" : "hidden";
           // this.grainstoreAni = swip;
           break;
-        
+
         case 4:
           if (swip) {
             if (!this.noVoice) {
@@ -315,7 +310,7 @@ export default {
             this.drawHousePromise(false);
             clearTimeout(this.lin2timer);
           }
-         break;
+          break;
         case 4:
           this.mapPop = swip;
           break;
@@ -328,17 +323,19 @@ export default {
           break;
       }
       this.list[index].show = swip;
-      this.conflict()
+      this.conflict();
     },
-    conflict(){
-      let swip1 = this.list[1].show
-      let swip3 = this.list[3].show
-      document.getElementById('myCanvasStatic4').style.visibility = swip1?'visible':'hidden';
-      if(this.list[2].show){
-        document.getElementById('myCanvasStatic4').style.visibility = 'visible'
+    conflict() {
+      let swip1 = this.list[1].show;
+      let swip3 = this.list[3].show;
+      document.getElementById("myCanvasStatic4").style.visibility = swip1
+        ? "visible"
+        : "hidden";
+      if (this.list[2].show) {
+        document.getElementById("myCanvasStatic4").style.visibility = "visible";
       }
-      if(swip3){
-        document.getElementById('myCanvasStatic4').style.visibility = 'visible'
+      if (swip3) {
+        document.getElementById("myCanvasStatic4").style.visibility = "visible";
       }
     },
     oriChange() {
@@ -398,7 +395,7 @@ export default {
       this.setZoom();
     },
     initCanvas() {},
-    
+
     showall(type) {
       this.canvasData.forEach((e, index) => {
         if (type) {
@@ -509,7 +506,7 @@ export default {
       route4.src = require("../static/img/route2b_green.png");
 
       //画圈
-      this.drwaCircle(canvasStatic2)
+      this.drwaCircle(canvasStatic2);
       controlCity.onload = () => {
         contextStatic2.drawImage(
           controlCity,
@@ -529,14 +526,20 @@ export default {
           this.baseHeight
         );
       };
-      
+
       imageMainCity.onload = () => {
         canvasStatic1.width = this.baseWidth;
         canvasStatic1.height = this.baseHeight;
-        contextStatic1.drawImage(imageMainCity, 0, 0, this.baseWidth, this.baseHeight);
-        canvasStatic1.style.visibility = 'hidden'
-      }
-     route1.onload = () => {
+        contextStatic1.drawImage(
+          imageMainCity,
+          0,
+          0,
+          this.baseWidth,
+          this.baseHeight
+        );
+        canvasStatic1.style.visibility = "hidden";
+      };
+      route1.onload = () => {
         this.imgCount++;
         this.pathObject = {
           source: route1,
@@ -561,22 +564,21 @@ export default {
       route2.onload = () => {
         this.pathObject.mask2 = {
           source: route2,
-          originX: 699,
-            originY: 818,
-            width: 1,
-            height: 162,
-            currOriginX: 699,
-            currOriginY: 818,
-            shiftX: 8,
-            shiftY: 0
-        }
-        
+          originX: 715,
+          originY: 750,
+          width: 1,
+          height: 162,
+          currOriginX: 715,
+          currOriginY: 750,
+          shiftX: 8,
+          shiftY: 0
+        };
       };
       imageHorse.onload = () => {
-        var translate = [[414, 222], [774, 497], [572, 748],[410,824]];
-        var scale = [1, 1, 1,0];
-        var dur = [20, 15, 10,10];
-        var sharpPoint = [0, 0, 0,2];
+        var translate = [[862, 222], [774, 497], [572, 748], [410, 824]];
+        var scale = [1, 1, 1, 0];
+        var dur = [15, 20, 20, 20];
+        var sharpPoint = [0, 0, 0, 2];
         this.horseObject1 = this.initHorseObject(
           translate,
           scale,
@@ -585,7 +587,7 @@ export default {
           imageHorse
         );
       };
-      
+
       // document.getElementById('map_container').append(divTag)
       // divTag.append(divTag)
       this.$nextTick(() => {
@@ -609,16 +611,20 @@ export default {
       this.zoomObj.setScale(this.boxscale);
       // this.zoomObj.setTransform(false,0,0)
     },
-    initHorseObject(imageHorse) {
+    initHorseObject(translate, scale, dur, sharpPoint, imageHorse) {
       var object = {
         source: imageHorse,
         totalFrame: 8,
         currFrame: 0,
         width: 369,
         height: 296,
+        point: sharpPoint,
         position: {
+          points: translate,
+          scales: scale,
           currPoint: 0,
-          dur: 1,
+          totalPoint: translate.length,
+          dur: dur,
           currDur: 1
         },
         division: 1,
@@ -711,20 +717,20 @@ export default {
   .map3_div {
     background-image: url("../static/img/river.png");
   }
-    .map4_div {
+  .map4_div {
     background-image: url("../static/img/main_city.png");
   }
-    .map5_div {
+  .map5_div {
     background-image: url("../static/img/main_city1.png");
   }
-     .map6_div {
+  .map6_div {
     background-image: url("../static/img/main_city2.png");
   }
-       .map7_div {
+  .map7_div {
     background-image: url("../static/img/main_city2.png");
   }
-  
-   .border_div {
+
+  .border_div {
     // background-image: url("../static/img/border.png");
   }
 
