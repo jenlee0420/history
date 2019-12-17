@@ -43,7 +43,7 @@
         </div>
       </div>
     </div>
-    <modal class="" headTitle="问题" :hideFooter="true" v-if="popWindow" @cancel-event="popWindow=false;list[8].show=false">
+    <modal class="" headTitle="問題" :hideFooter="true" v-if="popWindow" @cancel-event="popWindow=false;list[8].show=false">
       <div slot="modalCont">
         <div>
           <div class="question">
@@ -67,7 +67,7 @@
     </modal>
     <modal class=""  headTitle="太原（今太原）" :hideFooter="true" v-if="mapPop" @cancel-event="mapPop=false;list[7].show=false">
       <div slot="modalCont">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d201592.00878035487!2d112.40248763471689!3d37.863211918910245!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x360aa8ebade29601%3A0xdabd32137ae53d2b!2z5Lit5ZyL5bGx6KW_55yB5aSq5Y6f5biC!5e0!3m2!1szh-TW!2shk!4v1572422308363!5m2!1szh-TW!2shk"
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d22181963.551565137!2d89.14265667034489!3d38.36247360109584!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x360aa8ebade29601%3A0xdabd32137ae53d2b!2z5Lit5ZyL5bGx6KW_55yB5aSq5Y6f5biC!5e0!3m2!1szh-TW!2shk!4v1575949226396!5m2!1szh-TW!2shk"
           :width="bodytWidth/1.8" :height="bodyHeight/1.8" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
       </div>
     </modal>

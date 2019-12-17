@@ -77,6 +77,8 @@ const animate = {
           pathObject.mask1.currOriginX = pathObject.mask1.originX;
           pathObject.mask1.currOriginY = pathObject.mask1.originY;
           pathObject.mask1.height = 1;
+          pathObject.mask2.currOriginX = pathObject.mask2.originX;
+          pathObject.mask2.currOriginY = pathObject.mask2.originY;
   
           pathObject.playing = false;
           clearTimeout(pathObject.timeout);
