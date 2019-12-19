@@ -15,7 +15,6 @@
             <div class="map1_div pos_a map" v-if="map1"></div>
             <div class="map2_div pos_a map" v-if="map2"></div>
             <div class="map3_div pos_a map" v-if="map3"></div>
-            <div class="map4_div pos_a map" v-if="map3"></div>
             <div class="map5_div pos_a map" v-if="map5"></div>
             <div class="map8_div pos_a map" v-if="map5"></div>
             <div class="map9_div pos_a map" v-if="map6"></div>
@@ -126,7 +125,6 @@ export default {
       currAns2: null,
       data: [],
       mapPop: false,
-      imgCount: 0,
       list: [
         {
           ico: require("../static/img/icon/capital_icon.png"),
@@ -179,7 +177,7 @@ export default {
       bodytWidth: "",
       bodyHeight: "",
       baseWidth: "1430",
-      baseHeight: "1315",
+      baseHeight: "1316",
       orienta: "",
       boxscale: 1,
       o: "",
@@ -197,7 +195,7 @@ export default {
       scaleindex: 0,
       ele: null,
       popWindow: false,
-      canvasData: ["myCanvasStatic1", false, "myCanvasStatic5", "myCanvasStatic2",false,"myCanvasStatic5","myCanvasAnimBluePath"],
+      canvasData: ["canvasStatic1", false, "canvasStatic5", "canvasStatic2",false,"canvasStatic5","canvasAnimBluePath"],
       m01: null,
       m02: null,
       m03: null,
@@ -220,7 +218,9 @@ export default {
       chenTimer: null,
       lin2timer: null,
       scaleZoom: 0,
-      debug: ""
+      debug: "",
+      canvasObj:{},
+      contextObj:{},
     };
   },
   watch: {
@@ -280,6 +280,7 @@ export default {
         case 2:
           //要邑和运河
           c.style.visibility = swip?'visible':'hidden'
+          this.canvasObj.canvasStatic4.style.visibility = swip?'visible':'hidden'
           this.map3 = swip;
           // this.drawHousePromise(swip)
           // this.showCityAni(c, swip);
@@ -305,11 +306,11 @@ export default {
               this.license.play();
             }
             if (this.pathObject.playing != true) {
-              this.drawGreenPath(true);
+              this.drawRedPath(true);
               this.drawHousePromise(true);
             }
           } else {
-            this.drawGreenPath(false);
+            this.drawRedPath(false);
             this.drawHousePromise(false);
           }
           break;
@@ -342,26 +343,26 @@ export default {
       let swip4 = this.list[4].show;
       let swip5 = this.list[5].show;
       let swip6 = this.list[6].show;
-      document.getElementById("myCanvasStatic3").style.visibility = swip3
+      document.getElementById("canvasStatic3").style.visibility = swip3
         ? "visible"
         : "hidden";
-      document.getElementById("myCanvasStatic5").style.visibility = swip2
+      document.getElementById("canvasStatic5").style.visibility = swip2
         ? "visible"
         : "hidden";
-      document.getElementById("myCanvasAnimBluePath").style.visibility = swip2
+      document.getElementById("canvasAnimBluePath").style.visibility = swip2
         ? "visible"
         : "hidden";
       if (this.list[4].show) {
-        document.getElementById("myCanvasStatic3").style.visibility = "visible";
+        document.getElementById("canvasStatic3").style.visibility = "visible";
       }
       if (swip4) {
-        document.getElementById("myCanvasStatic3").style.visibility = "visible";
+        document.getElementById("canvasStatic3").style.visibility = "visible";
       }
       if(swip5){
-        document.getElementById("myCanvasStatic5").style.visibility = "visible";
+        document.getElementById("cnvasStatic5").style.visibility = "visible";
       }
       if(swip6){
-        document.getElementById("myCanvasAnimBluePath").style.visibility = "visible";
+        document.getElementById("canvasAnimBluePath").style.visibility = "visible";
       }
 
     },
@@ -444,24 +445,10 @@ export default {
     },
     createMap() {
       var divTag = this.$refs.canvasInnerDiv;
-      var canvasStatic1 = document.createElement("canvas");
-      var canvasStatic2 = document.createElement("canvas");
-      var canvasStatic3 = document.createElement("canvas");
-      var canvasStatic4 = document.createElement("canvas");
-      var canvasStatic5 = document.createElement("canvas");
-      var canvasAnimGreenPath = document.createElement("canvas");
-      var canvasAnimGreenPath2 = document.createElement("canvas");
-      var canvasAnimBluePath = document.createElement("canvas");
-      var canvasAnimHorse = document.createElement("canvas");
-      var contextStatic1 = canvasStatic1.getContext("2d");
-      var contextStatic2 = canvasStatic2.getContext("2d");
-      var contextStatic3 = canvasStatic3.getContext("2d");
-      var contextStatic4 = canvasStatic4.getContext("2d");
-      var contextStatic5 = canvasStatic5.getContext("2d");
-      var contextAnimGreenPath = canvasAnimGreenPath.getContext("2d");
-      var contextAnimGreenPath2 = canvasAnimGreenPath2.getContext("2d");
-      var contextAnimblue = canvasAnimBluePath.getContext("2d");
-      var contextAnimHorse = canvasAnimHorse.getContext("2d");
+      let list=[
+        {name:'canvasStatic1',zindex:2},{name:'canvasStatic2',zindex:2},{name:'canvasStatic3',zindex:2},{name:'canvasStatic4',zindex:2},{name:'canvasAnimRedPath',zindex:2}
+        ,{name:'canvasStatic5',zindex:2},{name:'canvasAnimBluePath',zindex:2},{name:'myCanvasAnimHorse',zindex:2}]
+      this.createCanvas(list,divTag)
       /* 音频 */
       this.m01 = document.createElement("audio");
       this.m02 = document.createElement("audio");
@@ -479,50 +466,11 @@ export default {
       this.license.src = require("../static/img/vo/License.mp3");
 
       // Variable init
-      divTag.appendChild(canvasStatic1);
-      divTag.appendChild(canvasStatic2);
-      divTag.appendChild(canvasStatic3);
-      divTag.appendChild(canvasStatic4);
-      divTag.appendChild(canvasStatic5);
-      // divTag.appendChild(canvasAnimGreenPath2);
-      divTag.appendChild(canvasAnimGreenPath);
-      divTag.appendChild(canvasAnimBluePath);
-      divTag.appendChild(canvasAnimHorse);
-      canvasStatic1.id = "myCanvasStatic1";
-      canvasStatic2.id = "myCanvasStatic2";
-      canvasStatic3.id = "myCanvasStatic3";
-      canvasStatic4.id = "myCanvasStatic4";
-      canvasStatic5.id = "myCanvasStatic5";
-      canvasAnimGreenPath.id = "myCanvasAnimGreenPath";
-      canvasAnimGreenPath2.id = "myCanvasAnimGreenPath2";
-      canvasAnimBluePath.id = "myCanvasAnimBluePath";
-      canvasAnimHorse.id = "myCanvasAnimHorse";
-      canvasStatic1.style.position = "absolute";
-      canvasStatic2.style.position = "absolute";
-      canvasStatic3.style.position = "absolute";
-      canvasStatic4.style.position = "absolute";
-      canvasStatic5.style.position = "absolute";
-      canvasAnimGreenPath.style.position = "absolute";
-      canvasAnimGreenPath2.style.position = "absolute";
-      canvasAnimBluePath.style.position = "absolute";
-      canvasAnimHorse.style.position = "absolute";
-      canvasStatic1.style.zIndex = "4";
-      canvasStatic2.style.zIndex = "2";
-      canvasStatic3.style.zIndex = "4";
-      canvasStatic4.style.zIndex = "4";
-      canvasStatic5.style.zIndex = "2";
-      canvasAnimGreenPath.style.zIndex = "2";
-      canvasAnimGreenPath2.style.zIndex = "2";
-      canvasAnimHorse.style.zIndex = "6";
-      canvasAnimGreenPath.width = this.baseWidth;
-      canvasAnimGreenPath.height = this.baseHeight;
-      canvasAnimGreenPath2.width = this.baseWidth;
-      canvasAnimGreenPath2.height = this.baseHeight;
-      canvasAnimHorse.width = this.baseWidth;
-      canvasAnimHorse.height = this.baseHeight;
+
 
       var controlCity = new Image();
       var controlCity2 = new Image();
+      var maincity= new Image()
       var maincity1= new Image()
       var imageGate = new Image();
       var imageMainCity = new Image();
@@ -539,6 +487,7 @@ export default {
       imageMainCity.src = require("../static/img/capital.png");
       imageHorse.src = require("../static/img/horse.png");
       maincity1.src= require("../static/img/main_city1.png");
+      maincity.src=require("../static/img/main_city.png");
       // imageGate.src = require("../static/img/gate.png");
       route1.src = require("../static/img/route1a_red.png");
       route2.src = require("../static/img/route1b_red.png");
@@ -546,9 +495,9 @@ export default {
       route4.src = require("../static/img/route2b_green.png");
 
       //画圈
-      this.drwaCircle(canvasStatic2);
+      this.drwaCircle(this.canvasObj.canvasStatic2);
       controlCity.onload = () => {
-        contextStatic2.drawImage(
+        this.contextObj.canvasStatic2.drawImage(
           controlCity,
           0,
           0,
@@ -558,56 +507,57 @@ export default {
         // canvasStatic2.style.visibility = "hidden";
       };
       controlCity2.onload = () => {
-        canvasStatic3.width = this.baseWidth;
-        canvasStatic3.height = this.baseHeight;
-        contextStatic3.drawImage(
+        this.contextObj.canvasStatic3.drawImage(
           controlCity2,
           0,
           0,
           this.baseWidth,
           this.baseHeight
         );
-        canvasStatic3.style.visibility = "hidden";
+        this.canvasObj.canvasStatic3.style.visibility = "hidden";
       };
 
       imageMainCity.onload = () => {
-        canvasStatic1.width = this.baseWidth;
-        canvasStatic1.height = this.baseHeight;
-        contextStatic1.drawImage(
+        this.contextObj.canvasStatic1.drawImage(
           imageMainCity,
           0,
           0,
           this.baseWidth,
           this.baseHeight
         );
-        canvasStatic1.style.visibility = "hidden";
+        this.canvasObj.canvasStatic1.style.visibility = "hidden";
+      };
+      maincity.onload = () => {
+        this.contextObj.canvasStatic4.drawImage(
+          maincity,
+          0,
+          0,
+          this.baseWidth,
+          this.baseHeight
+        );
+        this.canvasObj.canvasStatic4.style.visibility = "hidden";
       };
       maincity1.onload = () => {
-        canvasStatic5.width = this.baseWidth;
-        canvasStatic5.height = this.baseHeight;
-        contextStatic5.drawImage(
+        this.contextObj.canvasStatic5.drawImage(
           maincity1,
           0,
           0,
           this.baseWidth,
           this.baseHeight
         );
-        canvasStatic5.style.visibility = "hidden";
+        this.canvasObj.canvasStatic5.style.visibility = "hidden";
       };
       route3.onload = () => {
-        canvasAnimBluePath.width = this.baseWidth;
-        canvasAnimBluePath.height = this.baseHeight;
-        contextAnimblue.drawImage(
+        this.contextObj.canvasAnimBluePath.drawImage(
           route3,
           0,
           0,
           this.baseWidth,
           this.baseHeight
         );
-        canvasAnimBluePath.style.visibility = "hidden";
+        this.canvasObj.canvasAnimBluePath.style.visibility = "hidden";
       };
       route1.onload = () => {
-        this.imgCount++;
         this.pathObject = {
           source: route1,
           originX: 0,
@@ -786,10 +736,6 @@ export default {
   .map3_div {
     background-image: url("../static/img/river.png");
   }
-  .map4_div {
-    background-image: url("../static/img/main_city.png");
-     z-index: 3;
-  }
 
 
   .map5_div {
@@ -807,8 +753,8 @@ export default {
   }
 
   #canvasInnerDiv {
-    width: 1430px;
-    height: 1316px;
+    width: 1432px;
+    height: 1317px;
   }
   .iconItem {
     display: flex;

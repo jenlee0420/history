@@ -37,7 +37,7 @@
         </div>
       </div>
     </div>
-    <modal class="" headTitle="问题" :hideFooter="true" v-if="popWindow" @cancel-event="popWindow=false;list[6].show=false">
+    <modal class="" headTitle="問題" :hideFooter="true" v-if="popWindow" @cancel-event="popWindow=false;list[6].show=false">
       <div slot="modalCont">
         <div>
           <div class="question">
@@ -60,7 +60,7 @@
     </modal>
     <modal class=""  headTitle="建康（今南京市）" :hideFooter="true" v-if="mapPop" @cancel-event="mapPop=false;list[5].show=false">
       <div slot="modalCont">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1738801.539539802!2d119.2476953!3d31.6585725!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x35b58c9b668dcd83%3A0x8ffbb60b79df1b06!2z5Lit5ZyL5rGf6JiH55yB5Y2X5Lqs5biC!5e0!3m2!1szh-TW!2shk!4v1572421682457!5m2!1szh-TW!2shk"
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d24894379.013818808!2d87.03961028287168!3d36.20145956714316!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x35b58c9b668dcd83%3A0x8ffbb60b79df1b06!2z5Lit5ZyL5rGf6JiH55yB5Y2X5Lqs5biC!5e0!3m2!1szh-TW!2shk!4v1575951096356!5m2!1szh-TW!2shk"
           :width="bodytWidth/1.8" :height="bodyHeight/1.8" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
       </div>
     </modal>

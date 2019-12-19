@@ -36,7 +36,7 @@
         </div>
       </div>
     </div>
-    <modal class="" headTitle="问题" :hideFooter="true" v-if="popWindow" @cancel-event="popWindow=false;list[4].show=false">
+    <modal class="" headTitle="問題" :hideFooter="true" v-if="popWindow" @cancel-event="popWindow=false;list[4].show=false">
       <div slot="modalCont" >
         <div  class="question" >
           <div>1. 根據地圖，官倉大多鄰近大興，哪一個官倉離都城較遠？</div>
@@ -56,7 +56,7 @@
     </modal>
     <modal class=""  headTitle="大興（今西安市）" :hideFooter="true" v-if="mapPop" @cancel-event="mapPop=false;list[3].show=false">
       <div slot="modalCont">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d845158.7150065893!2d108.8816973!3d34.161658!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x366379e922ac17b9%3A0x85d466fda794582e!2z5Lit5ZyL6Zmd6KW_55yB6KW_5a6J5biC!5e0!3m2!1szh-TW!2shk!4v1572421815894!5m2!1szh-TW!2shk"
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d24781696.25475321!2d86.13987929246206!3d38.700543890057766!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x366379e922ac17b9%3A0x85d466fda794582e!2z5Lit5ZyL6Zmd6KW_55yB6KW_5a6J5biC!5e0!3m2!1szh-TW!2shk!4v1575948835917!5m2!1szh-TW!2shk"
           :width="bodytWidth/1.8" :height="bodyHeight/1.8" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
       </div>
     </modal>
