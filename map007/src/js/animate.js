@@ -22,6 +22,79 @@ const animate = {
     }, 260);
     canvasStatic.ani = true;
   },
+  drawGreenPath(flag) {
+    let canvasAnimPath = document.getElementById("canvasAnimGreenPath");
+    let contextAnimPath = canvasAnimPath.getContext("2d");
+    let pathObject = this.pathObjectGreen;
+    if (flag == true) {
+      if (pathObject.mask3.currOriginY < pathObject.mask3.endPoint) {
+        pathObject.playing = true;
+        this.canvasClear(canvasAnimPath);
+        contextAnimPath.save();
+        contextAnimPath.beginPath();
+        contextAnimPath.rect(
+          pathObject.mask1.currOriginX,
+          pathObject.mask1.currOriginY,
+          pathObject.mask1.width,
+          pathObject.mask1.height
+        );
+        if (pathObject.mask1.currOriginY < pathObject.mask1.endPoint) {
+          contextAnimPath.rect(
+            pathObject.mask2.currOriginX,
+            pathObject.mask2.currOriginY,
+            pathObject.mask2.width,
+            pathObject.mask2.height);
+            if (pathObject.mask2.currOriginX < pathObject.mask2.endPoint){
+                contextAnimPath.rect(
+                    pathObject.mask3.currOriginX,
+                    pathObject.mask3.currOriginY,
+                    pathObject.mask3.width,
+                    pathObject.mask3.height);
+            }
+        }
+
+        contextAnimPath.clip();
+        contextAnimPath.drawImage(
+          pathObject.source,
+          pathObject.originX,
+          pathObject.originY,
+          pathObject.width,
+          pathObject.height 
+        );
+        if (pathObject.mask1.currOriginY > pathObject.mask1.endPoint) {
+          // pathObject.mask1.currOriginX += pathObject.mask1.shiftX;
+          pathObject.mask1.currOriginY -= pathObject.mask1.shiftX;
+        } else {
+
+          contextAnimPath.drawImage(pathObject.mask2.source, pathObject.originX, pathObject.originY, pathObject.width, pathObject.height);
+          if (pathObject.mask2.currOriginX > pathObject.mask2.endPoint) {
+            pathObject.mask2.currOriginX -= pathObject.mask2.shiftX;
+          }else{
+            if (pathObject.mask3.currOriginX > pathObject.mask3.endPoint) {
+                pathObject.mask3.currOriginX -= pathObject.mask3.shiftX;
+            }
+          }
+        }
+        contextAnimPath.restore();
+        canvasAnimPath.style.visibility = "visible";
+        pathObject.timeout = setTimeout(() => {
+          this.drawGreenPath(flag);
+        }, 30);
+      }
+    } else {
+      canvasAnimPath.style.visibility = "hidden";
+      pathObject.mask1.currOriginX = pathObject.mask1.originX;
+      pathObject.mask1.currOriginY = pathObject.mask1.originY;
+
+      pathObject.mask2.currOriginX = pathObject.mask2.originX;
+      pathObject.mask2.currOriginY = pathObject.mask2.originY;
+      pathObject.mask3.currOriginX = pathObject.mask3.originX;
+      pathObject.mask3.currOriginY = pathObject.mask3.originY;
+
+      pathObject.playing = false;
+      clearTimeout(pathObject.timeout);
+    }
+  },
   drawRedPath(flag) {
     let canvasAnimPath = document.getElementById("canvasAnimRedPath");
     let contextAnimPath = canvasAnimPath.getContext("2d");
@@ -53,7 +126,7 @@ const animate = {
           pathObject.originX,
           pathObject.originY,
           pathObject.width,
-          pathObject.height
+          pathObject.height 
         );
         if (pathObject.mask1.height < 635) {
           // pathObject.mask1.currOriginX += pathObject.mask1.shiftX;
@@ -245,12 +318,6 @@ const animate = {
       divTag.appendChild(canvasStatic);
     }
   },
-  insterCanvas(img, contextStatic, bool) {
-    img.onload = () => {
-      this.contextObj[contextStatic].drawImage(controlCity,0,0,this.baseWidth,this.baseHeight);
-      this.contextObj[contextStatic].style.visibility = bool ? "visible" : "hidden";
-    };
-  }
   // createImg(src, contextStatic) {
   //     var controlCity = new Image();
   //     controlCity.src = require(`../static/img/${src}.png`);

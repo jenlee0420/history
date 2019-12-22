@@ -15,7 +15,6 @@
             <div class="map1_div pos_a map" v-if="map1"></div>
             <div class="map2_div pos_a map" v-if="map2"></div>
             <div class="map3_div pos_a map" v-if="map3"></div>
-            <div class="map5_div pos_a map" v-if="map5"></div>
             <div class="map8_div pos_a map" v-if="map5"></div>
             <div class="map9_div pos_a map" v-if="map6"></div>
           </div>
@@ -215,6 +214,7 @@ export default {
       map5:false,
       map6:false,
       pathObject: {},
+      pathObjectGreen:{},
       chenTimer: null,
       lin2timer: null,
       scaleZoom: 0,
@@ -316,7 +316,12 @@ export default {
           break;
         case 5:
           //唐玄宗逃走路線
-          this.showCityAni(c, swip);
+          if (swip && !this.noVoice) {
+            this.m05.currentTime = 0;
+            this.m05.play();
+          }
+          // this.showCityAni(c, swip);
+          this.drawGreenPath(swip)
           this.map5 = swip
           break;
         case 6:
@@ -335,7 +340,7 @@ export default {
           break;
       }
       this.list[index].show = swip;
-      this.conflict();
+      // this.conflict();
     },
     conflict() {
       let swip3 = this.list[3].show;
@@ -446,7 +451,7 @@ export default {
     createMap() {
       var divTag = this.$refs.canvasInnerDiv;
       let list=[
-        {name:'canvasStatic1',zindex:2},{name:'canvasStatic2',zindex:2},{name:'canvasStatic3',zindex:2},{name:'canvasStatic4',zindex:2},{name:'canvasAnimRedPath',zindex:2}
+        {name:'canvasStatic1',zindex:2},{name:'canvasStatic2',zindex:2},{name:'canvasStatic3',zindex:2},{name:'canvasStatic4',zindex:2},{name:'canvasAnimRedPath',zindex:2},{name:'canvasAnimGreenPath',zindex:2}
         ,{name:'canvasStatic5',zindex:2},{name:'canvasAnimBluePath',zindex:2},{name:'myCanvasAnimHorse',zindex:2}]
       this.createCanvas(list,divTag)
       /* 音频 */
@@ -492,7 +497,8 @@ export default {
       route1.src = require("../static/img/route1a_red.png");
       route2.src = require("../static/img/route1b_red.png");
       route3.src = require("../static/img/main_city2.png");
-      route4.src = require("../static/img/route2b_green.png");
+      route4.src = require("../static/img/route2a_green.png");
+      route5.src = require("../static/img/route2b_green.png");
 
       //画圈
       this.drwaCircle(this.canvasObj.canvasStatic2);
@@ -589,6 +595,54 @@ export default {
           currOriginY: 750,
           shiftX: 8,
           shiftY: 0
+        };
+      };
+      route4.onload = () => {
+        this.pathObjectGreen = {
+          source: route4,
+          originX: 0,
+          originY: 0,
+          width: this.baseWidth,
+          height: this.baseHeight,
+          mask1: {
+            originX: 491,
+            originY: 922,
+            width: 28,
+            height: 48,
+            currOriginX: 491,
+            currOriginY: 922,
+            shiftX: 8,
+            shiftY: 0,
+            endPoint:884,
+          },
+          timeout: null,
+          playing: false
+        };
+      };
+      route5.onload = () => {
+        this.pathObjectGreen.mask2 = {
+          source: route5,
+          originX: 519,
+          originY: 854,
+          width: 75,
+          height: 40,
+          currOriginX: 519,
+          currOriginY: 854,
+          shiftX: 8,
+          shiftY: 0,
+          endPoint:445,
+        };
+        this.pathObjectGreen.mask3 = {
+          source: route5,
+          originX: 146,
+          originY: 542,
+          width: 286,
+          height: 332,
+          currOriginX: 146,
+          currOriginY: 542,
+          shiftX: 8,
+          shiftY: 0,
+          endPoint:868,
         };
       };
       imageHorse.onload = () => {
