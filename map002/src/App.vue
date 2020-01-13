@@ -208,7 +208,7 @@
       muteMe() {
         this.m01.pause()
         this.m02.pause()
-        this.m03.pause()
+        // this.m03.pause()
       },
       showCanvas(index) {
         let c = document.getElementById(this.canvasData[index])
@@ -232,9 +232,7 @@
             break;
           case 2:
             if (swip) {
-              if(!this.noVoice){
-                this.m03.currentTime = 0
-              this.m03.play()}
+              
               console.log('ani start')
               
               this.ship1(true)
@@ -527,10 +525,10 @@
         /* 音频 */
         this.m01 = document.createElement('audio')
         this.m02 = document.createElement('audio')
-        this.m03 = document.createElement('audio')
+        // this.m03 = document.createElement('audio')
         this.m01.src = 'static/img/vo/Map002-1.mp3'
         this.m02.src = 'static/img/vo/Map002-2.mp3'
-        this.m03.src = 'static/img/vo/Map002-3.mp3'
+        // this.m03.src = 'static/img/vo/Map002-3.mp3'
         // Variable init
         divTag.appendChild(canvasBackground);
         divTag.appendChild(canvasTop);

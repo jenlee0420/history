@@ -18,7 +18,7 @@
             <div class="sample_title">圖例</div>
             <div class="sample blueButton action" :class="{'clicked':item.show}" v-for="(item,index) in list" :key="index" @click="showCanvas(index)">
               <div class="iconItem">
-                 <span class="icon"><img :src="item.ico"></span>
+                 <span class="icon"><img v-if="item.ico" :src="item.ico"></span>
                  <span>{{item.text}}</span>
                  </div>
             </div>
@@ -34,11 +34,11 @@
         </div>
       </div>
     </div>
-    <modal class="" headTitle="问题" :hideFooter="true" v-if="popWindow" @cancel-event="popWindow=false;list[7].show=false">
+    <modal class="" headTitle="問題" :hideFooter="true" v-if="popWindow" @cancel-event="popWindow=false;list[8].show=false">
       <div slot="modalCont">
         <div>
           <div class="question question2">
-            <div>1. 貞觀年間，唐皇朝開疆辟土，大部新增的領土均位於_________？</div>
+            <div class="title"><span>1. </span><span>貞觀年間，唐皇朝開疆辟土，大部新增的領土均位於_________？</span></div>
             <div>
               <span class="item" :class="{'selected':currAns==index}" v-for="(item,index) in questionItem" :key="index" @click="checkans(index)">{{item}}</span>
             </div>
@@ -64,7 +64,7 @@
         </div>
       </div>
     </modal>
-    <modal class=""  headTitle="長安（今西安市）" :hideFooter="true" v-if="mapPop" @cancel-event="mapPop=false;list[6].show=false">
+    <modal class=""  headTitle="長安（今西安市）" :hideFooter="true" v-if="mapPop" @cancel-event="mapPop=false;list[7].show=false">
       <div slot="modalCont">
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d24781696.25475321!2d86.13987929246206!3d38.700543890057766!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x366379e922ac17b9%3A0x85d466fda794582e!2z5Lit5ZyL6Zmd6KW_55yB6KW_5a6J5biC!5e0!3m2!1szh-TW!2shk!4v1575948835917!5m2!1szh-TW!2shk"
           :width="bodytWidth/1.8" :height="bodyHeight/1.8" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
@@ -76,7 +76,7 @@
 <script>
 import zoom from "./js/zoom.js";
 import modal from "./components/modal";
-import bar from "./components/bar";
+import bar from "./components/bar"; 
 export default {
   components: {
     modal,
@@ -128,7 +128,6 @@ export default {
       currAns2: null,
       data: [],
       mapPop: false,
-      imgCount: 0,
       list: [
         {
           ico: require("../static/img/icon/capital_icon.png"),
@@ -151,10 +150,16 @@ export default {
           show: false
         },
         {
-          ico: require("../static/img/icon/capital_icon.png"),
-          text: "邊族",
+          ico: "",
+          text: "突厥",
           show: false
         },
+        {
+          ico: "",
+          text: "吐蕃",
+          show: false
+        },
+        
         {
           ico: require("../static/img/icon/route_red_icon.png"),
           text: "拓展領土",
@@ -199,8 +204,9 @@ export default {
         "myCanvasStatic2",
         "myCanvasStatic3",
         "myCanvasStatic4",
+        "myCanvasStatic6",
         "myCanvasStatic5",
-        false,false
+        false,
       ],
       m01: null,
       m02: null,
@@ -229,12 +235,6 @@ export default {
     };
   },
   watch: {
-    imgCount(n) {
-      if (this.imgCount >= 2) {
-        // console.log(this.imgCount)
-        this.load = false;
-      }
-    },
     zoomObj: {
       handler(n, o) {
         this.scaleindex =
@@ -279,7 +279,7 @@ export default {
       this.m03.pause();
       this.m04.pause();
       this.m05.pause();
-      // this.m06.pause();
+      this.m06.pause();
       this.license.pause();
     },
     showCanvas(index) {
@@ -295,13 +295,13 @@ export default {
           this.showCityAni(c, swip);
           break;
         case 1:
+         c.style.visibility = swip ? "visible" : "hidden";
+          break;
+        case 2:
           if (swip && !this.noVoice) {
             this.m02.currentTime = 0;
             this.m02.play();
           }
-         c.style.visibility = swip ? "visible" : "hidden";
-          break;
-        case 2:
           c.style.visibility = swip ? "visible" : "hidden";
           break;
         case 3:
@@ -312,20 +312,32 @@ export default {
           c.style.visibility = swip ? "visible" : "hidden";
           break;
         case 4:
-         if (swip && !this.noVoice) {
+          if (swip && !this.noVoice) {
             this.m04.currentTime = 0;
             this.m04.play();
           }
           c.style.visibility = swip ? "visible" : "hidden";
           break;
         case 5:
-         
+          if (swip && !this.noVoice) {
+            this.m05.currentTime = 0;
+            this.m05.play();
+          }
+          c.style.visibility = swip ? "visible" : "hidden";
           break;
-        
         case 6:
-          this.mapPop = swip;
+          if (swip && !this.noVoice) {
+            // this.m06.currentTime = 0;
+            // this.m06.play();
+            this.license.play();
+          }
+          this.drawRedPath(swip)
+          this.drawHousePromise(swip)
           break;
         case 7:
+          this.mapPop = swip;
+          break;
+        case 8:
           this.popWindow = swip;
           this.currAns = null;
           this.currAns2 = null;
@@ -443,7 +455,9 @@ export default {
         { name: "myCanvasStatic3", zindex: 1 },
         { name: "myCanvasStatic4", zindex: 2 },
         { name: "myCanvasStatic5", zindex: 2 },
-        { name: "myCanvasAnimGreenPath", zindex: 2 },
+        { name: "myCanvasStatic6", zindex: 2 },
+        { name: "myCanvasStatic7", zindex: 2 },
+        { name: "myCanvasAnimHorse", zindex: 2 },
       ];
       let obj = this.createCanvas(list, divTag);
       this.canvasObj = obj[0];
@@ -454,24 +468,27 @@ export default {
       this.m03 = document.createElement("audio");
       this.m04 = document.createElement("audio");
       this.m05 = document.createElement("audio");
+      this.m06 = document.createElement("audio");
       this.license = document.createElement("audio");
       this.m01.src = require("../static/img/vo/Map005-1.mp3");
-      this.m02.src = require("../static/img/vo/Map005-2.mp3");
+      this.m02.src = require("../static/img/vo/Map005-3.mp3");
       this.m03.src = require("../static/img/vo/Map005-4.mp3");
-      this.m04.src = require("../static/img/vo/Map005-5.mp3");
-      this.m05.src = require("../static/img/vo/Map005-6.mp3");
+      this.m04.src = require("../static/img/vo/Map005-5_1.mp3");
+      this.m05.src = require("../static/img/vo/Map005-5_2.mp3");
+      this.m06.src = require("../static/img/vo/Map005-5_3.mp3");
       this.license.src = require("../static/img/vo/License.mp3");
 
       var imageCapital = new Image();
       var imageGate = new Image();
       var imageborder = new Image();
       var imagemap1 = new Image();
-var imagemap2 = new Image();
+      var imagemap2 = new Image();
       var imageMainCity = new Image();
       var imageHorse = new Image();
       var city1 = new Image();
       var city2 = new Image();
       var city3 = new Image();
+      var route = new Image();
       imageCapital.src = require("../static/img/capital.png");
       imageHorse.src = require("../static/img/horse.png");
 
@@ -481,21 +498,20 @@ var imagemap2 = new Image();
       city1.src=  require("../static/img/tubo.png");
       city2.src=  require("../static/img/tujue.png");
       city3.src=  require("../static/img/xinluo.png");
-
+      route.src=  require("../static/img/route.png");
       this.insterCanvas(imageCapital, "myCanvasStatic1", false);
       this.insterCanvas(imageborder, "myCanvasStatic2", false);
       this.insterCanvas(imagemap1, "myCanvasStatic3", false);
       this.insterCanvas(imagemap2, "myCanvasStatic4", false);
       this.insterCanvas(city1, "myCanvasStatic5", false);
-      this.insterCanvas(city2, "myCanvasStatic5", false);
-      this.insterCanvas(city3, "myCanvasStatic5", false);
+      this.insterCanvas(city2, "myCanvasStatic6", false);
+      this.insterCanvas(city3, "myCanvasStatic7", false);
      
       imageHorse.onload = () => {
-        this.imgCount++;
-        var translate = [[428, 404], [288, 706], [264, 888]];
+        var translate = [[497, 533], [298, 546], [127, 582]];
         var scale = [1, 1, 0];
-        var dur = [20, 15, 10];
-        var sharpPoint = [0, 0, 2];
+        var dur = [15, 15, 15];
+        var sharpPoint ='';
         this.horseObject1 = this.initHorseObject(
           translate,
           scale,
@@ -503,6 +519,72 @@ var imagemap2 = new Image();
           sharpPoint,
           imageHorse
         );
+        var translate = [[835, 670], [807, 442], [788, 282]];
+        var scale = [1, 1, 0];
+        var dur = [15, 15, 15];
+        var sharpPoint = '';
+        this.horseObject2 = this.initHorseObject(
+          translate,
+          scale,
+          dur,
+          sharpPoint,
+          imageHorse
+        );
+        var translate = [[-1070, 431], [-1268, 474], [-1366, 610]];
+        var scale = [1, 1, 0];
+        var dur = [10, 10, 15];
+        var sharpPoint = -1;
+        this.horseObject3 = this.initHorseObject(
+          translate,
+          scale,
+          dur,
+          sharpPoint,
+          imageHorse
+        );
+      };
+      route.onload = () => {
+        this.pathObject = {
+          source: route,
+          originX: 0,
+          originY: 0,
+          width: this.baseWidth,
+          height: this.baseHeight,
+          mask1: {
+            originX: 536,
+            originY: 546,
+            width: 1,
+            height: 76,
+            currOriginX: 536,
+            currOriginY: 546,
+            shiftX: 8,
+            shiftY: 0,
+            endPoint:440
+          },
+          mask2: {
+            originX: 788,
+            originY: 700,
+            width: 150,
+            height: 1,
+            currOriginX: 788,
+            currOriginY: 700,
+            shiftX: 8,
+          shiftY: 0,
+          endPoint:436
+          },
+          mask3: {
+            originX: 998,
+            originY: 522,
+            width: 1,
+            height: 116,
+            currOriginX: 998,
+            currOriginY: 522,
+            shiftX: 8,
+            shiftY: 0,
+            endPoint:360
+          },
+          timeout: null,
+          playing: false
+        };
       };
       // document.getElementById('map_container').append(divTag)
       // divTag.append(divTag)
@@ -672,6 +754,14 @@ var imagemap2 = new Image();
         margin: auto;
         // object-fit:contain;
       }
+    }
+  }
+}
+.title{
+  display: flex;
+  span{
+    &:last-child{
+      margin-left:0.35em;
     }
   }
 }

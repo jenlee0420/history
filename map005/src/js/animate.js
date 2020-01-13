@@ -23,11 +23,11 @@ const animate = {
         canvasStatic.ani = true;
     },
     drawRedPath(flag) {
-        let canvasAnimPath = document.getElementById("canvasAnimRedPath");
+        let canvasAnimPath = document.getElementById("myCanvasStatic6");
         let contextAnimPath = canvasAnimPath.getContext("2d");
         let pathObject = this.pathObject;
         if (flag == true) {
-            if (pathObject.mask2.currOriginX > 431) {
+            if (pathObject.mask2.height < pathObject.mask2.endPoint) {
                 pathObject.playing = true;
                 this.canvasClear(canvasAnimPath);
                 contextAnimPath.save();
@@ -38,14 +38,16 @@ const animate = {
                     pathObject.mask1.width,
                     pathObject.mask1.height
                 );
-                if (pathObject.mask1.height > 635) {
-
-                    contextAnimPath.rect(
-                        pathObject.mask2.currOriginX,
-                        pathObject.mask2.currOriginY,
-                        pathObject.mask2.width,
-                        pathObject.mask2.height);
-                }
+                contextAnimPath.rect(
+                    pathObject.mask2.currOriginX,
+                    pathObject.mask2.currOriginY,
+                    pathObject.mask2.width,
+                    pathObject.mask2.height);
+                contextAnimPath.rect(
+                    pathObject.mask3.currOriginX,
+                    pathObject.mask3.currOriginY,
+                    pathObject.mask3.width,
+                    pathObject.mask3.height);
 
                 contextAnimPath.clip();
                 contextAnimPath.drawImage(
@@ -55,17 +57,19 @@ const animate = {
                     pathObject.width,
                     pathObject.height
                 );
-                if (pathObject.mask1.height < 635) {
+                if (pathObject.mask1.width < pathObject.mask1.endPoint) {
                     // pathObject.mask1.currOriginX += pathObject.mask1.shiftX;
-                    pathObject.mask1.height += pathObject.mask1.shiftX;
-                } else {
-
-                    contextAnimPath.drawImage(pathObject.mask2.source, pathObject.originX, pathObject.originY, pathObject.width, pathObject.height);
-                    if (pathObject.mask2.currOriginX > 431) {
-                        pathObject.mask2.currOriginX -= pathObject.mask2.shiftX;
-                        pathObject.mask2.width += pathObject.mask2.shiftX;
-                    }
+                    pathObject.mask1.currOriginX -= pathObject.mask1.shiftX;
+                    pathObject.mask1.width += pathObject.mask1.shiftX;
                 }
+                if (pathObject.mask2.height < pathObject.mask2.endPoint) {
+                    pathObject.mask2.currOriginY -= pathObject.mask2.shiftX;
+                    pathObject.mask2.height += pathObject.mask2.shiftX;
+                }
+                if (pathObject.mask3.width < pathObject.mask3.endPoint) {
+                    pathObject.mask3.width += pathObject.mask3.shiftX;
+                }
+
                 contextAnimPath.restore();
                 canvasAnimPath.style.visibility = "visible";
                 pathObject.timeout = setTimeout(() => {
@@ -76,9 +80,13 @@ const animate = {
             canvasAnimPath.style.visibility = "hidden";
             pathObject.mask1.currOriginX = pathObject.mask1.originX;
             pathObject.mask1.currOriginY = pathObject.mask1.originY;
-            pathObject.mask1.height = 1;
+            pathObject.mask1.width = 1
             pathObject.mask2.currOriginX = pathObject.mask2.originX;
             pathObject.mask2.currOriginY = pathObject.mask2.originY;
+            pathObject.mask2.height =1
+            pathObject.mask3.currOriginX = pathObject.mask3.originX;
+            pathObject.mask3.currOriginY = pathObject.mask3.originY;
+            pathObject.mask3.width = 1
 
             pathObject.playing = false;
             clearTimeout(pathObject.timeout);
@@ -88,6 +96,9 @@ const animate = {
         this.canvasAnimHorse = document.getElementById("myCanvasAnimHorse");
         let contextAnimHorse = this.canvasAnimHorse.getContext("2d");
         if (flag) {
+            if (this.horseObject1.animated == true || this.horseObject2.animated == true|| this.horseObject3.animated == true) {
+                return;
+            }
             this.canvasAnimHorse.style.visibility = "visible";
 
             this.drawHorsesTimeout2 = setInterval(() => {
@@ -97,68 +108,119 @@ const animate = {
                     contextAnimHorse,
                     this.horseObject1.source
                 );
+                this.drawHorse(
+                    this.horseObject2,
+                    contextAnimHorse,
+                    this.horseObject2.source
+                );
+                this.drawHorse(
+                    this.horseObject3,
+                    contextAnimHorse,
+                    this.horseObject3.source
+                );
+                if(this.horseObject1.animated == true && this.horseObject2.animated == true && this.horseObject3.animated==true){
+                    this.license.pause();
+                }
             }, 70);
+            // }, 500)
         } else {
+            // for(var i= 0; i<this.drawHorsesTimeout2.length;i++){
+            //     clearInterval(this.drawHorsesTimeout2[i])
+            // }
+            // clearTimeout(this.horsetimerGroup)
             clearInterval(this.drawHorsesTimeout2);
             this.canvasClear(this.canvasAnimHorse);
             this.canvasAnimHorse.style.visibility = "hidden";
+            this.resetHorseObject(this.horseObject1);
+            this.resetHorseObject(this.horseObject2);
+            this.resetHorseObject(this.horseObject3);
         }
     },
     drawHorse(object, contextS, imageHorse) {
         return new Promise((resolve, rej) => {
+            if (object.position.currPoint + 1 < object.position.totalPoint) {
+                contextS.save();
+                if (object.point==-1) {
+                    contextS.scale(-1, 1);
+                }
+                var position = new Array();
+                var scale;
+                if (object.currFrame < object.totalFrame - 1) {
+                    object.currFrame++;
+                } else {
+                    object.currFrame = 0;
+                }
+                if (
+                    object.position.scales[object.position.currPoint] !=
+                    object.position.scales[object.position.currPoint + 1]
+                ) {
+                    if (
+                        object.position.scales[object.position.currPoint] >
+                        object.position.scales[object.position.currPoint + 1]
+                    ) {
+                        scale =
+                            (object.position.scales[object.position.currPoint] *
+                                (object.position.dur[object.position.currPoint] -
+                                    object.position.currDur)) /
+                            object.position.dur[object.position.currPoint];
+                    } else {
+                        scale =
+                            (object.position.scales[object.position.currPoint + 1] *
+                                object.position.currDur) /
+                            object.position.dur[object.position.currPoint];
+                    }
+                    if (scale < 0) {
+                        scale = 0;
+                    }
+                } else {
+                    scale = 1;
+                }
+                position[0] =
+                    (object.position.points[object.position.currPoint][0] *
+                        (object.position.dur[object.position.currPoint] -
+                            object.position.currDur) +
+                        object.position.points[object.position.currPoint + 1][0] *
+                        object.position.currDur) /
+                    object.position.dur[object.position.currPoint];
+                position[1] =
+                    (object.position.points[object.position.currPoint][1] *
+                        (object.position.dur[object.position.currPoint] -
+                            object.position.currDur) +
+                        object.position.points[object.position.currPoint + 1][1] *
+                        object.position.currDur) /
+                    object.position.dur[object.position.currPoint];
 
-            contextS.save();
-            var position = new Array();
-            var scale;
-            if (object.currFrame < object.totalFrame - 1) {
-                object.currFrame++;
+                contextS.drawImage(
+                    imageHorse,
+                    object.currFrame * object.width,
+                    0,
+                    object.width,
+                    object.height,
+                    position[0],
+                    position[1],
+                    object.width * scale * 0.53,
+                    object.height * scale * 0.53);
+                contextS.restore();
+                // Anim Position control
+                if (
+                    object.position.currDur <=
+                    object.position.dur[object.position.currPoint]
+                ) {
+                    object.position.currDur++;
+                } else {
+                    object.position.currDur = 1;
+                    object.position.currPoint++;
+                }
+                // return "ok";
             } else {
-                object.currFrame = 0;
+                resolve("//");
+                object.animating = false;
+                object.animated = true;
             }
-
-            contextS.drawImage(
-                imageHorse,
-                object.currFrame * object.width,
-                0,
-                object.width,
-                object.height,
-                630,
-                5,
-                object.width * 0.35,
-                object.height * 0.35);
-            contextS.drawImage(
-                imageHorse,
-                object.currFrame * object.width,
-                0,
-                object.width,
-                object.height,
-                560,
-                115,
-                object.width * 0.35,
-                object.height * 0.35);
-            contextS.drawImage(
-                imageHorse,
-                object.currFrame * object.width,
-                0,
-                object.width,
-                object.height,
-                630,
-                200,
-                object.width * 0.35,
-                object.height * 0.35);
-            contextS.restore();
-            // Anim Position control
-            if (
-                object.position.currDur <=
-                object.position.dur[object.position.currPoint]
-            ) {
-                object.position.currDur++;
-            } else {
-                object.position.currDur = 1;
-                object.position.currPoint++;
-            }
-            // return "ok";
-
+            // this.drawHorsesTimeout = setTimeout(() => {
+            //   this.canvasClear(this.canvasAnimHorse);
+            //   this.drawHorse(object, contextS, imageHorse)
+            // }, 60);
         });
 
         // })
