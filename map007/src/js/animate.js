@@ -331,6 +331,20 @@ const animate = {
 
     drwaCircle(canvasStatic2) {
         var contextStatic2 = canvasStatic2.getContext("2d");
+        if (!CanvasRenderingContext2D.prototype.ellipse) {
+          contextStatic2.ellipse = function(x, y, radiusX, radiusY, rotation, startAngle, endAngle,
+              anticlockwise) {
+              var r = radiusX > radiusY ? radiusX : radiusY; //用打的数为半径
+              var scaleX = radiusX / r; //计算缩放的x轴比例
+              var scaleY = radiusY / r; //计算缩放的y轴比例
+              this.save(); //保存副本                    
+              this.translate(x, y); //移动到圆心位置
+              this.rotate(rotation); //进行旋转
+              this.scale(scaleX, scaleY); //进行缩放
+              this.arc(0, 0, r, startAngle, endAngle, anticlockwise); //绘制圆形
+              this.restore(); //还原副本
+          }
+      }
         canvasStatic2.width = this.baseWidth;
         canvasStatic2.height = this.baseHeight;
         contextStatic2.lineWidth = 4;
@@ -354,6 +368,7 @@ const animate = {
         // contextStatic2.restore();
 
         canvasStatic2.style.visibility = 'hidden'
+        
     },
     createCanvas(canvasList, divTag) {
         for (var i = 0; i < canvasList.length; i++) {
@@ -371,6 +386,7 @@ const animate = {
             divTag.appendChild(canvasStatic);
         }
     },
+    
     // createImg(src, contextStatic) {
     //     var controlCity = new Image();
     //     controlCity.src = require(`../static/img/${src}.png`);

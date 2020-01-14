@@ -13,7 +13,7 @@
       }"
     >
       <div class="title_bar purpleGradient" :style="{ height: titleH + 'px' }">
-        <span>安史之亂初期形勢圖（755 — 756 年）</span>
+        <span>安史之亂初期形勢圖 (755-756 年)</span>
         <div
           id="soundCon"
           :class="{ mute: noVoice }"
@@ -156,10 +156,9 @@
 </template>
 
 <script>
+import zoom from "./js/zoom.js";
 import modal from "./components/modal";
 import bar from "./components/bar";
-// import animate from "./js/animate.js";
-import zoom from "./js/zoom.js";
 export default {
   components: {
     modal,
@@ -428,6 +427,10 @@ export default {
         case 6:
           // this.showCityAni(c, swip);
           // this.map6 = swip
+          if (swip && !this.noVoice) {
+            this.m06.currentTime = 0;
+            this.m06.play();
+          }
           this.drawbluePath(swip);
           break;
         case 7:
@@ -567,7 +570,7 @@ export default {
         { name: "canvasStatic6", zindex: 2 },
         { name: "canvasStatic7", zindex: 2 },
         { name: "canvasAnimBluePath", zindex: 2 },
-        { name: "myCanvasAnimHorse", zindex: 2 }
+        { name: "myCanvasAnimHorse", zindex: 3 }
       ];
       this.createCanvas(list, divTag);
       /* 音频 */
@@ -784,13 +787,13 @@ export default {
       };
       imageHorse.onload = () => {
         var translate = [
-          [862, 222],
+          [862, 202],
           [774, 497],
           [572, 748],
           [410, 824]
         ];
         var scale = [1, 1, 1, 0];
-        var dur = [15, 20, 20, 20];
+        var dur = [25, 20, 20, 20];
         var sharpPoint = [0, 0, 0, 2];
         this.horseObject1 = this.initHorseObject(
           translate,
