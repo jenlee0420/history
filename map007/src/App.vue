@@ -564,7 +564,7 @@ export default {
         { name: "canvasStatic2", zindex: 2 },
         { name: "canvasStatic3", zindex: 2 },
         { name: "canvasStatic4", zindex: 2 },
-        { name: "canvasAnimRedPath", zindex: 2 },
+        { name: "canvasAnimRedPath", zindex: 1 },
         { name: "canvasAnimGreenPath", zindex: 2 },
         { name: "canvasStatic5", zindex: 2 },
         { name: "canvasStatic6", zindex: 2 },
