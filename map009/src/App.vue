@@ -200,6 +200,11 @@ export default {
           show: false
         },
         {
+          ico: '',
+          text: "藩鎮類型",
+          show: false
+        },
+        {
           ico: require("../static/img/icon/border_icon.png"),
           text: "唐的疆界",
           show: false
@@ -246,6 +251,7 @@ export default {
       canvasData: [
         "myCanvasStatic1",
         "myCanvasStatic2",
+        false,
         "myCanvasStatic4",
         "myCanvasStatic5",
         false
@@ -258,7 +264,10 @@ export default {
       horsetimerGroup: null,
       drawHorsesTimeout: null,
       drawHorsesTimeout2: null,
-      redTimer: null,
+      redTimer: {
+        timer:null,
+        animate:false
+      },
       shipPlay: false,
       titleH: 70,
       prevorienta: "",
@@ -328,20 +337,23 @@ export default {
             this.m03.currentTime = 0;
             this.m03.play();
           }
+          this.drawColorArea(swip)
+          break;
+        case 3:
           this.borderAni1 = swip;
           break;
 
-        case 4:
+        case 5:
           if (swip && !this.noVoice) {
             this.m04.currentTime = 0;
             this.m04.play();
           }
 
           break;
-        case 3:
+        case 4:
           this.mapPop = swip;
           break;
-        case 5:
+        case 6:
           this.popWindow = swip;
           this.currAns = null;
           this.currAns2 = null;
@@ -455,13 +467,17 @@ export default {
     createMap() {
       var divTag = this.$refs.canvasInnerDiv;
       let list = [
-        { name: "myCanvasStatic1", zindex: 2 },
+        { name: "myCanvasStatic1", zindex: 4 },
         { name: "myCanvasStatic2", zindex: 2 },
         { name: "myCanvasStatic4", zindex: 2 },
         { name: "myCanvasStatic5", zindex: 2 },
         { name: "myCanvasAnimGreenPath", zindex: 2 },
         { name: "myCanvasAnimGreenPath2", zindex: 2 },
-        { name: "myCanvasAnimHorse", zindex: 6 }
+        { name: "myCanvasAnimHorse", zindex: 6 },
+        { name: "city1", zindex: 2 },
+        { name: "city2", zindex: 2 },
+        { name: "city3", zindex: 2 },
+        { name: "city4", zindex: 2 },
       ];
       let obj = this.createCanvas(list, divTag);
       this.canvasObj = obj[0];
@@ -474,7 +490,7 @@ export default {
       this.license = document.createElement("audio");
       this.m01.src = require("../static/img/vo/MAP009-1.mp3");
       this.m02.src = require("../static/img/vo/MAP009-2.mp3");
-      this.m03.src = require("../static/img/vo/MAP009-3.mp3");
+      this.m03.src = require("../static/img/vo/Map009-3_1.mp3");
       this.m04.src = require("../static/img/vo/MAP009-5.mp3");
       this.license.src = require("../static/img/vo/License.mp3");
       // Variable init
@@ -484,11 +500,14 @@ export default {
       var imageGate = new Image();
       var imageMainCity = new Image();
       var imageHorse = new Image();
-      var route1 = new Image();
-      var route2 = new Image();
-      var route3 = new Image();
-      var route4 = new Image();
-      var route5 = new Image();
+      var fanzhen1 = new Image();
+        var fanzhen2 = new Image();
+        var fanzhen3 = new Image();
+        var fanzhen4 = new Image();
+        fanzhen1.src = require("../static/img/fanzhen1.png");
+        fanzhen2.src = require("../static/img/fanzhen2.png");
+        fanzhen3.src = require("../static/img/fanzhen3.png");
+        fanzhen4.src = require("../static/img/fanzhen4.png");
 
       imageCapital.src = require("../static/img/capital.png");
       imageMainCity.src = require("../static/img/control_city.png");
@@ -496,6 +515,10 @@ export default {
 
       this.insterCanvas(imageCapital, "myCanvasStatic1", false);
       this.insterCanvas(imageMainCity, "myCanvasStatic2", false);
+      this.insterCanvas(fanzhen1, "city1", false);
+      this.insterCanvas(fanzhen2, "city2", false);
+      this.insterCanvas(fanzhen3, "city3", false);
+      this.insterCanvas(fanzhen4, "city4", false);
 
       imageHorse.onload = () => {
         var translate = [[862, 222], [774, 497], [572, 748], [410, 824]];
@@ -534,6 +557,7 @@ export default {
       // this.zoomObj.setTransform(false,0,0)
     },
     insterCanvas(img, contextStatic, bool) {
+      console.log(contextStatic,img)
       img.onload = () => {
         this.contextObj[contextStatic].drawImage(
           img,
@@ -632,6 +656,7 @@ export default {
     height: 100%;
     background: url("../static/img/mapDetail.png");
     background-size: cover;
+    z-index: 4;
   }
   .detail_div2 {
     display: inline-block;
@@ -639,6 +664,7 @@ export default {
     height: 100%;
     background: url("../static/img/mapDetail1.png");
     background-size: cover;
+    z-index: 4;
   }
   .border_div {
     display: inline-block;

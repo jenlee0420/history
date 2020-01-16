@@ -1042,6 +1042,7 @@ export default {
   }
   .main_city_div {
     background-image: url("../static/img/main_city.png");
+    z-index: 2;
   }
   .taiyuan_div{
      background-image: url("../static/img/main_city1.png");

@@ -87,6 +87,7 @@ const animate = {
     drawHousePromise(flag) {
         this.canvasAnimHorse = document.getElementById("myCanvasAnimHorse");
         let contextAnimHorse = this.canvasAnimHorse.getContext("2d");
+        clearInterval(this.drawHorsesTimeout2);
         if (flag) {
             this.canvasAnimHorse.style.visibility = "visible";
 
@@ -163,7 +164,37 @@ const animate = {
 
         // })
     },
-
+    drawColorArea(flag){
+        // var contextStatic = this.canvasObj['myCanvasStatic3'].getContext("2d");
+        
+        if(flag){
+            if(!this.redTimer.animate){
+                this.redTimer.animate==true
+                this.canvasObj['city3'].style.visibility='visible'
+                this.redTimer.timer = setTimeout(()=>{
+                    this.canvasObj['city2'].style.visibility='visible'
+                    this.redTimer.timer = setTimeout(()=>{
+                        this.canvasObj['city4'].style.visibility='visible'
+                        this.redTimer.timer = setTimeout(()=>{
+                            this.canvasObj['city1'].style.visibility='visible'
+                            this.redTimer.animate=false
+                        },3500)
+                    },10000)
+                },10000)
+                
+                
+                
+            }
+        }else{
+            clearTimeout(this.redTimer.timer)
+            this.redTimer.animate = false
+            this.canvasObj['city1'].style.visibility='hidden'
+            this.canvasObj['city2'].style.visibility='hidden'
+            this.canvasObj['city3'].style.visibility='hidden'
+            this.canvasObj['city4'].style.visibility='hidden'
+        }
+        
+    },
     drwaCircle(canvasStatic2) {
         var contextStatic2 = canvasStatic2.getContext("2d");
         canvasStatic2.width = this.baseWidth;

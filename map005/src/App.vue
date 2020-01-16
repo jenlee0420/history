@@ -313,15 +313,15 @@ export default {
           break;
         case 4:
           if (swip && !this.noVoice) {
-            this.m04.currentTime = 0;
-            this.m04.play();
+            this.m05.currentTime = 0;
+            this.m05.play();
           }
           c.style.visibility = swip ? "visible" : "hidden";
           break;
         case 5:
           if (swip && !this.noVoice) {
-            this.m05.currentTime = 0;
-            this.m05.play();
+            this.m04.currentTime = 0;
+            this.m04.play();
           }
           c.style.visibility = swip ? "visible" : "hidden";
           break;
@@ -457,6 +457,7 @@ export default {
         { name: "myCanvasStatic5", zindex: 2 },
         { name: "myCanvasStatic6", zindex: 2 },
         { name: "myCanvasStatic7", zindex: 2 },
+        { name: "myRedPath", zindex: 2 },
         { name: "myCanvasAnimHorse", zindex: 2 },
       ];
       let obj = this.createCanvas(list, divTag);

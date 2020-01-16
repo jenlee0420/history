@@ -23,7 +23,7 @@ const animate = {
         canvasStatic.ani = true;
     },
     drawRedPath(flag) {
-        let canvasAnimPath = document.getElementById("myCanvasStatic6");
+        let canvasAnimPath = document.getElementById("myRedPath");
         let contextAnimPath = canvasAnimPath.getContext("2d");
         let pathObject = this.pathObject;
         if (flag == true) {
