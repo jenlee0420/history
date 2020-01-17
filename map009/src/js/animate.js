@@ -144,7 +144,7 @@ const animate = {
                 object.width,
                 object.height,
                 630,
-                200,
+                210,
                 object.width * 0.35,
                 object.height * 0.35);
             contextS.restore();

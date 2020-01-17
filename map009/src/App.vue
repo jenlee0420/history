@@ -9,7 +9,7 @@
       :style="{'width':docWidth+'px','height':docHeight+'px','display':load?'none':'block'}"
     >
       <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
-        <span>藩鎮割據形勢圖（820 年）</span>
+        <span>藩鎮割據形勢圖 (820年)</span>
         <div id="soundCon" :class="{'mute':noVoice}" @click="noVoice=!noVoice"></div>
       </div>
       <div class="main_box">
@@ -70,8 +70,7 @@
         <div>
           <div class="question question2">
             <div>
-              1. 以下哪項
-              <font class="underline">不是</font>河北三鎮得以專橫割據的原因？
+              1. 以下哪項<font class="underline">不是</font>河北三鎮得以專橫割據的原因？
             </div>
             <div>
               <span
@@ -217,7 +216,7 @@ export default {
         },
         {
           ico: require("../static/img/icon/control_city_icon.png"),
-          text: "三鎮駐地",
+          text: "三鎮駐地特點",
           show: false
         },
         {
@@ -468,7 +467,7 @@ export default {
       var divTag = this.$refs.canvasInnerDiv;
       let list = [
         { name: "myCanvasStatic1", zindex: 4 },
-        { name: "myCanvasStatic2", zindex: 2 },
+        { name: "myCanvasStatic2", zindex: 3 },
         { name: "myCanvasStatic4", zindex: 2 },
         { name: "myCanvasStatic5", zindex: 2 },
         { name: "myCanvasAnimGreenPath", zindex: 2 },
@@ -672,6 +671,7 @@ export default {
     height: 100%;
     background: url("../static/img/border.png");
     background-size: cover;
+    z-index: 3;
   }
   .border_div1 {
     display: inline-block;
