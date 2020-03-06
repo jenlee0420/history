@@ -362,11 +362,29 @@ export default {
       this.conflict()
     },
     conflict(){
+      let swip0 = this.list[0].show
       let swip1 = this.list[1].show
+      let swip2 = this.list[2].show
+      let swip4 = this.list[4].show
       let swip6 = this.list[6].show
       document.getElementById(this.canvasData[6]).style.visibility = swip1?'visible':'hidden';
+      document.getElementById(this.canvasData[0]).style.visibility = swip0?'visible':'hidden';
+      document.getElementById(this.canvasData[2]).style.visibility =  swip2?'visible':'hidden';
+      this.cityAni= this.list[3].show
+      this.maincityAni = swip1
       if(swip6){
         document.getElementById(this.canvasData[6]).style.visibility = 'visible'
+      }
+      if(swip6 || swip4){
+        document.getElementById(this.canvasData[0]).style.visibility = 'visible'
+      }
+      if(swip4){
+        document.getElementById(this.canvasData[2]).style.visibility = 'visible'
+        this.cityAni= true
+        this.maincityAni = true
+      }
+      if(swip1){
+        this.maincityAni= true
       }
     },
     oriChange() {

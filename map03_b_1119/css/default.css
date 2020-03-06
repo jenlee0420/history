@@ -200,10 +200,13 @@ div.smallMap {
     background-repeat: no-repeat;
     background-position: center;
     position: absolute;
-    top: 5.8em;
+    bottom: 0.8em;
     right: 2em;
 }
-
+#ansBox2{
+    bottom:0.8em;
+    top: auto;
+}
 .rightico {
     background-image: url('../img/right.png');
 }
@@ -240,7 +243,7 @@ div.smallMap {
 }
 
 .question .item {
-    margin-bottom: 1.4em;
+    margin-bottom: 1em;
     width: 49%;
     display: inline-block;
     cursor: pointer;

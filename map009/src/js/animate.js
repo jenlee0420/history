@@ -171,11 +171,11 @@ const animate = {
             if(!this.redTimer.animate){
                 this.redTimer.animate==true
                 this.canvasObj['city3'].style.visibility='visible'
-                this.redTimer.timer = setTimeout(()=>{
+                this.redTimer.timer1 = setTimeout(()=>{
                     this.canvasObj['city2'].style.visibility='visible'
-                    this.redTimer.timer = setTimeout(()=>{
+                    this.redTimer.timer2 = setTimeout(()=>{
                         this.canvasObj['city4'].style.visibility='visible'
-                        this.redTimer.timer = setTimeout(()=>{
+                        this.redTimer.timer3 = setTimeout(()=>{
                             this.canvasObj['city1'].style.visibility='visible'
                             this.redTimer.animate=false
                         },3500)
@@ -186,7 +186,9 @@ const animate = {
                 
             }
         }else{
-            clearTimeout(this.redTimer.timer)
+            clearTimeout(this.redTimer.timer1)
+            clearTimeout(this.redTimer.timer2)
+            clearTimeout(this.redTimer.timer3)
             this.redTimer.animate = false
             this.canvasObj['city1'].style.visibility='hidden'
             this.canvasObj['city2'].style.visibility='hidden'

@@ -5,7 +5,7 @@
     <div  id="main_container" :style="{'width':docWidth+'px','height':docHeight+'px','display':load?'none':'block'}">
       <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
         <span>隋滅陳路線圖 (588-589 年)</span>
-        <div id="soundCon" :class="{'mute':noVoice}" @click="noVoice=!noVoice"> </div>
+        <div id="soundCon" :class="{'mute':noVoice}" @click="setVoice"> </div>
       </div>
       <div class="main_box">
         <div id="map_container" class="modal_content" ref="map_container" :style="{'width':canvasW+'px','height':canvasH+'px'}">
@@ -80,13 +80,13 @@
     beforeCreate() {},
     created () {
     const that = this
-    that.timer = setInterval(function () {
-        console.log(document.readyState)
-        if (document.readyState === 'complete') {
-            that.load = false;
-            window.clearInterval(that.timer)
-        }
-    }, 10)
+    // that.timer = setInterval(function () {
+    //     console.log(document.readyState)
+    //     if (document.readyState === 'complete') {
+    //         that.load = false;
+    //         window.clearInterval(that.timer)
+    //     }
+    // }, 10)
     },
     mounted() {
       this.createMap()
@@ -148,7 +148,7 @@
           text: '南北朝疆界',
           show: false
         }, {
-          ico: require('../static/img/icon/capital_icon.png'),
+          ico: require('../static/img/icon/city_icon.png'),
           text: '建康（今南京市）',
           type: 'map',
           show: false
@@ -188,6 +188,7 @@
         horsetimerGroup: null,
         drawHorsesTimeout: null,
         drawHorsesTimeout2: null,
+        drawHorsesTimeout3:null,
         redTimer: null,
         shipPlay: false,
         titleH: 70,
@@ -195,10 +196,17 @@
         prevorienta: '',
         borderAni: true,
         pathObject: {},
+        pathObject2: {},
         chenTimer:null,
         lin2timer:null,
+        line3timer:null,
         scaleZoom:0,
-        debug:''
+        debug:'',
+        canvasObj: {},
+      contextObj: {},
+      imgCount:0,
+      imgTotal:9,
+      showStatic:false
       }
     },
     watch:{
@@ -208,9 +216,19 @@
           this.debug = n.scale+"---"+n.maxScale+'--'+this.scaleindex
         },
         deep: true
+      },
+      imgCount:function(n,o){
+        if(n == this.imgTotal){
+          console.log(n)
+          this.load = false;
+        }
       }
     },
     methods: {
+      setVoice(){
+        this.noVoice = !this.noVoice,
+        this.muteMe()
+      },
       bodyScroll(event) {
         event.preventDefault();
       },
@@ -263,23 +281,33 @@
                     this.drawGreenPath2(true)
                   },2300)
                   this.drawHousePromise(true)
+                  this.line3timer = setTimeout(() => {
+                    if (!this.noVoice && this.showStatic == false) {
+                      this.m03.pause()
+                      this.m04.currentTime = 0
+                      this.m04.play()
+                    }
+                    this.drawGreenPath_part2(true)
+                    this.drawHousePromise_part2(true)
+                  },20000)
                }
             } else {
               this.drawGreenPath(false)
               this.drawGreenPath2(false)
+              this.drawGreenPath_part2(false)
               this.drawHousePromise(false)
               clearTimeout(this.lin2timer)
+              clearTimeout(this.line3timer)
+              this.drawHousePromise_part2(false)
             }
             break;
           case 4:
-            if (swip && !this.noVoice) {
-              this.m04.currentTime = 0
-              this.m04.play()
-            }
+            // if (swip && !this.noVoice) {
+            //   this.m04.currentTime = 0
+            //   this.m04.play()
+            // }
             if (swip) {
-              this.chenTimer = setTimeout(() => {
-                this.borderAni = false
-              }, 10000);
+              this.borderAni = false
             } else {
               this.borderAni = true
               clearTimeout(this.chenTimer)
@@ -297,6 +325,7 @@
             break;
         }
         this.list[index].show = swip
+        this.showStatic=false
       },
       oriChange() {
         setTimeout(() => {
@@ -382,7 +411,7 @@
         this.canvasAnimHorse = document.getElementById('myCanvasAnimHorse')
         let contextAnimHorse = this.canvasAnimHorse.getContext('2d');
         if(flag){
-          if (this.horseObject5.animated == true) {
+          if (this.horseObject2.animated == true) {
             return
           }
           this.canvasAnimHorse.style.visibility = 'visible'
@@ -397,20 +426,6 @@
               }else{
                 if(this.horseObject2.animated == false){
                   this.drawHorse(this.horseObject2, contextAnimHorse, this.horseObject2.source)
-                }else{
-                  if(this.horseObject3.animated == false){
-                    this.drawHorse(this.horseObject3, contextAnimHorse, this.horseObject3.source)
-                  }else{
-                    if(this.horseObject4.animated == false){
-                      this.drawHorse(this.horseObject4, contextAnimHorse, this.horseObject4.source)
-                    }else{
-                      if(this.horseObject5.animated == false){
-                        this.drawHorse(this.horseObject5, contextAnimHorse, this.horseObject5.source)
-                      }else{
-                        this.license.pause()
-                      }
-                    }
-                  }
                 }
               }
             }, 60);
@@ -426,9 +441,6 @@
           this.canvasAnimHorse.style.visibility = 'hidden'
           this.resetHorseObject(this.horseObject1)
           this.resetHorseObject(this.horseObject2)
-          this.resetHorseObject(this.horseObject3)
-          this.resetHorseObject(this.horseObject4)
-          this.resetHorseObject(this.horseObject5)
         }
       },
       drawHorse(object, contextS, imageHorse) {
@@ -481,59 +493,18 @@
         let contextAnimPath = canvasAnimPath.getContext('2d');
         let pathObject = this.pathObject
         if (flag == true) {
-          if (pathObject.mask7.height < 350) {
+          if (pathObject.mask1.width < 590) {
             pathObject.playing = true
             this.canvasClear(canvasAnimPath);
             contextAnimPath.save();
             contextAnimPath.beginPath();
             contextAnimPath.rect(pathObject.mask1.currOriginX, pathObject.mask1.currOriginY, pathObject.mask1.width, pathObject.mask1.height);
-            if (pathObject.mask1.width >= 590) {
-                
-              if (pathObject.mask2.width >= 580) {
-                //
-                contextAnimPath.rect(pathObject.mask3.currOriginX, pathObject.mask3.currOriginY, pathObject.mask3.width, pathObject.mask3.height);
-                if (pathObject.mask3.currOriginX >= 153) {
-                  contextAnimPath.rect(pathObject.mask4.currOriginX, pathObject.mask4.currOriginY, pathObject.mask4.width, pathObject.mask4.height);
-                  if (pathObject.mask4.currOriginX >= 1060) {
-                    contextAnimPath.rect(pathObject.mask5.currOriginX, pathObject.mask5.currOriginY, pathObject.mask5.width, pathObject.mask5.height);
-                    if (pathObject.mask5.currOriginX <= 1070) {
-                      contextAnimPath.rect(pathObject.mask7.currOriginX, pathObject.mask7.currOriginY, pathObject.mask7.width, pathObject.mask7.height);
-                    }
-                  }
-                }
-              }
-            }
+
             contextAnimPath.clip();
             contextAnimPath.drawImage(pathObject.source, pathObject.originX, pathObject.originY, pathObject.width, pathObject.height);
             if (pathObject.mask1.width <= 590) {
-              // pathObject.mask1.currOriginX += pathObject.mask1.shiftX;
               pathObject.mask1.width += pathObject.mask1.shiftX;
-            } else {
-              if (pathObject.mask2.width < 580) {
-                  //
-              } else {
-                contextAnimPath.drawImage(pathObject.mask3.source, pathObject.originX, pathObject.originY, pathObject.width, pathObject.height);
-                if (pathObject.mask3.width < 153) {
-                  pathObject.mask3.width += pathObject.mask3.shiftX;
-                } else {
-                  contextAnimPath.drawImage(pathObject.mask4.source, pathObject.originX, pathObject.originY, pathObject.width, pathObject.height);
-                  if (pathObject.mask4.height < 20) {
-                    pathObject.mask4.height += 2;
-                  } else if (pathObject.mask4.currOriginX <= 1060) {
-                    pathObject.mask4.currOriginX += 2;
-                    pathObject.mask4.height += 3;
-                  } else if (pathObject.mask5.currOriginX > 1060) {
-                    pathObject.mask5.currOriginX -= 6;
-                    pathObject.mask4.height += 2;
-                  } else {
-                    contextAnimPath.drawImage(pathObject.mask7.source, pathObject.originX, pathObject.originY, pathObject.width, pathObject.height);
-                    if (pathObject.mask5.currOriginX <= 1070) {
-                      pathObject.mask7.height += pathObject.mask7.shiftX;
-                    }
-                  }
-                }
-              }
-            }
+            } 
             contextAnimPath.restore();
             canvasAnimPath.style.visibility = "visible";
             pathObject.timeout = setTimeout(() => {
@@ -545,17 +516,6 @@
           pathObject.mask1.currOriginX = pathObject.mask1.originX;
           pathObject.mask1.currOriginY = pathObject.mask1.originY;
           pathObject.mask1.width = 1;
-          pathObject.mask3.currOriginX = pathObject.mask3.originX;
-          pathObject.mask3.currOriginY = pathObject.mask3.originY;
-          pathObject.mask3.width = 1;
-          pathObject.mask4.currOriginX = pathObject.mask4.originX;
-          pathObject.mask4.currOriginY = pathObject.mask4.originY;
-          pathObject.mask4.height = 1;
-          pathObject.mask5.currOriginX = pathObject.mask5.originX;
-          pathObject.mask5.currOriginY = pathObject.mask5.originY;
-          pathObject.mask7.currOriginX = pathObject.mask7.originX;
-          pathObject.mask7.currOriginY = pathObject.mask7.originY;
-          pathObject.mask7.height = 1;
           pathObject.playing= false
           clearTimeout(pathObject.timeout);
         }
@@ -600,6 +560,7 @@
         this.showCanvas(index)
       });
       this.muteMe()
+      this.showStatic=type
     },
     resetHorseObject(object) {
       object.currFrame = 0;
@@ -611,12 +572,18 @@
     },
     createMap() {
       var divTag = this.$refs.canvasInnerDiv
+      let list = [
+        { name: "contextAnimHorse2", zindex:6 },
+      ];
+      this.createCanvas(list, divTag);
+
       var canvasStatic1 = document.createElement('canvas');
       var canvasStatic2 = document.createElement('canvas');
       var canvasStatic4 = document.createElement('canvas');
       var canvasStatic5 = document.createElement('canvas');
       var canvasAnimGreenPath = document.createElement('canvas');
       var canvasAnimGreenPath2 = document.createElement('canvas');
+      var canvasAnimGreenPath3 = document.createElement('canvas');
       var canvasAnimBluePath = document.createElement('canvas');
       var canvasAnimHorse = document.createElement('canvas');
       var contextStatic1 = canvasStatic1.getContext('2d');
@@ -625,6 +592,7 @@
       var contextStatic5 = canvasStatic5.getContext('2d');
       var contextAnimGreenPath = canvasAnimGreenPath.getContext('2d');
       var contextAnimGreenPath2 = canvasAnimGreenPath2.getContext('2d');
+      var contextAnimGreenPath3 = canvasAnimGreenPath3.getContext('2d');
       var contextAnimHorse = canvasAnimHorse.getContext('2d');
       /* 音频 */
       this.m01 = document.createElement('audio')
@@ -634,15 +602,17 @@
       this.license = document.createElement('audio')
       this.m01.src = require('../static/img/vo/Map001-1.mp3')
       this.m02.src = require('../static/img/vo/Map001-2.mp3')
-      this.m03.src = require('../static/img/vo/Map001-4.mp3')
-      this.m04.src = require('../static/img/vo/Map001-5.mp3')
+      this.m03.src = require('../static/img/vo/Map001-4_1.mp3')
+      this.m04.src = require('../static/img/vo/Map001-4_2.mp3')
       this.license.src = require('../static/img/vo/License.mp3')
+      this.license.loop = 'loop';
       // Variable init
       divTag.appendChild(canvasStatic1);
       divTag.appendChild(canvasStatic2);
       divTag.appendChild(canvasStatic4);
       divTag.appendChild(canvasStatic5);
       divTag.appendChild(canvasAnimGreenPath2);
+      divTag.appendChild(canvasAnimGreenPath3);
       divTag.appendChild(canvasAnimGreenPath);
       divTag.appendChild(canvasAnimHorse);
       canvasStatic1.id = "myCanvasStatic1";
@@ -651,6 +621,7 @@
       canvasStatic5.id = "myCanvasStatic5";
       canvasAnimGreenPath.id = "myCanvasAnimGreenPath";
       canvasAnimGreenPath2.id = "myCanvasAnimGreenPath2";
+      canvasAnimGreenPath3.id = "myCanvasAnimGreenPath3";
       canvasAnimHorse.id = "myCanvasAnimHorse";
       canvasStatic1.style.position = "absolute";
       canvasStatic2.style.position = "absolute";
@@ -658,6 +629,7 @@
       canvasStatic5.style.position = "absolute";
       canvasAnimGreenPath.style.position = "absolute";
       canvasAnimGreenPath2.style.position = "absolute";
+      canvasAnimGreenPath3.style.position = "absolute";
       canvasAnimHorse.style.position = "absolute";
       canvasStatic1.style.zIndex = "4";
       canvasStatic2.style.zIndex = "4";
@@ -665,11 +637,14 @@
       canvasStatic5.style.zIndex = "2";
       canvasAnimGreenPath.style.zIndex = "2";
       canvasAnimGreenPath2.style.zIndex = "2";
+      canvasAnimGreenPath3.style.zIndex = "2";
       canvasAnimHorse.style.zIndex = "6";
       canvasAnimGreenPath.width = this.baseWidth;
       canvasAnimGreenPath.height = this.baseHeight;
       canvasAnimGreenPath2.width = this.baseWidth;
       canvasAnimGreenPath2.height = this.baseHeight;
+      canvasAnimGreenPath3.width = this.baseWidth;
+      canvasAnimGreenPath3.height = this.baseHeight;
       canvasAnimHorse.width = this.baseWidth;
       canvasAnimHorse.height = this.baseHeight;
       var imageMap = new Image();
@@ -699,6 +674,7 @@
       route4.src = require('../static/img/route4.png');
       route5.src = require('../static/img/route5.png');
       imageCapital.onload = () => {
+        this.imgCount ++ 
         canvasStatic1.width = this.baseWidth;
         canvasStatic1.height = this.baseHeight;
         contextStatic1.drawImage(imageCapital, 0, 0, this.baseWidth, this.baseHeight);
@@ -709,15 +685,37 @@
         canvasStatic2.height = this.baseHeight;
         contextStatic2.drawImage(imageGate, 0, 0, this.baseWidth, this.baseHeight);
         canvasStatic2.style.visibility = 'hidden'
+        this.imgCount ++ 
       }
       imageMainCity.onload = () => {
         canvasStatic4.width = this.baseWidth;
         canvasStatic4.height = this.baseHeight;
         contextStatic4.drawImage(imageMainCity, 0, 0, this.baseWidth, this.baseHeight);
         canvasStatic4.style.visibility = 'hidden'
+        this.imgCount ++ 
       }
       route1.onload = () => {
+        this.imgCount ++ 
         this.pathObject = {
+          'source': route1,
+          'originX': 0,
+          'originY': 0,
+          'width': this.baseWidth,
+          'height': this.baseHeight,
+          'mask1': {
+            'originX': 130,
+            'originY': 675,
+            'width': 1,
+            'height': 250,
+            'currOriginX': 130,
+            'currOriginY': 675,
+            'shiftX': 10,
+            'shiftY': 0
+          },
+          'timeout': null,
+          'playing':false
+        }
+        this.pathObject2 = {
           'source': route1,
           'originX': 0,
           'originY': 0,
@@ -738,6 +736,7 @@
         }
       }
       route2.onload = () => {
+        this.imgCount ++ 
         this.pathObject.mask2 = {
           'source': route2,
           'originX': 356,
@@ -751,7 +750,8 @@
         }
       }
       route3.onload = () => {
-        this.pathObject.mask3 = {
+        this.imgCount ++ 
+        this.pathObject2.mask3 = {
           'source': route3,
           'originX': 900,
           'originY': 484,
@@ -764,7 +764,8 @@
         }
       }
       route4.onload = () => {
-        this.pathObject.mask4 = {
+        this.imgCount ++ 
+        this.pathObject2.mask4 = {
           'source': route4,
           'originX': 1060,
           'originY': 410,
@@ -775,7 +776,7 @@
           'shiftX': 10,
           'shiftY': 0
         }
-        this.pathObject.mask5 = {
+        this.pathObject2.mask5 = {
           'source': route4,
           'originX': 1130,
           'originY': 431,
@@ -788,7 +789,8 @@
         }
       }
       route5.onload = () => {
-        this.pathObject.mask7 = {
+        this.imgCount ++ 
+        this.pathObject2.mask7 = {
           'source': route5,
           'originX': 1070,
           'originY': 410,
@@ -801,6 +803,7 @@
         }
       }
       imageHorse.onload = () => {
+        this.imgCount ++ 
         var translate = [
           [130, 655],
           [300, 650],

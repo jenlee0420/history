@@ -180,19 +180,38 @@ var m04 = document.createElement('audio');
 var m05 = document.createElement('audio');
 var m06 = document.createElement('audio');
 var m07 = document.createElement('audio');
+var m08 = document.createElement('audio');
 var waveSound = document.createElement('audio');
 var winSound = document.createElement('audio');
-m01.src = 'img/vo/map003_01.mp3';
-m02.src = 'img/vo/map003_02.mp3';
-m03.src = 'img/vo/map003_04.mp3';
-m04.src = 'img/vo/map003_05.mp3';
-m05.src = 'img/vo/map003_06.mp3';
-m06.src = 'img/vo/map003_07.mp3';
-m07.src = 'img/vo/map003_07.mp3';
+var audioTimer=[]
+m01.src = 'img/vo/Map003-1.mp3';
+m02.src = 'img/vo/Map003-2.mp3';
+m03.src = 'img/vo/Map003-4.mp3';
+m04.src = 'img/vo/Map003-5_1.mp3';
+m05.src = 'img/vo/Map003-5_2.mp3';
+m06.src = 'img/vo/Map003-5_3.mp3';
+m07.src = 'img/vo/Map003-5_4.mp3';
+m08.src = 'img/vo/Map003-5_5.mp3';
 waveSound.src = 'img/vo/wave.mp3';
 winSound.src = 'img/vo/win.mp3';
 waveSound.loop = 'loop';
 waveSound.volume = 0.4;
+audioCount = 0
+// m04.pause()
+
+// m05.oncanplaythrough = function(){
+//     audioCount++
+// }
+// m06.oncanplaythrough = function(){
+//     audioCount++
+// }
+// m07.oncanplaythrough = function(){
+//     audioCount++
+// }
+// m08.oncanplaythrough = function(){
+//     audioCount++
+// }
+
 
 // Variable init
 divTag.appendChild(canvasBackground);
@@ -384,8 +403,13 @@ function muteMe(elem) {
     m04.pause();
     m05.pause();
     m06.pause();
+    m07.pause();
+    m08.pause();
     waveSound.pause();
     winSound.pause();
+    // for (var i = 0; i < audioTimer.length; i++) {
+    //     clearTimeout(audioTimer[i]);
+    // }
 }
 
 function setSound(control, action) {
@@ -399,10 +423,10 @@ function setSound(control, action) {
     if (control == '0' || isMute == true) return;
     switch (action) {
         case '0':
+            // console.dir(m01)
             m01.currentTime = 0;
             m01.play();
             // showCityAni(canvasStatic1, true)
-
             break;
         case '1':
             m02.currentTime = 0;
@@ -420,17 +444,55 @@ function setSound(control, action) {
         case '4':
             m04.currentTime = 0;
             m04.play();
+            m04.addEventListener('ended', function () {  
+                m05.currentTime = 0;
+                m05.play();
+            })
+            m05.addEventListener('ended', function () {  
+                m07.currentTime = 0;
+                m07.play();
+            })
+            m07.addEventListener('ended', function () {  
+                m06.currentTime = 0;
+                m06.play();
+            })
+            m06.addEventListener('ended', function () {  
+                m08.currentTime = 0;
+                m08.play();
+            })
+            // m04.addEventListener('ended', function () {  
+            //     m05.currentTime = 0;
+            //     m05.play();
+            // })
+            // audioTimer[1] = setTimeout(function () {
+            //     m05.currentTime = 0;
+            //     m05.play();
+            // }, 13000);
+            // audioTimer[2] = setTimeout(function () {
+            //     m07.currentTime = 0;
+            //     m07.play();
+            // }, 25500);
+            // audioTimer[3] = setTimeout(function () {
+            //     m06.currentTime = 0;
+            //     m06.play();
+            // }, 32500);
+            // audioTimer[4] = setTimeout(function () {
+            //     m08.currentTime = 0;
+            //     m08.play();
+            // }, 39500);
             // showCityAni(canvasStatic4, true)
             break;
         case '5':
-            m05.currentTime = waveSound.currentTime = 0;
-            m05.play();
+            // m05.currentTime = waveSound.currentTime = 0;
+            // m05.play();
+            waveSound.volume=0.1
             waveSound.play();
 
             break;
         case '6':
-            m06.currentTime = waveSound.currentTime = 0;
-            m06.play();
+            // m06.currentTime = waveSound.currentTime = 0;
+            // m06.play();
+            waveSound.volume=0.1
             waveSound.play();
 
             break;
@@ -606,8 +668,9 @@ function createMap(controlArray, scale) {
     for (var i = 0; i < controlArray.length; i++) {
         _controlArray[i] = controlArray[i];
     }
-
+    
     return $(divTag);
+    
 }
 
 function ship1(flag) {
@@ -803,24 +866,41 @@ function drawRiverPath(flag) {
         timerGroup[4] = setTimeout(() => {
             sharp2(canvasStatic9)
         }, 11000);*/
+
         timerGroup[0] = setTimeout(function () {
             canvasStatic5.style.visibility = "visible";
             contextStatic5.drawImage(imageRiver, 0, 0, baseWidth, baseHeight);
-        }, 5000);
+        }, 1000);
         timerGroup[1] = setTimeout(function () {
-            contextStatic5.drawImage(imageRiver2, 0, 0, baseWidth, baseHeight);
-        }, 7000);
-        timerGroup[2] = setTimeout(function () {
-            contextStatic5.drawImage(imageRiver3, 0, 0, baseWidth, baseHeight);
-        }, 9000);
-        timerGroup[3] = setTimeout(function () {
+     
             contextStatic5.drawImage(imageRiver4, 0, 0, baseWidth, baseHeight);
-        }, 10000);
-        timerGroup[4] = setTimeout(function () {
+            },18000)
+
+        // timerGroup[2] = setTimeout(function () {
+            m05.addEventListener('ended', function () {  
+                console.log('end')
+                timerGroup[2] = setTimeout(function () {
             contextStatic5.drawImage(imageRiver5, 0, 0, baseWidth, baseHeight);
-        }, 12000);
+                },1000)
+            })
+        // }, 25500);
+        
+            m07.addEventListener('ended', function () {  
+                timerGroup[3] = setTimeout(function () {
+            contextStatic5.drawImage(imageRiver3, 0, 0, baseWidth, baseHeight);
+            }, 1000);
+            })
+        
+        
+            m06.addEventListener('ended', function () {  
+                timerGroup[4] = setTimeout(function () {
+            contextStatic5.drawImage(imageRiver2, 0, 0, baseWidth, baseHeight);
+            }, 1000);
+            })
+        // }, 39500);
     } else {
         console.log('clear');
+        
         drawRiverTimeout = '';
         for (var i = 0; i < timerGroup.length; i++) {
             clearTimeout(timerGroup[i]);
@@ -834,7 +914,6 @@ function drawRiverPath(flag) {
         canvasStatic9.style.visibility = "hidden";*/
     }
 }
-
 function drawRedPath(flag) {
     if (flag == true) {
         if (redPathObject.anim4.mask1.currOriginX > redPathObject.anim4.path1.endPointX) {

@@ -309,10 +309,14 @@ $(function() {
             }
            
         });
-        bind_ques($(".question"), '增加稅收')
+        bind_ques($("#question"), 'B')
+        bind_ques2($("#question2"), 'C')
         bind_sound($("#soundCon"))
-        $("#loading").hide();
+        
+        // $("#loading").hide();
         $("#main_container").show();
+        $("#loading").hide();
+        
         setPop()
         $(".closeBtn2", ".ui-dialog-titlebar-close").on('click', function () {
             mp4_container.dialog('close')
@@ -329,5 +333,4 @@ $(function() {
             $(".title_bar").css({ 'height': docHeight- canvasH})
         }
     })
-
 })

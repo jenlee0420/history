@@ -194,16 +194,27 @@ function bind_map_func(div, mp4div) {
 
 function bind_ques(div, rightIndex) {
     div.on('click', '.item', function (e) {
-        $(".ansBox").removeClass('rightico wrongico');
+        $(".ti1").removeClass('rightico wrongico');
         $(e.target).addClass('selected').siblings().removeClass('selected');
         // console.log(e.target.innerHTML, $(e.target).innerHTML);
-        if (e.target.innerHTML.indexOf('B') > -1) {
-            $(".ansBox").show().addClass('rightico');
+        if (e.target.innerHTML.indexOf(rightIndex) > -1) {
+            $(".ti1").show().addClass('rightico');
         } else {
-            $(".ansBox").show().addClass('wrongico');
+            $(".ti1").show().addClass('wrongico');
         }
     });
-   
+}
+function bind_ques2(div, rightIndex) {
+    div.on('click', '.item', function (e) {
+        $(".ti2").removeClass('rightico wrongico');
+        $(e.target).addClass('selected').siblings().removeClass('selected');
+        // console.log(e.target.innerHTML, $(e.target).innerHTML);
+        if (e.target.innerHTML.indexOf(rightIndex) > -1) {
+            $(".ti2").show().addClass('rightico');
+        } else {
+            $(".ti2").show().addClass('wrongico');
+        }
+    });
 }
 function bind_sound(div) {
     div.on('click', function () {

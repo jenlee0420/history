@@ -92,7 +92,6 @@ export default {
       }
       this.distanceX = touch.clientX - this.el.offsetLeft;
       this.distanceY = touch.clientY - this.el.offsetTop;
-      console.log(this.el.offsetTop,this.el.offsetLeft)
       
       this.el.style.left = this.el.offsetLeft + "px";
       this.el.style.top = this.el.offsetTop + "px";

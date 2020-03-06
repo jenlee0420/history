@@ -22,11 +22,13 @@ const animate = {
         }, 260);
         canvasStatic.ani = true;
     },
-    drawbluePath(flag) {
+    drawbluePath(flag = true) {
         let canvasAnimPath = document.getElementById("canvasAnimBluePath");
         let contextAnimPath = canvasAnimPath.getContext("2d");
         let pathObject = this.pathObjectblue;
         if (flag == true) {
+            let buleRoad = () =>{
+                if(!this.blueSwitch){return}
             if (pathObject.mask1.currOriginY > pathObject.mask1.endPoint) {
                 pathObject.playing = true;
                 this.canvasClear(canvasAnimPath);
@@ -56,9 +58,14 @@ const animate = {
                 pathObject.timeout = setTimeout(() => {
                     this.drawbluePath(flag);
                 }, 30);
-            } else {
-                this.showCityAni(this.canvasObj.canvasStatic6, true)
+                
+                }else{
+                    // this.blueSwitch = false
+                    clearTimeout(pathObject.timeout)
+                }
+                // this.requestNextAnimationFrame()(buleRoad)
             }
+            buleRoad()
         } else {
             canvasAnimPath.style.visibility = "hidden";
             pathObject.mask1.currOriginX = pathObject.mask1.originX;
@@ -74,6 +81,7 @@ const animate = {
         let contextAnimPath = canvasAnimPath.getContext("2d");
         let pathObject = this.pathObjectGreen;
         if (flag == true) {
+            
             if (pathObject.mask3.currOriginY < pathObject.mask3.endPoint) {
                 pathObject.playing = true;
                 this.canvasClear(canvasAnimPath);
@@ -117,10 +125,16 @@ const animate = {
                         pathObject.mask2.currOriginX -= pathObject.mask2.shiftX;
                     } else {
                         contextAnimPath.drawImage(pathObject.mask2.source, pathObject.originX, pathObject.originY, pathObject.width, pathObject.height);
-                        if (pathObject.mask3.currOriginY <= pathObject.mask3.endPoint) {
-                            this.timer2 = setTimeout(() => {
+                        if (pathObject.mask3.currOriginY < pathObject.mask3.endPoint) {
+                           
+                            if(!pathObject.mask3.ani){
                                 pathObject.mask3.currOriginY += pathObject.mask3.shiftX;
-                            }, 1200)
+                            }else{
+                                this.timer2 = setTimeout(() => {
+                                    pathObject.mask3.ani = false                                
+                                }, 1200)
+                            }
+                            
                         }
                     }
                 }
@@ -140,15 +154,18 @@ const animate = {
             pathObject.mask2.currOriginX = pathObject.mask2.originX;
             pathObject.mask2.currOriginY = pathObject.mask2.originY;
             pathObject.mask3.currOriginX = pathObject.mask3.originX;
-            pathObject.mask3.currOriginY = pathObject.mask3.originY;
+            this.pathObjectGreen.mask3.currOriginY = this.pathObjectGreen.mask3.originY;
+            pathObject.mask3.ani = true
 
             pathObject.playing = false;
+            clearTimeout(this.timer2);
             clearTimeout(pathObject.timeout);
             this.showCityAni(this.canvasObj.canvasStatic5, false)
             this.showCityAni(this.canvasObj.canvasStatic7, false)
         }
     },
     drawRedPath(flag) {
+        // return new Promise((resolve, rej) => {
         let canvasAnimPath = document.getElementById("canvasAnimRedPath");
         let contextAnimPath = canvasAnimPath.getContext("2d");
         let pathObject = this.pathObject;
@@ -186,7 +203,7 @@ const animate = {
                     pathObject.mask1.height += pathObject.mask1.shiftX;
                 } else {
 
-                    contextAnimPath.drawImage(pathObject.mask2.source, pathObject.originX, pathObject.originY, pathObject.width, pathObject.height);
+                    // contextAnimPath.drawImage(pathObject.mask2.source, pathObject.originX, pathObject.originY, pathObject.width, pathObject.height);
                     if (pathObject.mask2.currOriginX > 431) {
                         pathObject.mask2.currOriginX -= pathObject.mask2.shiftX;
                         pathObject.mask2.width += pathObject.mask2.shiftX;
@@ -197,6 +214,8 @@ const animate = {
                 pathObject.timeout = setTimeout(() => {
                     this.drawRedPath(flag);
                 }, 30);
+            }else{
+                console.log('aniend')
             }
         } else {
             canvasAnimPath.style.visibility = "hidden";
@@ -209,6 +228,7 @@ const animate = {
             pathObject.playing = false;
             clearTimeout(pathObject.timeout);
         }
+    // })
     },
     drawHousePromise(flag) {
         this.canvasAnimHorse = document.getElementById("myCanvasAnimHorse");
@@ -401,5 +421,203 @@ const animate = {
     //         // canvasStatic2.style.visibility = "hidden";
     //     };
     // }
+    testCanvas(){
+        var canvas = document.getElementById('testCanvas'),
+            context = canvas.getContext('2d'),
+            discs = [
+                { 
+                   x: 150,
+                   y: 250,
+                   lastX: 150,
+                   lastY: 250,
+                   velocityX: -3.2,
+                   velocityY: 3.5,
+                   radius: 25,
+                   innerColor: 'rgba(255,255,0,1)',
+                   middleColor: 'rgba(255,255,0,0.7)',
+                   outerColor: 'rgba(255,255,0,0.5)',
+                   strokeStyle: 'gray',
+                },
+          
+                { 
+                   x: 50,
+                   y: 150,
+                   lastX: 50,
+                   lastY: 150,
+                   velocityX: 2.2,
+                   velocityY: 2.5,
+                   radius: 25,
+                   innerColor: 'rgba(100,145,230,1.0)',
+                   middleColor: 'rgba(100,145,230,0.7)',
+                   outerColor: 'rgba(100,145,230,0.5)',
+                   strokeStyle: 'blue'
+                },
+          
+                { 
+                   x: 150,
+                   y: 75,
+                   lastX: 150,
+                   lastY: 75,
+                   velocityX: 1.2,
+                   velocityY: 1.5,
+                   radius: 25,
+                   innerColor: 'rgba(255,0,0,1.0)',
+                   middleColor: 'rgba(255,0,0,0.7)',
+                   outerColor: 'rgba(255,0,0,0.5)',
+                   strokeStyle: 'orange'
+                },
+             ],
+             numDiscs = discs.length,
+             gradient=null
+            let update = () => {
+                var disc = null;
+                for(var i=0; i < numDiscs; ++i) {
+                   disc = discs[i];
+                   //边缘检测
+                   if (disc.x + disc.velocityX + disc.radius > context.canvas.width ||
+                       disc.x + disc.velocityX - disc.radius < 0) 
+                      disc.velocityX = -disc.velocityX;
+             
+                   if (disc.y + disc.velocityY + disc.radius > context.canvas.height ||
+                       disc.y + disc.velocityY - disc.radius  < 0) 
+                      disc.velocityY= -disc.velocityY;
+             
+                   disc.x += disc.velocityX;
+                   disc.y += disc.velocityY;
+                }
+             }
+
+             let draw= () => {
+                var disc = discs[i];
+             
+                for(var i=0; i < numDiscs; ++i) {
+                   disc = discs[i];
+             
+                   gradient = context.createRadialGradient(disc.x, disc.y, 0,
+                                      disc.x, disc.y, disc.radius);
+             
+                   gradient.addColorStop(0.3, disc.innerColor);
+                   gradient.addColorStop(0.5, disc.middleColor);
+                   gradient.addColorStop(1.0, disc.outerColor);
+             
+                   context.save();
+                   context.beginPath();
+                   context.arc(disc.x, disc.y, disc.radius, 0, Math.PI*2, false);
+                   context.fillStyle = gradient;
+                   context.strokeStyle = disc.strokeStyle;
+                   context.fill();
+                   context.stroke();
+                   context.restore();
+                }
+            }
+
+            let animate11 = () =>{
+                update();
+                draw();
+                this.requestNextAnimationFrame()(animate11);
+            }
+            animate11()
+    },
+
+    requestNextAnimationFrame(){
+        var originalWebkitMethod,
+            wrapper = undefined,
+            selfcallback = undefined,
+            geckoVersion = 0,
+            userAgent = navigator.userAgent,
+            index = 0,
+            self = this;
+        if(window.webkitRequestAnimationFrame){
+            wrapper = (time)=>{
+                if(time === undefined){
+                    time += new Date();
+                }
+                selfcallback(time);
+            };
+            originalWebkitMethod = window.webkitRequestAnimationFrame;
+            window.webkitRequestAnimationFrame = (callback,element)=>{
+                selfcallback = callback;
+                originalWebkitMethod(wrapper , element);
+            }
+        }
+        if(window.mozRequestAnimationFrame){
+            index = userAgent.indexOf('rv:');
+            if(userAgent.indexOf('Gecko') != -1){
+                geckoVersion = userAgent.substr(index+3 , 3);
+                if(geckoVersion === '2.0'){
+                    window.mozRequestAnimationFrame = undefined;
+                }
+            }
+        }
+
+
+        return window.requestNextAnimationFrame ||
+               window.webkitRequestAnimationFrame ||
+               window.mozRequestAnimationFrame ||
+               window.oRequestAnimationFrame ||
+               window.msRequestAnimationFrame ||
+
+               ((callback , element)=>{
+                    var start,
+                        finish;
+                    window.setTimeout(()=>{
+                        start = +new Date();
+                        callback(start);
+                        finish = +new Date();
+                        self.timeout = 1000/500 - (finish - start);
+                    } , self.timeout);
+               })
+    }
 }
+// window.requestNextAnimationFrame = (function(){
+//     let originalWebkitMethod,
+//         wrapper = undefined,
+//         selfcallback = undefined,
+//         geckoVersion = 0,
+//         userAgent = navigator.userAgent,
+//         index = 0,
+//         self = this;
+//     if(window.webkitRequestAnimationFrame){
+//         wrapper = function(time){
+//             if(time === undefined){
+//                 time += new Date();
+//             }
+//             selfcallback(time);
+//         };
+//         originalWebkitMethod = window.webkitRequestAnimationFrame;
+//         window.webkitRequestAnimationFrame = (callback,element)=>{
+//             console.log(callback)
+//             selfcallback = callback;
+//             originalWebkitMethod(wrapper , element);
+//         }
+//     }
+//     if(window.mozRequestAnimationFrame){
+//         index = userAgent.indexOf('rv:');
+//         if(userAgent.indexOf('Gecko') != -1){
+//             geckoVersion = userAgent.substr(index+3 , 3);
+//             if(geckoVersion === '2.0'){
+//                 window.mozRequestAnimationFrame = undefined;
+//             }
+//         }
+//     }
+
+
+//     return window.requestNextAnimationFrame ||
+//            window.webkitRequestAnimationFrame ||
+//            window.mozRequestAnimationFrame ||
+//            window.oRequestAnimationFrame ||
+//            window.msRequestAnimationFrame ||
+
+
+//            function (callback , element){
+//                 var start,
+//                     finish;
+//                 window.setTimeout(function(){
+//                     start = +new Date();
+//                     callback(start);
+//                     finish = +new Date();
+//                     self.timeout = 1000/60 - (finish - start);
+//                 } , self.timeout);
+//            };
+// })();
 export default animate;

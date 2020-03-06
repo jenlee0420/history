@@ -10,7 +10,7 @@
     >
       <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
         <span>藩鎮割據形勢圖 (820年)</span>
-        <div id="soundCon" :class="{'mute':noVoice}" @click="noVoice=!noVoice"></div>
+        <div id="soundCon" :class="{'mute':noVoice}" @click="setVoice"></div>
       </div>
       <div class="main_box">
         <div
@@ -64,7 +64,7 @@
       headTitle="問題"
       :hideFooter="true"
       v-if="popWindow"
-      @cancel-event="popWindow=false;list[5].show=false"
+      @cancel-event="popWindow=false;list[6].show=false"
     >
       <div slot="modalCont">
         <div>
@@ -109,10 +109,10 @@
     </modal>
     <modal
       class
-      headTitle="三鎮駐地"
+      headTitle="三鎮駐地（今河北省）"
       :hideFooter="true"
       v-if="mapPop"
-      @cancel-event="mapPop=false;list[3].show=false"
+      @cancel-event="mapPop=false;list[4].show=false"
     >
       <div slot="modalCont">
         <iframe
@@ -264,7 +264,9 @@ export default {
       drawHorsesTimeout: null,
       drawHorsesTimeout2: null,
       redTimer: {
-        timer:null,
+        timer1:null,
+        timer2:null,
+        timer3:null,
         animate:false
       },
       shipPlay: false,
@@ -292,6 +294,10 @@ export default {
     }
   },
   methods: {
+    setVoice(){
+      this.noVoice = !this.noVoice,
+      this.muteMe()
+    },
     bodyScroll(event) {
       event.preventDefault();
     },

@@ -1,10 +1,11 @@
 <template>
   <div id="app">
+    <!-- <canvas id="testCanvas"></canvas> -->
     <!-- <div class="pos_a" style="font-size:0.5rem">{{debug}}</div> -->
     <div v-if="load" id="loading" style="width:820px;">
       <img :src="require('../static/img/loading.gif')" />
     </div>
-    <div
+    <div v-show="!load"
       id="main_container"
       :style="{
         width: docWidth + 'px',
@@ -157,6 +158,7 @@
 
 <script>
 import zoom from "./js/zoom.js";
+// import canvasFun from "./js/canvas.js";
 import modal from "./components/modal";
 import bar from "./components/bar";
 export default {
@@ -169,14 +171,16 @@ export default {
   created() {
     const that = this;
     that.timer = setInterval(function() {
-      console.log(document.readyState);
-      if (document.readyState === "complete") {
-        that.load = false;
+      if (document.readyState === "complete" && that.imgCount == that.imgTotal) {
+        console.log(document.readyState,that.imgCount)
+        // that.load = false;
         window.clearInterval(that.timer);
+        
       }
     }, 500);
   },
   mounted() {
+    // this.testCanvas()
     this.createMap();
     if ("onorientationchange" in window) {
       window.addEventListener("orientationchange", this.oriChange, false);
@@ -196,9 +200,12 @@ export default {
   },
   data() {
     return {
+      Redroadtimer:null,
       load: true,
       noVoice: false,
       zoomObj: null,
+      imgCount:0,
+      imgTotal:14,
       questionItem: ["A. 長江", "B. 淮河", "C. 黃河"],
       rightans: 2,
       showWrong: 0,
@@ -246,7 +253,7 @@ export default {
           show: false
         },
         {
-          ico: require("../static/img/icon/capital_icon.png"),
+          ico: require("../static/img/icon/gate_icon.png"),
           text: "潼關（今潼關縣）",
           type: "map",
           show: false
@@ -317,7 +324,9 @@ export default {
       debug: "",
       canvasObj: {},
       contextObj: {},
-      timer2: null
+      timer2: null,
+      blueSwitch:true,
+      // blueSwitch:true
     };
   },
   watch: {
@@ -328,6 +337,21 @@ export default {
         this.debug = n.scale + "---" + n.maxScale + "--" + this.scaleindex;
       },
       deep: true
+    },
+    imgCount(){
+      if(this.imgCount == this.imgTotal){
+        this.load = false;
+        this.Redroadtimer = setInterval(() => {
+          // console.log(this.pathObject.animated)
+          if(this.pathObjectblue.animated == true){
+            this.load = false;
+            this.drawbluePath(false)
+            window.clearInterval(this.Redroadtimer);
+          }
+        }, 500);
+        // this.drawHousePromise(true)
+        // this.drawbluePath(true)
+      }
     }
   },
   methods: {
@@ -389,8 +413,8 @@ export default {
         case 3:
           //安祿山控制的三鎮
           if (swip && !this.noVoice) {
-            this.m04.currentTime = 0;
-            this.m04.play();
+            this.m03.currentTime = 0;
+            this.m03.play();
           }
           c.style.visibility = swip ? "visible" : "hidden";
           // this.grainstoreAni = swip;
@@ -405,10 +429,9 @@ export default {
               this.license.volume = 0.3;
               this.license.play();
             }
-            if (this.pathObject.playing != true) {
-              this.drawRedPath(true);
-              this.drawHousePromise(true);
-            }
+            this.drawRedPath(true);
+            this.drawHousePromise(true);
+          
           } else {
             this.drawRedPath(false);
             this.drawHousePromise(false);
@@ -431,7 +454,9 @@ export default {
             this.m06.currentTime = 0;
             this.m06.play();
           }
+          this.blueSwitch=swip
           this.drawbluePath(swip);
+          // this.canvasObj.canvasStatic6.style.visibility = swip ? "visible" : "hidden";
           break;
         case 7:
           this.mapPop = swip;
@@ -449,35 +474,43 @@ export default {
     },
     conflict() {
       let swip3 = this.list[3].show;
+      let swip0 = this.list[0].show;
       let swip2 = this.list[2].show;
       let swip4 = this.list[4].show;
       let swip5 = this.list[5].show;
       let swip6 = this.list[6].show;
-      document.getElementById("canvasStatic3").style.visibility = swip3
+      
+      this.canvasObj.canvasStatic3.style.visibility = swip3
         ? "visible"
         : "hidden";
-      this.canvasObj["canvasStatic5"].style.visibility = swip2
+      this.canvasObj.canvasStatic5.style.visibility = swip2
         ? "visible"
         : "hidden";
       this.canvasObj.canvasStatic6.style.visibility = swip2
         ? "visible"
         : "hidden";
+      this.canvasObj.canvasStatic1.style.visibility = swip0
+        ? "visible"
+        : "hidden";
+      this.canvasObj.canvasStatic4.style.visibility = swip2
+        ? "visible"
+        : "hidden";
       this.canvasObj.canvasStatic7.style.visibility = swip2
         ? "visible"
         : "hidden";
-      if (this.list[4].show) {
-        document.getElementById("canvasStatic3").style.visibility = "visible";
-      }
       if (swip4) {
-        document.getElementById("canvasStatic3").style.visibility = "visible";
+        this.canvasObj.canvasStatic3.style.visibility = "visible";
+        this.canvasObj.canvasStatic1.style.visibility = "visible";
+        this.canvasObj.canvasStatic4.style.visibility = "visible";
       }
       if (swip5) {
         this.canvasObj.canvasStatic5.style.visibility = "visible";
-
+        this.canvasObj.canvasStatic1.style.visibility = "visible";
         this.canvasObj.canvasStatic7.style.visibility = "visible";
       }
       if (swip6) {
         this.canvasObj.canvasStatic6.style.visibility = "visible";
+        this.canvasObj.canvasStatic1.style.visibility = "visible";
       }
     },
     oriChange() {
@@ -530,7 +563,6 @@ export default {
         } else {
           this.rem = this.o / 10 / this.dpr;
         }
-        console.log(this.boxscale, this.o, this.dpr, this.rem);
         document.documentElement.style.fontSize = this.rem + "px";
       };
       selffun();
@@ -560,6 +592,7 @@ export default {
     createMap() {
       var divTag = this.$refs.canvasInnerDiv;
       let list = [
+        { name: "mapbackground", zindex: 1 },
         { name: "canvasStatic1", zindex: 2 },
         { name: "canvasStatic2", zindex: 2 },
         { name: "canvasStatic3", zindex: 2 },
@@ -605,6 +638,8 @@ export default {
       var route3 = new Image();
       var route4 = new Image();
       var route5 = new Image();
+      var background = new Image();
+      var redroad = new Image();
       // imageMap.src = require("../static/img/map.png");
       // imageMapDetail.src = require("../static/img/mapDetail.png");
       controlCity.src = require("../static/img/control_city.png");
@@ -622,10 +657,15 @@ export default {
       route4.src = require("../static/img/route2a_green.png");
       route5.src = require("../static/img/route2b_green.png");
       imageblue.src = require("../static/img/route_blue.png");
+      background.src = require("../static/img/map.png");
+      redroad.src = require("../static/img/route_red.png");
 
+      // this.checkimg([controlCity,controlCity2,maincity,imageMainCity,imageHorse,maincity1,maincity2,maincity3,
+      // route1,route2,route3,route4,route5,imageblue])
+      
       //画圈
       this.drwaCircle(this.canvasObj.canvasStatic2);
-      controlCity.onload = () => {
+      this.insterCanvas2(controlCity,()=>{
         this.contextObj.canvasStatic2.drawImage(
           controlCity,
           0,
@@ -633,9 +673,11 @@ export default {
           this.baseWidth,
           this.baseHeight
         );
-        // canvasStatic2.style.visibility = "hidden";
-      };
-      controlCity2.onload = () => {
+      })
+      // controlCity.onload = () => ;
+      // controlCity2.onload = () => {    };
+      // imageMainCity.onload = () => {};
+      this.insterCanvas2(controlCity2,()=>{
         this.contextObj.canvasStatic3.drawImage(
           controlCity2,
           0,
@@ -644,9 +686,9 @@ export default {
           this.baseHeight
         );
         this.canvasObj.canvasStatic3.style.visibility = "hidden";
-      };
-
-      imageMainCity.onload = () => {
+      })
+      
+      this.insterCanvas2(imageMainCity,()=>{
         this.contextObj.canvasStatic1.drawImage(
           imageMainCity,
           0,
@@ -655,8 +697,10 @@ export default {
           this.baseHeight
         );
         this.canvasObj.canvasStatic1.style.visibility = "hidden";
-      };
-      maincity.onload = () => {
+      })
+
+      // maincity.onload = () => {};
+      this.insterCanvas2(maincity,()=>{
         this.contextObj.canvasStatic4.drawImage(
           maincity,
           0,
@@ -665,14 +709,16 @@ export default {
           this.baseHeight
         );
         this.canvasObj.canvasStatic4.style.visibility = "hidden";
-      };
+      })
       this.insterCanvas(maincity1, "canvasStatic5", false);
       this.insterCanvas(maincity2, "canvasStatic6", false);
       this.insterCanvas(maincity3, "canvasStatic7", false);
+      this.insterCanvas(background, "mapbackground", true);
       // this.insterCanvas(imageblue,'canvasAnimBluePath',false)
-      imageblue.onload = () => {
-        this.pathObjectblue = {
-          source: imageblue,
+      this.insterCanvas2(imageblue,()=>{
+         this.pathObjectblue.source = imageblue
+      })
+      this.pathObjectblue = {
           originX: 0,
           originY: 0,
           width: this.baseWidth,
@@ -691,9 +737,10 @@ export default {
           timeout: null,
           playing: false
         };
-      };
-
-      route3.onload = () => {
+      // imageblue.onload = () => {
+        
+      // };
+      this.insterCanvas2(route3,()=>{
         this.contextObj.canvasAnimBluePath.drawImage(
           route3,
           0,
@@ -702,10 +749,14 @@ export default {
           this.baseHeight
         );
         this.canvasObj.canvasAnimBluePath.style.visibility = "hidden";
-      };
-      route1.onload = () => {
-        this.pathObject = {
-          source: route1,
+      })
+      // route3.onload = () => {
+        
+      // };
+      
+      // route1.onload = () => { 
+      // };
+      this.pathObject = {
           originX: 0,
           originY: 0,
           width: this.baseWidth,
@@ -720,26 +771,34 @@ export default {
             shiftX: 8,
             shiftY: 0
           },
+          mask2:{
+            source:null,
+            originX: 715,
+            originY: 750,
+            width: 1,
+            height: 162,
+            currOriginX: 715,
+            currOriginY: 750,
+            shiftX: 8,
+            shiftY: 0
+          },
           timeout: null,
           playing: false
-        };
       };
-      route2.onload = () => {
-        this.pathObject.mask2 = {
-          source: route2,
-          originX: 715,
-          originY: 750,
-          width: 1,
-          height: 162,
-          currOriginX: 715,
-          currOriginY: 750,
-          shiftX: 8,
-          shiftY: 0
-        };
-      };
-      route4.onload = () => {
-        this.pathObjectGreen = {
-          source: route4,
+      // this.insterCanvas2(route2,()=>{
+      //   this.pathObject.mask2.source = route2
+      // })
+      this.insterCanvas2(route1,()=>{
+        this.pathObject.source = redroad
+      })
+      
+      // route2.onload = () => {
+        
+      // };
+      this.insterCanvas2(route4,()=>{
+        this.pathObjectGreen.source = route4
+      })
+      this.pathObjectGreen = {
           originX: 0,
           originY: 0,
           width: this.baseWidth,
@@ -755,37 +814,43 @@ export default {
             shiftY: 0,
             endPoint: 800
           },
+        mask2:{
+            originX: 519,
+            originY: 780,
+            width: 75,
+            height: 40,
+            currOriginX: 519,
+            currOriginY: 780,
+            shiftX: 8,
+            shiftY: 0,
+            endPoint: 445
+          },
+          mask3:{
+            originX: 146,
+            originY: 440,
+            width: 286,
+            height: 352,
+            currOriginX: 146,
+            currOriginY: 440,
+            shiftX: 8,
+            shiftY: 0,
+            endPoint: 784,
+            ani:true
+          },
           timeout: null,
           playing: false
         };
-      };
-      route5.onload = () => {
-        this.pathObjectGreen.mask2 = {
-          source: route5,
-          originX: 519,
-          originY: 780,
-          width: 75,
-          height: 40,
-          currOriginX: 519,
-          currOriginY: 780,
-          shiftX: 8,
-          shiftY: 0,
-          endPoint: 445
-        };
-        this.pathObjectGreen.mask3 = {
-          source: route5,
-          originX: 146,
-          originY: 440,
-          width: 286,
-          height: 352,
-          currOriginX: 146,
-          currOriginY: 440,
-          shiftX: 8,
-          shiftY: 0,
-          endPoint: 790
-        };
-      };
-      imageHorse.onload = () => {
+      // route4.onload = () => {
+        
+      // };
+      this.insterCanvas2(route5,()=>{
+        this.pathObjectGreen.mask2.source = route5
+        this.pathObjectGreen.mask3.source = route5
+      })
+     
+      // route5.onload = () => {
+      // };
+      this.insterCanvas2(imageHorse,()=>{
         var translate = [
           [862, 202],
           [774, 497],
@@ -802,7 +867,10 @@ export default {
           sharpPoint,
           imageHorse
         );
-      };
+      })
+      // imageHorse.onload = () => {
+        
+      // };
 
       // document.getElementById('map_container').append(divTag)
       // divTag.append(divTag)
@@ -829,6 +897,7 @@ export default {
     },
     insterCanvas(img, contextStatic, bool) {
       img.onload = () => {
+        this.imgCount++
         this.contextObj[contextStatic].drawImage(
           img,
           0,
@@ -840,6 +909,12 @@ export default {
           ? "visible"
           : "hidden";
       };
+    },
+    insterCanvas2(img, fun) {
+      img.onload = () => {
+        this.imgCount++
+        fun()
+      }
     },
     initHorseObject(translate, scale, dur, sharpPoint, imageHorse) {
       var object = {
@@ -921,7 +996,7 @@ export default {
   font-family: Verdana, Arial, sans-serif;
   .mapBackground {
     display: inline-block;
-    background: url("../static/img/map.png");
+    // background: url("../static/img/map.png");
     background-size: cover;
   }
   .detail_div {
@@ -930,6 +1005,7 @@ export default {
     height: 100%;
     background: url("../static/img/mapDetail.png");
     background-size: cover;
+    z-index:2;
   }
   .map {
     display: inline-block;
@@ -947,21 +1023,10 @@ export default {
   }
   .map3_div {
     background-image: url("../static/img/river.png");
+    z-index: 2;
   }
 
-  .city1 {
-    background-image: url("../static/img/main_city1.png");
-  }
-  .city2 {
-    background-image: url("../static/img/main_city2.png");
-  }
-  .city3 {
-    background-image: url("../static/img/main_city3.png");
-    z-index: 3;
-  }
-  .map5_div {
-    background-image: url("../static/img/route2a_green.png");
-  }
+
 
   #canvasInnerDiv {
     width: 1432px;
