@@ -4,14 +4,14 @@
     <div v-if="load" id="loading" style="width:820px;"><img :src="require('../static/img/loading.gif')"></div>
     <div  id="main_container" :style="{'width':docWidth+'px','height':docHeight+'px','display':load?'none':'block'}">
       <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
-        <span>隋滅陳路線圖 (588-589 年)</span>
+        <span>十大兵鎮節度使和唐中央的擁兵數量圖 </span>
         <div id="soundCon" :class="{'mute':noVoice}" @click="noVoice=!noVoice"> </div>
       </div>
       <div class="main_box">
         <div id="map_container" class="modal_content" ref="map_container" :style="{'width':canvasW+'px','height':canvasH+'px'}">
           <div class="mapBackground" id="canvasInnerDiv" ref="canvasInnerDiv">
+            <imageview imgsrc="militarytown2.png" zindex="4" :static="control.town2"></imageview>
             <div class="detail_div pos_a map"></div>
-            <div class="border_div pos_a map"></div>
             <div class="map1_div pos_a map" v-if="map1"></div>
             <div class="map2_div pos_a map" v-if="map2"></div>
           </div>
@@ -48,7 +48,7 @@
           <div class="ansBox" :class="showWrong==false?'wrongico':'rightico'" v-if="currAns!=null"></div>
         </div>
         <div class="question">
-          <div>2. 參考地圖標示，共有多少個兵鎮由漢人出任節度使？</div>
+          <div>2. 參考地圖標示，共有多少個兵鎮的兵力在六萬以上？</div>
           <div>
             <span class="item" :class="{'selected':currAns2==index}" v-for="(item,index) in questionItem2" :key="index" @click="checkans2(index)">{{item}}</span>
           </div>
@@ -69,12 +69,14 @@
 <script>
 import modal from "./components/modal";
 import bar from "./components/bar";
+import imageview from "./components/ImageView";
 // import animate from "./js/animate.js";
 import zoom from "./js/zoom.js";
 export default {
   components: {
     modal,
-    bar
+    bar,
+    imageview
   },
   name: "App",
   beforeCreate() {},
@@ -108,6 +110,9 @@ export default {
   },
   data() {
     return {
+      control:{
+        town2:false
+      },
       load: true,
       noVoice: false,
       zoomObj: null,
@@ -115,7 +120,7 @@ export default {
       rightans: 1,
       showWrong: 0,
       currAns: null,
-      questionItem2: ["A. 5個", "B. 6個", "C. 7個"],
+      questionItem2: ["A. 4個", "B. 5個", "C. 6個"],
       rightans2: 0,
       showWrong2: 0,
       currAns2: null,
@@ -124,28 +129,23 @@ export default {
       imgCount: 0,
       list: [
         {
-          ico: require("../static/img/icon/hanren_icon.png"),
-          text: "漢人節度使",
-          show: false
-        },
-        {
-          ico: require("../static/img/icon/huren_icon.png"),
-          text: "胡人節度使",
+          ico: require("../static/img/icon/military town_icon.png"),
+          text: "十大兵鎮治所",
           show: false
         },
         {
           ico: require("../static/img/icon/capital_icon.png"),
-          text: "唐中央",
+          text: "首都",
           show: false
         },
         {
           ico: require("../static/img/icon/military_icon.png"),
-          text: "安祿山的兵力",
+          text: "兵力",
           show: false
         },
         {
           ico: require("../static/img/icon/capital_icon.png"),
-          text: "唐中央—長安（今西安）",
+          text: "唐中央—長安（今西安） ",
           type: "map",
           show: false
         },
@@ -178,8 +178,7 @@ export default {
       ele: null,
       popWindow: false,
       canvasData: [
-        false,
-        false,
+        'myCanvasStatic4',
         "myCanvasStatic1",
         "myCanvasStatic2"
       ],
@@ -260,17 +259,18 @@ export default {
       switch (index) {
         case 0:
           if (swip && !this.noVoice) {
-            this.m01.currentTime = 0;
-            this.m01.play();
-          }
-          this.map1 = swip;
-          break;
-        case 1:
-          if (swip && !this.noVoice) {
             this.m02.currentTime = 0;
             this.m02.play();
           }
-          this.map2 = swip;
+          c.style.visibility = swip?'visible':'hidden'
+          break;
+        case 1:
+          if (swip && !this.noVoice) {
+            this.m01.currentTime = 0;
+            this.m01.play();
+          }
+          this.showCityAni(c, swip);
+          this.drawHousePromise2(swip)
           break;
         case 2:
           if (swip && !this.noVoice) {
@@ -278,7 +278,8 @@ export default {
             this.m03.play();
           }
           this.drawHousePromise(swip)
-          this.showCityAni(c, swip);
+          // this.showCityAni(c, swip);
+          c.style.visibility = swip?'visible':'hidden'
           
           break;
         case 3:
@@ -286,6 +287,7 @@ export default {
             this.m04.currentTime = 0;
             this.m04.play();
           }
+          this.drawHousePromise(swip)
           c.style.visibility = swip?'visible':'hidden'
           // this.grainstoreAni = swip;
           break;
@@ -323,15 +325,13 @@ export default {
       this.conflict()
     },
     conflict(){
-      let swip1 = this.list[1].show
+      let swip0 = this.list[0].show
       let swip3 = this.list[3].show
-      document.getElementById('myCanvasStatic4').style.visibility = swip1?'visible':'hidden';
+      this.control.town2 = swip0
       if(this.list[2].show){
-        document.getElementById('myCanvasStatic4').style.visibility = 'visible'
+        this.control.town2 = true
       }
-      if(swip3){
-        document.getElementById('myCanvasStatic4').style.visibility = 'visible'
-      }
+
     },
     oriChange() {
       setTimeout(() => {
@@ -443,7 +443,7 @@ export default {
       divTag.appendChild(canvasStatic1);
       divTag.appendChild(canvasStatic2);
       divTag.appendChild(canvasStatic4);
-      // divTag.appendChild(canvasStatic5);
+      divTag.appendChild(canvasStatic5);
       // divTag.appendChild(canvasAnimGreenPath2);
       // divTag.appendChild(canvasAnimGreenPath);
       divTag.appendChild(canvasAnimHorse);
@@ -464,19 +464,19 @@ export default {
       canvasStatic1.style.zIndex = "4";
       canvasStatic2.style.zIndex = "2";
       canvasStatic4.style.zIndex = "4";
-      canvasStatic5.style.zIndex = "2";
+      canvasStatic5.style.zIndex = "4";
       canvasAnimGreenPath.style.zIndex = "2";
       canvasAnimGreenPath2.style.zIndex = "2";
       canvasAnimHorse.style.zIndex = "6";
-      canvasAnimGreenPath.width = this.baseWidth;
-      canvasAnimGreenPath.height = this.baseHeight;
+      canvasStatic5.width = this.baseWidth;
+      canvasStatic5.height = this.baseHeight;
       canvasAnimGreenPath2.width = this.baseWidth;
       canvasAnimGreenPath2.height = this.baseHeight;
       canvasAnimHorse.width = this.baseWidth;
       canvasAnimHorse.height = this.baseHeight;
       var imageMap = new Image();
       var imageMapDetail = new Image();
-      var imageHuren = new Image();
+      var town = new Image();
       var imageGate = new Image();
       var imageMainCity = new Image();
       var imageHorse = new Image();
@@ -487,17 +487,17 @@ export default {
       var route5 = new Image();
       // imageMap.src = require("../static/img/map.png");
       // imageMapDetail.src = require("../static/img/mapDetail.png");
-      imageHuren.src = require("../static/img/Huren_1.png");
+      town.src = require("../static/img/militarytown.png");
       imageMainCity.src = require("../static/img/capital.png");
       imageHorse.src = require("../static/img/horse.png");
       // imageGate.src = require("../static/img/gate.png");
       // route1.src = require("../static/img/route.png");
 
-      imageHuren.onload = () => {
+      town.onload = () => {
         canvasStatic4.width = this.baseWidth;
         canvasStatic4.height = this.baseHeight;
         contextStatic4.drawImage(
-          imageHuren,
+          town,
           0,
           0,
           this.baseWidth,
@@ -530,6 +530,9 @@ export default {
         contextAnimHorse.height = this.baseHeight;
         canvasAnimHorse.style.visibility = 'hidden'
         this.horseObject1 = this.initHorseObject(imageHorse)
+        this.horseObject2 = this.initHorseObject(imageHorse)
+        this.horseObject3 = this.initHorseObject(imageHorse)
+        this.horseObject4 = this.initHorseObject(imageHorse)
 
       };
       //画圈
@@ -656,9 +659,7 @@ export default {
   .map2_div {
     background-image: url("../static/img/Huren.png");
   }
-   .border_div {
-    background-image: url("../static/img/border.png");
-  }
+
 
   #canvasInnerDiv {
     width: 1430px;

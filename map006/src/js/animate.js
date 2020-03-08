@@ -26,21 +26,38 @@ const animate = {
         this.canvasAnimHorse = document.getElementById("myCanvasAnimHorse");
         let contextAnimHorse = this.canvasAnimHorse.getContext("2d");
         if (flag) {
-            if (this.horseObject5.animated == true) {
-                return;
-            }
+            // if (this.horseObject5.animated == true) {
+            //     return;
+            // }
             this.canvasAnimHorse.style.visibility = "visible";
 
             // contextAnimHorse.drawImage(this.horseObject1.source, this.horseObject1.position.points[0][0], this.horseObject1.position.points[0][1], this.horseObject1.width * 0.55, this.horseObject1.height * 0.55);
             // this.showCityAni(canvasAnimHorse, true)
             // this.horsetimerGroup = setTimeout(() => {
-            this.drawHorsesTimeout2 = setInterval(() => {
+            this.drawHorsesTimeout = setInterval(() => {
                 this.canvasClear(this.canvasAnimHorse);
                 this.drawHorse(
                     this.horseObject1,
                     contextAnimHorse,
-                    this.horseObject1.source
+                    this.horseObject1.source,
+                    850,
+                    528
                 );
+                this.drawHorse(
+                    this.horseObject2,
+                    contextAnimHorse,
+                    this.horseObject1.source,
+                    948,
+                    430,
+                );
+                this.drawHorse(
+                    this.horseObject3,
+                    contextAnimHorse,
+                    this.horseObject1.source,
+                    1128,
+                    360,
+                );
+
             }, 70);
             // }, 500)
         } else {
@@ -48,15 +65,43 @@ const animate = {
             //     clearInterval(this.drawHorsesTimeout2[i])
             // }
             // clearTimeout(this.horsetimerGroup)
-            clearInterval(this.drawHorsesTimeout2);
+            clearInterval(this.drawHorsesTimeout);
             this.canvasClear(this.canvasAnimHorse);
             this.canvasAnimHorse.style.visibility = "hidden";
             this.resetHorseObject(this.horseObject1);
+            this.resetHorseObject(this.horseObject2);
+            this.resetHorseObject(this.horseObject3);
         }
     },
-    drawHorse(object, contextS, imageHorse) {
-        return new Promise((resolve, rej) => {
+    drawHousePromise2(flag) {
+        let canvasAnimHorse = document.getElementById("myCanvasStatic5");
+        let contextAnimHorse = canvasAnimHorse.getContext("2d");
+        if (flag) {
+            // if (this.horseObject4.animated == true) {
+            //     return;
+            // }
+            canvasAnimHorse.style.visibility = "visible";
 
+            this.drawHorsesTimeout2 = setInterval(() => {
+                this.canvasClear(canvasAnimHorse);
+                this.drawHorse(
+                    this.horseObject4,
+                    contextAnimHorse,
+                    this.horseObject4.source,
+                    1035,
+                    731,
+                );
+            }, 70);
+            // }, 500)
+        } else {
+            clearInterval(this.drawHorsesTimeout2);
+            this.canvasClear(canvasAnimHorse);
+            canvasAnimHorse.style.visibility = "hidden";
+            this.resetHorseObject(this.horseObject4);
+        }
+    },
+    drawHorse(object, contextS, imageHorse,x,y) {
+        return new Promise((resolve, rej) => {
             contextS.save();
             var position = new Array();
             var scale;
@@ -66,44 +111,24 @@ const animate = {
                 object.currFrame = 0;
             }
 
+            // contextS.drawImage(
+            //     imageHorse,
+            //     object.currFrame * object.width,
+            //     0,
+            //     object.width,
+            //     object.height,
+            //     760,
+            //     678,
+            //     object.width * 0.35,
+            //     object.height * 0.35);
             contextS.drawImage(
                 imageHorse,
                 object.currFrame * object.width,
                 0,
                 object.width,
                 object.height,
-                760,
-                678,
-                object.width * 0.35,
-                object.height * 0.35);
-            contextS.drawImage(
-                imageHorse,
-                object.currFrame * object.width,
-                0,
-                object.width,
-                object.height,
-                850,
-                528,
-                object.width * 0.35,
-                object.height * 0.35);
-            contextS.drawImage(
-                imageHorse,
-                object.currFrame * object.width,
-                0,
-                object.width,
-                object.height,
-                948,
-                430,
-                object.width * 0.35,
-                object.height * 0.35);
-            contextS.drawImage(
-                imageHorse,
-                object.currFrame * object.width,
-                0,
-                object.width,
-                object.height,
-                1128,
-                360,
+                x,
+                y,
                 object.width * 0.35,
                 object.height * 0.35);
             contextS.restore();
