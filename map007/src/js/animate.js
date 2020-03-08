@@ -268,10 +268,11 @@ const animate = {
                 return;
             }
             this.canvasAnimHorse.style.visibility = "visible";
-
+            this.horseObject1.animating = true
             // contextAnimHorse.drawImage(this.horseObject1.source, this.horseObject1.position.points[0][0], this.horseObject1.position.points[0][1], this.horseObject1.width * 0.55, this.horseObject1.height * 0.55);
             // this.showCityAni(canvasAnimHorse, true)
             // this.horsetimerGroup = setTimeout(() => {
+                
             this.drawHorsesTimeout2 = setInterval(() => {
                 this.canvasClear(this.canvasAnimHorse);
                 this.drawHorse(

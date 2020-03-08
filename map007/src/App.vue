@@ -30,7 +30,7 @@
         >
           <div class="mapBackground" id="canvasInnerDiv" ref="canvasInnerDiv">
             <imageview :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
-            <imageview :imgsrc="'capital.png'" :static="control.maincity.show" :zindex="2" @update="updateImg"></imageview>
+            <imageview :imgsrc="'capital.png'" :static="control.maincity.show" :zindex="3" @update="updateImg"></imageview>
             <imageview :imgsrc="'main_city2.png'" :static="control.lingwu.show" :zindex="3" @update="updateImg"></imageview>
             <imageview :imgsrc="'main_city3.png'" :static="control.guimayi.show" :zindex="3" @update="updateImg"></imageview>
             <imageview :imgsrc="'main_city1.png'" :static="control.chengdu.show" :zindex="3" @update="updateImg"></imageview>
@@ -469,7 +469,11 @@ export default {
               this.license.play();
             }
             this.drawRedPath(true);
-            this.drawHousePromise(true);
+            if(this.horseObject1.animating ==false){
+              console.log('/////')
+                    this.drawHousePromise(true);
+                }
+            
           
           } else {
             this.drawRedPath(false);
