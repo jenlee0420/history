@@ -28,6 +28,7 @@ export default {
    methods: {
        load(){
            this.imgReady= true
+           this.$emit('update')
        }
    }
 }

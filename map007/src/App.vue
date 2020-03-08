@@ -18,7 +18,7 @@
         <div
           id="soundCon"
           :class="{ mute: noVoice }"
-          @click="noVoice = !noVoice"
+           @click="setVoice"
         ></div>
       </div>
       <div class="main_box">
@@ -29,14 +29,14 @@
           :style="{ width: canvasW + 'px', height: canvasH + 'px' }"
         >
           <div class="mapBackground" id="canvasInnerDiv" ref="canvasInnerDiv">
-            <imageview :imgsrc="'map.png'" :static="true" :zindex="1"></imageview>
-            <imageview :imgsrc="'capital.png'" :static="control.maincity.show" :zindex="2"></imageview>
-            <imageview :imgsrc="'main_city2.png'" :static="control.lingwu.show" :zindex="3"></imageview>
-            <imageview :imgsrc="'main_city3.png'" :static="control.guimayi.show" :zindex="3"></imageview>
-            <imageview :imgsrc="'main_city1.png'" :static="control.chengdu.show" :zindex="3"></imageview>
-            <imageview :imgsrc="'cityfanyang.png'" :static="control.fanyang" :zindex="3"></imageview>
-            <imageview :imgsrc="'city.png'" :static="control.city" :zindex="3"></imageview>
-            <imageview :imgsrc="'main_city.png'" :static="control.luoyang" :zindex="3"></imageview>
+            <imageview :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
+            <imageview :imgsrc="'capital.png'" :static="control.maincity.show" :zindex="2" @update="updateImg"></imageview>
+            <imageview :imgsrc="'main_city2.png'" :static="control.lingwu.show" :zindex="3" @update="updateImg"></imageview>
+            <imageview :imgsrc="'main_city3.png'" :static="control.guimayi.show" :zindex="3" @update="updateImg"></imageview>
+            <imageview :imgsrc="'main_city1.png'" :static="control.chengdu.show" :zindex="3" @update="updateImg"></imageview>
+            <imageview :imgsrc="'cityfanyang.png'" :static="control.fanyang" :zindex="3" @update="updateImg"></imageview>
+            <imageview :imgsrc="'city.png'" :static="control.city" :zindex="3" @update="updateImg"></imageview>
+            <imageview :imgsrc="'main_city.png'" :static="control.luoyang" :zindex="3" @update="updateImg"></imageview>
             
             <div class="detail_div pos_a map"></div>
             <div class="border_div pos_a map"></div>
@@ -181,8 +181,8 @@ export default {
   created() {
     const that = this;
     that.timer = setInterval(function() {
-      // && that.imgCount == that.imgTotal
-      if (document.readyState === "complete") {
+      //
+      if (document.readyState === "complete" && that.imgCount == that.imgTotal) {
         console.log(document.readyState,that.imgCount)
         that.load = false;
         window.clearInterval(that.timer);
@@ -389,6 +389,13 @@ export default {
     }
   },
   methods: {
+    updateImg(){
+      this.imgCount ++ 
+    },
+    setVoice(){
+      this.noVoice = !this.noVoice
+      this.muteMe()
+    },
     bodyScroll(event) {
       event.preventDefault();
     },
