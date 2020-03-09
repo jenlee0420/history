@@ -37,7 +37,7 @@
         </div>
       </div>
     </div>
-    <modal class="" headTitle="問題" :hideFooter="true" v-if="popWindow" @cancel-event="popWindow=false;list[5].show=false">
+    <modal class="" headTitle="問題" :hideFooter="true" v-if="popWindow" @cancel-event="popWindow=false;list[4].show=false">
       <div slot="modalCont">
         <div>
           <div class="question">
@@ -57,7 +57,7 @@
         </div>
       </div>
     </modal>
-    <modal class=""  headTitle="唐中央—長安（今西安）" :hideFooter="true" v-if="mapPop" @cancel-event="mapPop=false;list[4].show=false">
+    <modal class=""  headTitle="唐中央—長安（今西安）" :hideFooter="true" v-if="mapPop" @cancel-event="mapPop=false;list[3].show=false">
       <div slot="modalCont">
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d24781696.25475321!2d86.13987929246206!3d38.700543890057766!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x366379e922ac17b9%3A0x85d466fda794582e!2z5Lit5ZyL6Zmd6KW_55yB6KW_5a6J5biC!5e0!3m2!1szh-TW!2shk!4v1575948835917!5m2!1szh-TW!2shk"
           :width="bodytWidth/1.8" :height="bodyHeight/1.8" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
@@ -268,14 +268,18 @@ export default {
           if (swip && !this.noVoice) {
             this.m01.currentTime = 0;
             this.m01.play();
+            this.m01.onended= ()=>{
+              this.m03.currentTime = 0;
+              this.m03.play();
+            }
           }
           this.showCityAni(c, swip);
           this.drawHousePromise2(swip)
           break;
         case 2:
           if (swip && !this.noVoice) {
-            this.m03.currentTime = 0;
-            this.m03.play();
+            this.m04.currentTime = 0;
+            this.m04.play();
           }
           this.drawHousePromise(swip)
           // this.showCityAni(c, swip);
@@ -283,37 +287,9 @@ export default {
           
           break;
         case 3:
-          if (swip && !this.noVoice) {
-            this.m04.currentTime = 0;
-            this.m04.play();
-          }
-          this.drawHousePromise(swip)
-          c.style.visibility = swip?'visible':'hidden'
-          // this.grainstoreAni = swip;
-          break;
-        //case 4:
-          // if (swip) {
-          //   if (!this.noVoice) {
-          //     this.m06.currentTime = 0;
-          //     this.m06.play();
-          //     this.license.currentTime = 0;
-          //     this.license.volume = 0.2;
-          //     this.license.play();
-          //   }
-          //   if (this.pathObject.playing != true) {
-          //     this.drawGreenPath(true);
-          //     this.drawHousePromise(true);
-          //   }
-          // } else {
-          //   this.drawGreenPath(false);
-          //   this.drawHousePromise(false);
-          //   clearTimeout(this.lin2timer);
-          // }
-         // break;
-        case 4:
           this.mapPop = swip;
           break;
-        case 5:
+        case 4:
           this.popWindow = swip;
           this.currAns = null;
           this.currAns2 = null;
