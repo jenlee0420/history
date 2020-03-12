@@ -370,6 +370,10 @@ export default {
           if (swip && !this.noVoice) {
             this.m04.currentTime = 0;
             this.m04.play();
+            this.m04.onended= ()=>{
+              this.scream.currentTime = 0;
+              this.scream.play();
+            }
           }
           c.style.visibility = swip ? "visible" : "hidden";
           break;
@@ -387,8 +391,6 @@ export default {
           if (swip && !this.noVoice) {
             this.m06.currentTime = 0;
             this.m06.play();
-            this.scream.currentTime = 0;
-            this.scream.play();
           }
           this.drawPurple(swip)
           break;
@@ -547,7 +549,6 @@ export default {
       this.m06.src = require("../static/img/vo/Map010-7.mp3");
       this.scream.src = require("../static/img/vo/scream.mp3");
       this.license.src = require("../static/img/vo/License.mp3");
-      this.scream.loop='loop'
       this.license.loop='loop'
       this.scream.volume=0.2
       this.license.volume=0.2

@@ -5,12 +5,13 @@
     <div  id="main_container" :style="{'width':docWidth+'px','height':docHeight+'px','display':load?'none':'block'}">
       <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
         <span>十大兵鎮節度使和唐中央的擁兵數量圖 </span>
-        <div id="soundCon" :class="{'mute':noVoice}" @click="noVoice=!noVoice"> </div>
+        <div id="soundCon" :class="{'mute':noVoice}" @click="setVoice"> </div>
       </div>
       <div class="main_box">
         <div id="map_container" class="modal_content" ref="map_container" :style="{'width':canvasW+'px','height':canvasH+'px'}">
           <div class="mapBackground" id="canvasInnerDiv" ref="canvasInnerDiv">
             <imageview imgsrc="militarytown2.png" zindex="4" :static="control.town2"></imageview>
+            <imageview imgsrc="capital_1.png" zindex="4" :static="control.shoudu"></imageview>
             <div class="detail_div pos_a map"></div>
             <div class="map1_div pos_a map" v-if="map1"></div>
             <div class="map2_div pos_a map" v-if="map2"></div>
@@ -111,7 +112,8 @@ export default {
   data() {
     return {
       control:{
-        town2:false
+        town2:false,
+        shoudu:false
       },
       load: true,
       noVoice: false,
@@ -215,6 +217,10 @@ export default {
     }
   },
   methods: {
+    setVoice(){
+      this.noVoice = !this.noVoice
+      this.muteMe()
+    },
     bodyScroll(event) {
       event.preventDefault();
     },
@@ -273,8 +279,16 @@ export default {
               this.m03.play();
             }
           }
+          if(swip){
+            this.lin2timer = setTimeout(()=>{
+              this.drawHousePromise2(swip)
+              clearTimeout(this.lin2timer)
+            },4300)
+          }else{
+            this.drawHousePromise2(false)
+          }
+          this.control.shoudu = swip
           this.showCityAni(c, swip);
-          this.drawHousePromise2(swip)
           break;
         case 2:
           if (swip && !this.noVoice) {
@@ -638,8 +652,8 @@ export default {
 
 
   #canvasInnerDiv {
-    width: 1430px;
-    height: 1316px;
+    width: 1432px;
+    height: 1317px;
   }
   .iconItem {
     display: flex;
