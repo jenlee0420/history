@@ -20,6 +20,10 @@
           :style="{'width':canvasW+'px','height':canvasH+'px'}"
         >
           <div class="mapBackground" id="canvasInnerDiv" ref="canvasInnerDiv">
+            <imageview :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
+            <imageview :imgsrc="'yuehan.png'" :static="control.yuehan" :zindex="3" @update="updateImg"></imageview>
+            <imageview :imgsrc="'chuanhan.png'" :static="control.chuanhan" :zindex="3" @update="updateImg"></imageview>
+            
           </div>
         </div>
         <div id="menu_container" style="float: right;">
@@ -128,11 +132,13 @@
 import zoom from "./js/zoom.js";
 import modal from "./components/modal";
 import bar from "./components/bar";
+import imageview from "./components/ImageView";
 // import tools from './js/animate.js';
 export default {
   components: {
     modal,
-    bar
+    bar,
+    imageview
   },
   name: "App",
   beforeCreate() {},
@@ -166,6 +172,9 @@ export default {
   },
   data() {
     return {
+      control:{
+        yuehan:false,
+      },
       load: true,
       noVoice: false,
       zoomObj: null,
@@ -293,7 +302,7 @@ export default {
       canvasObj: {},
       contextObj: {},
       imgCount:0,
-      imgTotal:9,
+      imgTotal:11,
     licenseTimer:null
     };
   },
@@ -307,13 +316,16 @@ export default {
       deep: true
     },
     imgCount:function(n,o){
-      if(n == this.imgTotal && document.readyState == "complete"){
-        console.log(n)
-        this.load = false;
-      }
+      // if(n == this.imgTotal && document.readyState == "complete"){
+      //   console.log(n)
+      //   // this.load = false;
+      // }
     }
   },
   methods: {
+    updateImg(){
+      this.imgCount ++ 
+    },
     setVoice(){
       this.noVoice = !this.noVoice
       this.muteMe()
@@ -375,7 +387,8 @@ export default {
             this.m03.play();
             this.train.play();
           }
-          c.style.visibility = swip ? "visible" : "hidden";
+          // c.style.visibility = swip ? "visible" : "hidden";
+          this.control.yuehan = swip
           this.drawHousePromise(swip)
           // this.drawHousePromise2(swip)
           break;
@@ -385,12 +398,13 @@ export default {
             this.m04.play();
             this.train1.play();
           }
-          c.style.visibility = swip ? "visible" : "hidden";
+          this.control.chuanhan = swip
+          // c.style.visibility = swip ? "visible" : "hidden";
           // this.drawHousePromise(swip)
           this.drawHousePromise2(swip)
           break;
         case 6:
-          if(!swip){clearTimeout(this.licenseTimer);console.log('//')}
+          if(!swip){clearTimeout(this.licenseTimer);}
           if (swip && !this.noVoice) {
             this.licenseTimer =  setTimeout(() => {
               this.license.currentTime = 0;
@@ -403,7 +417,7 @@ export default {
             this.m05.onended=()=>{
                this.license.pause();
             }
-            console.log(this.license.volume)
+            // console.log(this.license.volume)
           }
           
           c.style.visibility = swip ? "visible" : "hidden";
@@ -582,8 +596,8 @@ export default {
       this.insterCanvas(imageMainCity, 'city1.png',"myCanvasStatic4", false);
       this.insterCanvas(border, 'border.png',"myCanvasStatic5", false);
       this.insterCanvas(privince, 'province border.png',"myCanvasStatic6", false);
-      this.insterCanvas(route, 'yuehan.png',"myCanvasStatic7", false);
-      this.insterCanvas(route1, 'chuanhan.png',"myCanvasStatic8", false);
+      // this.insterCanvas(route, 'yuehan.png',"myCanvasStatic7", false);
+      // this.insterCanvas(route1, 'chuanhan.png',"myCanvasStatic8", false);
       this.insterCanvas(ba0lu, 'baolu.png',"myCanvasStatic9", false);
       
 
@@ -740,7 +754,7 @@ export default {
   font-family: Verdana, Arial, sans-serif;
   .mapBackground {
     display: inline-block;
-    background: url("../static/img/map.png");
+    // background: url("../static/img/map.png");
     background-size: cover;
   }
 

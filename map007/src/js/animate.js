@@ -1,4 +1,27 @@
 const animate = {
+    sharpCity(obj,bool){
+        if (!bool) {
+            clearInterval(obj.timer);
+            obj.show = false
+            obj.ani = false
+            return;
+        }
+        if (obj.ani == true) {
+            return;
+        }
+        obj.ani= true
+        let show = false;
+        let times = 6;
+        obj.timer = setInterval(() => {
+            if (times == 0) {
+                clearInterval(obj.timer);
+                return;
+            }
+            obj.show = show
+            show = !show;
+            times -= 1;
+        },260)
+    },
     showCityAni(canvasStatic, bool) {
         if (!bool) {
             clearInterval(canvasStatic.timeout);
@@ -62,6 +85,7 @@ const animate = {
                 }else{
                     // this.blueSwitch = false
                     clearTimeout(pathObject.timeout)
+                    this.sharpCity(this.control.lingwu,true)
                 }
                 // this.requestNextAnimationFrame()(buleRoad)
             }
@@ -73,7 +97,8 @@ const animate = {
 
             pathObject.playing = false;
             clearTimeout(pathObject.timeout);
-            this.showCityAni(this.canvasObj.canvasStatic6, false)
+
+            this.sharpCity(this.control.lingwu,false)
         }
     },
     drawGreenPath(flag) {
@@ -99,7 +124,9 @@ const animate = {
                         pathObject.mask2.currOriginY,
                         pathObject.mask2.width,
                         pathObject.mask2.height);
-                    this.showCityAni(this.canvasObj.canvasStatic7, true)
+                    // this.showCityAni(this.canvasObj.canvasStatic7, true)
+                    this.sharpCity(this.control.guimayi, true)
+                    // this.point2=true
                     if (pathObject.mask2.currOriginX < pathObject.mask2.endPoint) {
                         contextAnimPath.rect(
                             pathObject.mask3.currOriginX,
@@ -144,7 +171,7 @@ const animate = {
                     this.drawGreenPath(flag);
                 }, 30);
             } else {
-                this.showCityAni(this.canvasObj.canvasStatic5, true)
+                this.sharpCity(this.control.chengdu, true)
             }
         } else {
             canvasAnimPath.style.visibility = "hidden";
@@ -160,8 +187,11 @@ const animate = {
             pathObject.playing = false;
             clearTimeout(this.timer2);
             clearTimeout(pathObject.timeout);
-            this.showCityAni(this.canvasObj.canvasStatic5, false)
-            this.showCityAni(this.canvasObj.canvasStatic7, false)
+            this.sharpCity(this.control.guimayi, false)
+            // this.showCityAni(this.canvasObj.canvasStatic7, false)
+            this.sharpCity(this.control.chengdu, false)
+            this.point2= false
+
         }
     },
     drawRedPath(flag) {
@@ -238,10 +268,11 @@ const animate = {
                 return;
             }
             this.canvasAnimHorse.style.visibility = "visible";
-
+            this.horseObject1.animating = true
             // contextAnimHorse.drawImage(this.horseObject1.source, this.horseObject1.position.points[0][0], this.horseObject1.position.points[0][1], this.horseObject1.width * 0.55, this.horseObject1.height * 0.55);
             // this.showCityAni(canvasAnimHorse, true)
             // this.horsetimerGroup = setTimeout(() => {
+                
             this.drawHorsesTimeout2 = setInterval(() => {
                 this.canvasClear(this.canvasAnimHorse);
                 this.drawHorse(
