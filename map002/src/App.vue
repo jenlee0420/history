@@ -5,7 +5,7 @@
     <div id="main_container" :style="{'width':docWidth+'px','height':docHeight+'px','display':load?'none':'block'}">
       <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
         <span>開皇年間官倉分佈圖 (581-600 年)</span>
-        <div id="soundCon" :class="{'mute':noVoice}" @click="noVoice=!noVoice"> </div>
+        <div id="soundCon" :class="{'mute':noVoice}" @click="setVoice"> </div>
       </div>
       <div class="main_box" id="main_box">
         <div id="map_container" class="modal_content" ref="map_container" :style="{'width':canvasW+'px','height':canvasH+'px'}">
@@ -197,6 +197,10 @@
       }
     },
     methods: {
+      setVoice(){
+      this.noVoice = !this.noVoice
+      this.muteMe()
+    },
       bodyScroll(event) {
         event.preventDefault();
       },
