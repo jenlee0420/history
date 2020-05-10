@@ -401,6 +401,15 @@ export default {
           break;
       }
       this.list[index].show = swip;
+      this.controller()
+    },
+    controller(){
+      let swip3= this.list[3].show
+      if(swip3){
+        this.control.capital.show = true;
+        this.control.city.show = true;
+        this.control.main_city = true;
+      }
     },
     oriChange() {
       setTimeout(() => {

@@ -90,7 +90,7 @@
             ></div>
           </div>
           <div class="question question2">
-            <div>2. 以下哪項是唐朝為保護航道而選擇駐軍於屯門的原因？</div>
+            <div>2. 以下哪項是唐朝為保護航道而選擇駐軍於屯門的原因<font class='dot'>？</font></div>
             <div>
               <span
                 class="item"
@@ -98,7 +98,8 @@
                 v-for="(item,index) in questionItem2"
                 :key="index"
                 @click="checkans2(index)"
-              >{{item}}</span>
+                v-html="item"
+              ></span>
             </div>
             <div
               class="ansBox"
@@ -195,7 +196,7 @@ export default {
       currAns: null,
       questionItem2: ["A. 港口常有別國侵擾",
         "B. 屯門灣經常發生海難",
-        "C. 鄰近山嶺，適合佈防"],
+        "C. 鄰近山嶺<font class='dot'>，</font>適合佈防"],
       rightans2: 2,
       showWrong2: 0,
       currAns2: null,
@@ -372,6 +373,15 @@ export default {
           break;
       }
       this.list[index].show = swip;
+      this.controller()
+    },
+    controller(){
+      // let swip1 = this.list[1].show
+      this.control.harbor.show =this.list[1].show
+      let swip2 = this.list[2].show
+      if(swip2){
+        this.control.harbor.show = swip2
+      }
     },
     oriChange() {
       setTimeout(() => {
@@ -685,7 +695,6 @@ export default {
   .pos_a {
     position: absolute;
   }
-  font-family: Verdana, Arial, sans-serif;
   .mapBackground {
     display: inline-block;
     // background: url("../static/img/map.png");
