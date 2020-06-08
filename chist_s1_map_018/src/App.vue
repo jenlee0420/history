@@ -358,7 +358,11 @@ export default {
     muteMe() {
       this.m01.pause();
       this.m02.pause();
-      this.license.pause();
+      this.m03.pause();
+      this.m04.pause();
+      this.m05.pause();
+      this.m06.pause();
+      // this.license.pause();
     },
     showCanvas(index) {
       let c = this.canvasObj[this.canvasData[index]];
@@ -366,6 +370,10 @@ export default {
       this.muteMe();
       switch (index) {
         case 0:
+          if (swip && !this.noVoice) {
+            this.m01.currentTime = 0;
+            this.m01.play();
+          }
           this.sharpCity(this.control.capital,swip)
           this.control.zhou = swip
           if(swip){
@@ -378,33 +386,38 @@ export default {
           break;
         case 1:
           if (swip && !this.noVoice) {
-            this.m01.currentTime = 0;
-            this.m01.play();
+            this.m02.currentTime = 0;
+            this.m02.play();
           }
           this.control.city.show=swip
           break;
         case 2:
           if (swip && !this.noVoice) {
-            this.m02.currentTime = 0;
-            this.m02.play();
+            this.m03.currentTime = 0;
+            this.m03.play();
           }
           if(swip){
             this.AniTimer[1] = setTimeout(() => {
               this.control.jin = swip
-            }, 1000);
+            }, 8000);
             this.AniTimer[2] = setTimeout(() => {
               this.control.wei = swip
-            }, 2000);
+            }, 9000);
             this.AniTimer[3] = setTimeout(() => {
               this.control.lu = swip
-            }, 3000);
+            }, 10000);
             this.AniTimer[4] = setTimeout(() => {
               this.control.cai = swip
-            }, 4000);
+            }, 11000);
             this.AniTimer[5] = setTimeout(() => {
               this.control.yan = swip
-            }, 5000);
+            }, 12000);
           }else{
+            this.control.jin = swip
+            this.control.wei = swip
+            this.control.lu = swip
+            this.control.cai = swip
+            this.control.yan = swip
             clearTimeout(this.AniTimer[1])
             clearTimeout(this.AniTimer[2])
             clearTimeout(this.AniTimer[3])
@@ -414,19 +427,23 @@ export default {
           break;
         case 3:
           if (swip && !this.noVoice) {
-            this.m01.currentTime = 0;
-            this.m01.play();
+            this.m04.currentTime = 0;
+            this.m04.play();
           }
           this.control.qi=swip
           break;
         case 4:
           if (swip && !this.noVoice) {
-            this.m01.currentTime = 0;
-            this.m01.play();
+            this.m05.currentTime = 0;
+            this.m05.play();
           }
           this.sharpCity(this.control.song,swip)
           break;
         case 5:
+          if (swip && !this.noVoice) {
+            this.m06.currentTime = 0;
+            this.m06.play();
+          }
           this.drawMap(swip)
           this.sharpCity(this.control.city,swip)
           break;
@@ -567,12 +584,17 @@ export default {
       this.m03 = document.createElement("audio");
       this.m04 = document.createElement("audio");
       this.m05 = document.createElement("audio");
+      this.m06 = document.createElement("audio");
       this.license = document.createElement("audio");
-      this.m01.src = require("../static/img/vo/Map013-2.mp3");
-      this.m02.src = require("../static/img/vo/Map013-3.mp3");
-      this.license.src = require("../static/img/vo/Commons.mp3");
-      this.license.loop='loop'
-      this.license.volume =0.3
+      this.m01.src = require("../static/img/vo/Chist_s1_map_018_1.mp3");
+      this.m02.src = require("../static/img/vo/Chist_s1_map_018_2.mp3");
+      this.m03.src = require("../static/img/vo/Chist_s1_map_018_3.mp3");
+      this.m04.src = require("../static/img/vo/Chist_s1_map_018_4.mp3");
+      this.m05.src = require("../static/img/vo/Chist_s1_map_018_5.mp3");
+      this.m06.src = require("../static/img/vo/Chist_s1_map_018_6.mp3");
+      // this.license.src = require("../static/img/vo/Commons.mp3");
+      // this.license.loop='loop'
+      // this.license.volume =0.3
       // Variable init
 
       var territory = new Image();

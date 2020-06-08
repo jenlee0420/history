@@ -38,14 +38,14 @@
       <div slot="modalCont">
         <div>
           <div class="question question2">
-            <div class="title"><span>1. </span><span>貞觀年間，唐皇朝開疆闢土，大部分新增的領土均位於_________？</span></div>
+            <div class="title"><span>1. </span><span>貞觀年間<font class="dot">，</font>唐皇朝開疆闢土<font class="dot">，</font>大部分新增的領土均位於_________？</span></div>
             <div>
               <span class="item" :class="{'selected':currAns==index}" v-for="(item,index) in questionItem" :key="index" @click="checkans(index)">{{item}}</span>
             </div>
             <div class="ansBox" :class="showWrong==false?'wrongico':'rightico'" v-if="currAns!=null"></div>
           </div>
             <div class="question">
-            <div>2. 貞觀年間，唐帝國的東部領土與以下哪一國接壤？</div>
+            <div>2. 貞觀年間<span class="dot">，</span>唐帝國的東部領土與以下哪一國接壤？</div>
             <div>
               <span
                 class="item"

@@ -39,14 +39,14 @@
     <modal class="" headTitle="問題" :hideFooter="true" v-if="popWindow" @cancel-event="popWindow=false;list[4].show=false">
       <div slot="modalCont" >
         <div  class="question" >
-          <div>1. 根據地圖，官倉大多鄰近大興，哪一個官倉離都城較遠？</div>
+          <div>1. 根據地圖<span class="dot">，</span>官倉大多鄰近大興<span class="dot">，</span>哪一個官倉離都城較遠？</div>
           <div>
             <span class="item" :class="{'selected':currAns==index}" v-for="(item,index) in questionItem" :key="index" @click="checkans(index)">{{item}}</span>
           </div>
           <div class="ansBox" :class="showWrong==false?'wrongico':'rightico'" v-if="currAns!=null"></div>
           </div>
           <div  class="question" >
-          <div>2. 地圖所顯示的官倉，均置於哪一河流的河岸附近？</div>
+          <div>2. 地圖所顯示的官倉<span class="dot">，</span>均置於哪一河流的河岸附近？</div>
           <div>
             <span class="item" :class="{'selected':currAns2==index}" v-for="(item,index) in questionItem2" :key="index" @click="checkans2(index)">{{item}}</span>
           </div>
@@ -741,6 +741,6 @@
 </script>
 <style lang="less">
 #app{
-      font-family: Verdana, Arial, sans-serif
+      
 }
 </style>

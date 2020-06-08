@@ -3,6 +3,7 @@ body {
     padding: 0px;
     overflow: hidden;
 }
+.dot{    font-family: Arial,'新細明體','PMingLiU';}
 .mr5{margin-right: 0.2em;}
 .main_box {
     flex: 1;

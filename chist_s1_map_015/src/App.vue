@@ -75,7 +75,7 @@
         <div>
           <div class="question">
             <div class="">
-              1. 根據地圖，宋帝南逃的最終目的地是？
+              1. 根據地圖<span class="dot">，</span>宋帝南逃的最終目的地是？
             </div>
             <div>
               <span

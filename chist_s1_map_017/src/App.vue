@@ -9,7 +9,7 @@
       :style="{'width':docWidth+'px','height':docHeight+'px','display':load?'none':'block'}"
     >
       <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
-        <span>川漢、粵漢鐵路位置圖 (1911 年)</span>
+        <span>川漢<span class="dot">、</span>粵漢鐵路位置圖 (1911 年)</span>
         <div id="soundCon" :class="{'mute':noVoice}" @click="setVoice"></div>
       </div>
       <div class="main_box">
@@ -77,7 +77,7 @@
         <div>
           <div class="question">
             <div class="flex">
-              <em class="mr5">1.</em><em> 川漢和粵漢鐵路的「國有化」計劃影響了四省民眾的利益，<br>但不包括以下哪省？</em>
+              <em class="mr5">1.</em><em> 川漢和粵漢鐵路的「國有化」計劃影響了四省民眾的利益<font class="dot">，</font><br>但不包括以下哪省？</em>
             </div>
             <div>
               <span
@@ -95,7 +95,7 @@
             ></div>
           </div>
           <div class="question">
-            <div>2. 按地圖所示，哪個受到保路風潮影響的省份較接近北京？</div>
+            <div>2. 按地圖所示<font class="dot">，</font>哪個受到保路風潮影響的省份較接近北京？</div>
             <div>
               <span
                 class="item"

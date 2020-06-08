@@ -22,7 +22,7 @@
           <div class="mapBackground" id="canvasInnerDiv" ref="canvasInnerDiv">
             <imageview :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
             <imageview :imgsrc="'mapDetail.png'" :static="true" :zindex="2" @update="updateImg"></imageview>
-            <imageview :imgsrc="'capital.png'" :static="control.capital.show" :zindex="2" @update="updateImg"></imageview>
+            <imageview :imgsrc="'capital.png'" :static="control.capital.show" :zindex="4" @update="updateImg"></imageview>
             <imageview :imgsrc="'city.png'" :static="control.city" :zindex="2" @update="updateImg"></imageview>
             <imageview :imgsrc="'EasternZhou.png'" :static="control.EasternZhou" :zindex="2" @update="updateImg"></imageview>
             <imageview :imgsrc="'WesternZhou.png'" :static="control.WesternZhou" :zindex="2" @update="updateImg"></imageview>
@@ -100,7 +100,8 @@
                 v-for="(item,index) in questionItem2"
                 :key="index"
                 @click="checkans2(index)"
-              >{{item}}</span>
+                v-html="item"
+              ></span>
             </div>
             <div
               class="ansBox"
@@ -149,7 +150,7 @@ export default {
   created() {
     const that = this;
     that.timer = setInterval(function() {
-      console.log(document.readyState);
+      // console.log(document.readyState);
       if (document.readyState === "complete" && that.imgCount == that.imgTotal) {
         that.load = false;
         window.clearInterval(that.timer);
@@ -199,7 +200,7 @@ export default {
       rightans: 2,
       showWrong: 0,
       currAns: null,
-      questionItem2: ["A. 諸侯退還土地，並西遷鎬京",
+      questionItem2: ["A. 諸侯退還土地<font class='dot'>，</font>並西遷鎬京",
         "B. 東周的得名與都城位置有關",
         "C. 東周首任君主為周幽王"],
       rightans2: 1,
@@ -337,6 +338,9 @@ export default {
     muteMe() {
       this.m01.pause();
       this.m02.pause();
+      this.m03.pause();
+      this.m04.pause();
+      this.m05.pause();
       this.license.pause();
     },
     showCanvas(index) {
@@ -345,47 +349,72 @@ export default {
       this.muteMe();
       switch (index) {
         case 0:
-          this.sharpCity(this.control.capital,swip)
-          this.control.zhou = swip
-          if(swip){
-            this.timer1 = setTimeout(() => {
-              this.control.zhou = false
-            }, 3000);
-          }else{
-            clearTimeout(this.timer1)
-          }
-          break;
-        case 1:
           if (swip && !this.noVoice) {
             this.m01.currentTime = 0;
             this.m01.play();
+            this.m01.onended=()=>{
+              this.m05.currentTime = 0;
+              this.m05.play();
+              this.m05.onended=()=>{
+                this.timer1 = setTimeout(() => {
+                  this.control.zhou = false
+                }, 3000);
+              }
+            }
+          }
+          if(this.noVoice && swip){
+            this.timer1 = setTimeout(() => {
+              this.control.zhou = false
+            }, 5000);
+          }
+          if(!swip){
+            this.control.zhou = false
+            clearTimeout(this.timer1)
+          }
+          this.sharpCity(this.control.capital,swip)
+          this.control.zhou = swip
+          
+          break;
+        case 1:
+          if (swip && !this.noVoice) {
+            this.m02.currentTime = 0;
+            this.m02.play();
           }
           if(!swip){
             this.roadAniEnd = false
+            // this.sharpCity(this.control.city,swip)
           }
           this.drawRedPath(swip)
           break;
         case 2:
           if (swip && !this.noVoice) {
-            this.m02.currentTime = 0;
-            this.m02.play();
+            this.m03.currentTime = 0;
+            this.m03.play();
           }
           this.control.WesternZhou = swip
           break;
         case 3:
           if (swip && !this.noVoice) {
-            this.m02.currentTime = 0;
-            this.m02.play();
+            this.m04.currentTime = 0;
+            this.m04.play();
+            this.m04.onended=()=>{
+              this.timer2 = setTimeout(() => {
+                this.control.zhou1 = false
+              }, 3000);
+            }
+          }
+          if(this.noVoice && swip){
+            this.timer2 = setTimeout(() => {
+              this.control.zhou1 = false
+            }, 5000);
+          }
+          if(!swip){
+            this.control.zhou1 = false
+            clearTimeout(this.timer2)
           }
           this.control.EasternZhou = swip
           this.control.zhou1 = swip
-          if(swip){
-            this.timer2 = setTimeout(() => {
-              this.control.zhou1 = false
-            }, 3000);
-          }else{
-            clearTimeout(this.timer2)
-          }
+          
           break;
         case 4:
           this.mapPop = swip;
@@ -409,6 +438,9 @@ export default {
       let swip1 = this.list[1].show
       if(swip2){
         this.control.capital.show = swip2
+      }
+      if(swip1){
+        this.control.capital.show = swip1
       }
       if(swip1 && this.roadAniEnd){
         this.control.city = swip1
@@ -531,11 +563,14 @@ export default {
       this.m04 = document.createElement("audio");
       this.m05 = document.createElement("audio");
       this.license = document.createElement("audio");
-      this.m01.src = require("../static/img/vo/Map013-2.mp3");
-      this.m02.src = require("../static/img/vo/Map013-3.mp3");
-      this.license.src = require("../static/img/vo/Commons.mp3");
-      this.license.loop='loop'
-      this.license.volume =0.3
+      this.m01.src = require("../static/img/vo/Chist_s1_map_019_1.mp3");
+      this.m02.src = require("../static/img/vo/Chist_s1_map_019_2.mp3");
+      this.m03.src = require("../static/img/vo/Chist_s1_map_019_3.mp3");
+      this.m04.src = require("../static/img/vo/Chist_s1_map_019_4.mp3");
+      this.m05.src = require("../static/img/vo/Chist_s1_map_019_1_2.mp3");
+      // this.license.src = require("../static/img/vo/Commons.mp3");
+      // this.license.loop='loop'
+      // this.license.volume =0.3
       // Variable init
 
       var route = new Image();
@@ -758,7 +793,7 @@ export default {
   display: flex;
   // margin-bottom: 0.5em !important;
   .item {
-    width: 43% !important;
+    width: 90% !important;
     margin-bottom: 0.8em !important;
   }
 }

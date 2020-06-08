@@ -4,7 +4,7 @@ body {
     overflow: hidden;
 }
 .mr5{margin-right: 0.2em;}
-
+.dot{    font-family: Arial,'新細明體','PMingLiU';}
 .main_box {
     flex: 1;
     display: flex;

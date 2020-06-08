@@ -67,7 +67,7 @@
         <div>
           <div class="question">
             <div>
-              1. 在唐代的貿易港口中，哪一個位處於長江下游？
+              1. 在唐代的貿易港口中<span class="dot">，</span>哪一個位處於長江下游？
             </div>
             <div>
               <span
@@ -85,7 +85,7 @@
             ></div>
           </div>
           <div class="question">
-            <div>2. 在唐代的貿易港口中，哪一個離長安最遠？</div>
+            <div>2. 在唐代的貿易港口中<span class="dot">，</span>哪一個離長安最遠？</div>
             <div>
               <span
                 class="item"

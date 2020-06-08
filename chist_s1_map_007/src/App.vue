@@ -119,7 +119,7 @@
           </div>
           <div class="question">
             <div>
-              2. 根據地圖所示，太子李亨逃往哪地後，便與唐玄宗分途出走？
+              2. 根據地圖所示<span class="dot">，</span>太子李亨逃往哪地後<span class="dot">，</span>便與唐玄宗分途出走？
             </div>
             <div>
               <span

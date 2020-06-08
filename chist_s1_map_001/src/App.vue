@@ -41,7 +41,7 @@
       <div slot="modalCont">
         <div>
           <div class="question">
-          <div>1. 隋軍要突破陳的防線，必先要突破哪一河流的天險？</div>
+          <div>1. 隋軍要突破陳的防線<span class="dot">，</span>必先要突破哪一河流的天險？</div>
           <div>
             <span class="item" :class="{'selected':currAns==index}" v-for="(item,index) in questionItem" :key="index" @click="checkans(index)">{{item}}</span>
           </div>
@@ -958,9 +958,7 @@
     .pos_a {
       position: absolute;
     }
-    font-family: Verdana,
-    Arial,
-    sans-serif;
+    
     .mapBackground {
       display: inline-block;
       background: url('../static/img/map.png');

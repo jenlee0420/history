@@ -47,7 +47,7 @@
       <div slot="modalCont">
         <div>
           <div class="question">
-          <div>1. 李淵攻取大興，佔領附近的哪些設施，以獲得大量糧食？</div>
+          <div>1. 李淵攻取大興<span class="dot">，</span>佔領附近的哪些設施<span class="dot">，</span>以獲得大量糧食？</div>
           <div>
             <span class="item" :class="{'selected':currAns==index}" v-for="(item,index) in questionItem" :key="index" @click="checkans(index)">{{item}}</span>
           </div>
@@ -55,7 +55,7 @@
         </div>
 
         <div class="question">
-          <div>2. 根據地圖顯示，哪一段隋代運河鄰近李淵的進軍路線？</div>
+          <div>2. 根據地圖顯示<span class="dot">，</span>哪一段隋代運河鄰近李淵的進軍路線？</div>
           <div>
             <span class="item" :class="{'selected':currAns2==index}" v-for="(item,index) in questionItem2" :key="index" @click="checkans2(index)">{{item}}</span>
           </div>

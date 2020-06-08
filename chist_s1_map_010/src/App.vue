@@ -67,7 +67,7 @@
         <div>
           <div class="question">
             <div class="flex">
-              <em class="mr5">1. </em><em>黃巢的起義部隊轉戰唐朝的東南地區，以下哪一個不是曾受<br>攻擊的沿海港口？</em>
+              <em class="mr5">1. </em><em>黃巢的起義部隊轉戰唐朝的東南地區<span class="dot">，</span>以下哪一個不是曾受<br>攻擊的沿海港口？</em>
             </div>
             <div>
               <span
@@ -85,7 +85,7 @@
             ></div>
           </div>
           <div class="question">
-            <div>2. 按地圖所示，黃巢起事後，率眾向哪一方向進攻？</div>
+            <div>2. 按地圖所示<span class="dot">，</span>黃巢起事後<span class="dot">，</span>率眾向哪一方向進攻？</div>
             <div>
               <span
                 class="item"

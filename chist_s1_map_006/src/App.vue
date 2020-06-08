@@ -43,14 +43,14 @@
       <div slot="modalCont">
         <div>
           <div class="question">
-          <div>1. 十大兵鎮主要集中在唐中央的_______邊境。</div>
+          <div>1. 十大兵鎮主要集中在唐中央的_______邊境<span class="dot">。</span></div>
           <div>
             <span class="item" :class="{'selected':currAns==index}" v-for="(item,index) in questionItem" :key="index" @click="checkans(index)">{{item}}</span>
           </div>
           <div class="ansBox" :class="showWrong==false?'wrongico':'rightico'" v-if="currAns!=null"></div>
         </div>
         <div class="question">
-          <div>2. 參考地圖標示，共有多少個兵鎮的兵力在六萬以上？</div>
+          <div>2. 參考地圖標示<span class="dot">，</span>共有多少個兵鎮的兵力在六萬以上？</div>
           <div>
             <span class="item" :class="{'selected':currAns2==index}" v-for="(item,index) in questionItem2" :key="index" @click="checkans2(index)">{{item}}</span>
           </div>

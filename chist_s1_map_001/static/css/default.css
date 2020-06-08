@@ -2,6 +2,11 @@ body {
     margin: 0px;
     padding: 0px;
     overflow: hidden;
+    font-family: Verdana, Arial, sans-serif;
+    /* PMingLiu-Extb */
+}
+.dot{
+    font-family: Arial,'新細明體','PMingLiU';
 }
 
 .main_box {

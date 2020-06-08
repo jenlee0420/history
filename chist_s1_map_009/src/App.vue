@@ -79,7 +79,8 @@
                 v-for="(item,index) in questionItem"
                 :key="index"
                 @click="checkans(index)"
-              >{{item}}</span>
+                v-html="item"
+              ></span>
             </div>
             <div
               class="ansBox"
@@ -88,7 +89,7 @@
             ></div>
           </div>
           <div class="question">
-            <div>2. 根據地圖，長安與河北三鎮之間被哪一條河流所分隔？</div>
+            <div>2. 根據地圖<span class="dot">，</span>長安與河北三鎮之間被哪一條河流所分隔？</div>
             <div>
               <span
                 class="item"
@@ -176,7 +177,7 @@ export default {
       questionItem: [
         "A. 地理上與中央隔閡",
         "B. 節度使為皇族",
-        "C. 掌握地方軍、政及財權"
+        "C. 掌握地方軍<span class='dot'>、</span>政及財權"
       ],
       rightans: 1,
       showWrong: 0,
