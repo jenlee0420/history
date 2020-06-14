@@ -31,7 +31,7 @@
             <imageview :imgsrc="'yan.png'" :static="control.yan" :zindex="2" @update="updateImg"></imageview>
             <imageview :imgsrc="'qi.png'" :static="control.qi" :zindex="2" @update="updateImg"></imageview>
             <imageview :imgsrc="'song.png'" :static="control.song.show" :zindex="2" @update="updateImg"></imageview>
-            <imageview :imgsrc="'zhou.png'" :static="control.zhou" :zindex="2" @update="updateImg"></imageview>
+            <imageview :imgsrc="'zhou.png'" :static="control.zhou.show" :zindex="2" @update="updateImg"></imageview>
           </div>
         </div>
         <div id="menu_container" style="float: right;">
@@ -204,7 +204,9 @@ export default {
         yan:false,
         qi:false,
         cai:false,
-        zhou:false
+        zhou:{
+          show:false,
+          play:false,}
       },
       load: true,
       noVoice: false,
@@ -316,7 +318,8 @@ export default {
       contextObj: {},
       imgCount:0,
       imgTotal:13,
-      AniTimer:[null,null,null,null,null,null,null,null,null]
+      AniTimer:[null,null,null,null,null,null,null,null,null],
+      isShowAll:false
     };
   },
   watch: {
@@ -373,14 +376,28 @@ export default {
           if (swip && !this.noVoice) {
             this.m01.currentTime = 0;
             this.m01.play();
+            this.AniTimer[0] = setTimeout(() => {
+              this.control.zhou.show = false
+            }, 7000);
+            if(this.isShowAll){
+              this.AniTimer[0] = setTimeout(() => {
+                this.control.zhou.show = false
+              }, 3000);
+            }
           }
           this.sharpCity(this.control.capital,swip)
-          this.control.zhou = swip
-          if(swip){
-          this.AniTimer[0] = setTimeout(() => {
-            this.control.zhou = false
-          }, 3000);
-          }else{
+          if(this.noVoice && swip){
+            this.AniTimer[0] = setTimeout(() => {
+              this.control.zhou.show = false
+            }, 3000);
+          }
+          if(!this.control.zhou.play){
+            this.control.zhou.show = swip
+            this.control.zhou.play = true
+          }
+          if(!swip){
+            this.control.zhou.play = false
+            this.control.zhou.show = false
             clearTimeout(this.AniTimer[0])
           }
           break;
@@ -411,7 +428,7 @@ export default {
             }, 11000);
             this.AniTimer[5] = setTimeout(() => {
               this.control.yan = swip
-            }, 12000);
+            }, 21000);
           }else{
             this.control.jin = swip
             this.control.wei = swip
@@ -550,6 +567,7 @@ export default {
       canvasStatic.ani = true;
     },
     showall(type) {
+      this.isShowAll=type
       this.list.forEach((e, index) => {
         if (!this.list[index].type) {
           if (type) {

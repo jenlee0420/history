@@ -26,8 +26,8 @@
             <imageview :imgsrc="'city.png'" :static="control.city" :zindex="2" @update="updateImg"></imageview>
             <imageview :imgsrc="'EasternZhou.png'" :static="control.EasternZhou" :zindex="2" @update="updateImg"></imageview>
             <imageview :imgsrc="'WesternZhou.png'" :static="control.WesternZhou" :zindex="2" @update="updateImg"></imageview>
-            <imageview :imgsrc="'zhou.png'" :static="control.zhou" :zindex="2" @update="updateImg"></imageview>
-            <imageview :imgsrc="'zhou1.png'" :static="control.zhou1" :zindex="2" @update="updateImg"></imageview>
+            <imageview :imgsrc="'zhou.png'" :static="control.zhou.show" :zindex="2" @update="updateImg"></imageview>
+            <imageview :imgsrc="'zhou1.png'" :static="control.zhou1.show" :zindex="2" @update="updateImg"></imageview>
           </div>
         </div>
         <div id="menu_container" style="float: right;">
@@ -186,8 +186,10 @@ export default {
         city:false,
         EasternZhou:false,
         WesternZhou:false,
-        zhou:false,
-        zhou1:false,
+        zhou:{play:false,
+        show:false},
+        zhou1:{play:false,
+        show:false},
       },
       load: true,
       noVoice: false,
@@ -296,7 +298,8 @@ export default {
       imgCount:0,
       imgTotal:9,
       roadAniEnd:false,
-    licenseTimer:null
+    licenseTimer:null,
+    isShowAll:false,
     };
   },
   watch: {
@@ -355,11 +358,14 @@ export default {
             this.m01.onended=()=>{
               this.m05.currentTime = 0;
               this.m05.play();
-              this.m05.onended=()=>{
-                this.timer1 = setTimeout(() => {
-                  this.control.zhou = false
-                }, 3000);
-              }
+            }
+            this.timer1 = setTimeout(() => {
+              this.control.zhou.show = false
+            }, 13000);
+            if(this.isShowAll){
+              this.timer2 = setTimeout(() => {
+                this.control.zhou.show = false
+              }, 3000);
             }
           }
           if(this.noVoice && swip){
@@ -367,13 +373,17 @@ export default {
               this.control.zhou = false
             }, 5000);
           }
+          if(!this.control.zhou.play){
+            this.control.zhou.show = swip
+            this.control.zhou.play = true
+          }
           if(!swip){
-            this.control.zhou = false
+            this.control.zhou.show = false
+            this.control.zhou.play = false
             clearTimeout(this.timer1)
           }
           this.sharpCity(this.control.capital,swip)
-          this.control.zhou = swip
-          
+
           break;
         case 1:
           if (swip && !this.noVoice) {
@@ -397,23 +407,32 @@ export default {
           if (swip && !this.noVoice) {
             this.m04.currentTime = 0;
             this.m04.play();
-            this.m04.onended=()=>{
+            this.timer2 = setTimeout(() => {
+              this.control.zhou1.show = false
+            }, 16000);
+            if(this.isShowAll){
               this.timer2 = setTimeout(() => {
-                this.control.zhou1 = false
+                this.control.zhou1.show = false
               }, 3000);
             }
           }
           if(this.noVoice && swip){
             this.timer2 = setTimeout(() => {
-              this.control.zhou1 = false
-            }, 5000);
+              this.control.zhou1.show = false
+            }, 3000);
+          }
+          if(!this.control.zhou1.play){
+            this.control.zhou1.show = swip
+            this.control.zhou1.play = true
           }
           if(!swip){
-            this.control.zhou1 = false
+            this.control.zhou1.show = false
+            this.control.zhou1.play = false
+            console.log('hide')
             clearTimeout(this.timer2)
           }
           this.control.EasternZhou = swip
-          this.control.zhou1 = swip
+          
           
           break;
         case 4:
@@ -527,6 +546,7 @@ export default {
       canvasStatic.ani = true;
     },
     showall(type) {
+      this.isShowAll = type
       this.list.forEach((e, index) => {
         if (!this.list[index].type) {
           if (type) {
