@@ -20,9 +20,10 @@
           :style="{'width':canvasW+'px','height':canvasH+'px'}"
         >
           <div class="mapBackground" id="canvasInnerDiv" ref="canvasInnerDiv">
-            <imageview :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
-            <imageview :imgsrc="'mapDetail.png'" :static="true" :zindex="2" @update="updateImg"></imageview>
+            <imageview :imgsrc="'map.png'" :static="false" :zindex="1" @update="updateImg"></imageview>
+            <imageview :imgsrc="'mapDetail.png'" :static="false" :zindex="2" @update="updateImg"></imageview>
             <imageview :imgsrc="'capital.png'" :static="control.capital.show" :zindex="2" @update="updateImg"></imageview>
+            <!-- <imageview :imgsrc="'Qinborder.png'" :static="true" :zindex="2" @update="updateImg"></imageview> -->
             <imageview :imgsrc="'Qin.png'" :static="control.Qin.show" :zindex="2" @update="updateImg"></imageview>
             <imageview :imgsrc="'gate.png'" :static="control.gate" :zindex="2" @update="updateImg"></imageview>
             <imageview :imgsrc="'mountain1.png'" :static="control.mountain" :zindex="2" @update="updateImg"></imageview>
@@ -151,7 +152,7 @@ export default {
     const that = this;
     that.timer = setInterval(function() {
       // console.log(document.readyState);
-      if (document.readyState === "complete" && that.imgCount == that.imgTotal) {
+      if (document.readyState === "complete" && that.imgCount >= that.imgTotal) {
         that.load = false;
         window.clearInterval(that.timer);
       }
@@ -350,8 +351,8 @@ export default {
       this.muteMe();
       switch (index) {
         case 0:
-          this.sharpCity(this.control.Qin,swip)
-          // this.control.tripod = swip
+          // this.sharpCity(this.control.Qin,swip)
+          this.drawRedPath(swip)
           break;
         case 1:
           if (swip && !this.noVoice) {
@@ -545,71 +546,115 @@ export default {
           originY: 0,
           width: this.baseWidth,
           height: this.baseHeight,
-          // mask1: {
-          //   originX: 655,
-          //   originY: 623,
-          //   width: 30,
-          //   height: 1,
-          //   currOriginX: 655,
-          //   currOriginY: 623,
-          //   shiftX: 5,
-          //   shiftY: 0,
-          //   endPoint:49
-          // },
-          // mask2: {
-          //   originX: 684,
-          //   originY: 660,
-          //   width: 1,
-          //   height: 21,
-          //   currOriginX: 684,
-          //   currOriginY: 660,
-          //   shiftX: 5,
-          //   shiftY: 0,
-          //   endPoint:21
-          // },
-          // mask3: {
-          //   originX: 688,
-          //   originY: 659,
-          //   width: 16,
-          //   height: 1,
-          //   currOriginX: 684,
-          //   currOriginY: 659,
-          //   shiftX: 5,
-          //   shiftY: 0,
-          //   endPoint:39
-          // },
-          // mask3: {
-          //   originX: 688,
-          //   originY: 659,
-          //   width: 16,
-          //   height: 1,
-          //   currOriginX: 684,
-          //   currOriginY: 659,
-          //   shiftX: 5,
-          //   shiftY: 0,
-          //   endPoint:39
-          // },
-          mask1: {
-            originX: 654,
-            originY: 611,
-            width: 108,
-            height: 1,
-            currOriginX: 654,
-            currOriginY: 611,
-            shiftX: 5,
-            shiftY: 0,
-            endPoint:64
+          mask1:{
+            
+            point1: [668, 630],
+            point2: [642, 660],
+            point3: [702, 669],
+            pointOrg1: [1328, 1371],
+            pointOrg2: [1323, 1699],
+            pointOrg3: [1363, 1336],
+            ani: 0,
+            speed: 5,
+            size:10
           },
-          mask2: {
-            originX: 654,
-            originY: 611,
-            width: 108,
-            height: 1,
-            currOriginX: 654,
-            currOriginY: 611,
-            shiftX: 5,
-            shiftY: 0,
-            endPoint:64
+          mask2:{
+            point1: [702, 669],
+            point2: [666, 613],
+            point3: [759, 613],
+            ani: 0,
+            speed: 5,
+            size:4
+          },
+          mask3:{
+            point1: [759, 613],
+            point2: [735, 641],
+            point3: [710, 664],
+            ani: 0,
+            speed: 5,
+            size:4
+          },
+          mask4:{
+            point1: [710, 664],
+            point2: [765, 657],
+            point3: [785, 718],
+            ani: 0,
+            speed: 5,
+          },
+          mask5:{
+            point1: [785, 718],
+            point2: [755, 730],
+            point3: [700, 690],
+            ani: 0,
+            speed: 5,
+          },
+          mask6:{
+            point1: [700, 690],
+            point2: [590, 650],
+            point3: [590, 705],
+            ani: 0,
+            speed: 5,
+          },
+          mask7:{
+            point1: [571, 700],
+            // endpoint: [571, 797],
+            endpoint:104,
+            width:112,
+            height:1,
+            ani: 0,
+            speed: 5,
+          },
+          mask8:{
+            point1: [637, 804],
+            point2: [690, 786],
+            point3: [635, 845],
+            ani: 0,
+            speed: 5,
+          },
+          mask9:{
+            point1: [635, 845],
+            point2: [565, 958],
+            point3: [417, 1020],
+            ani: 0,
+            speed: 3,
+          },
+          mask10:{
+            point1: [417, 1020],
+            point2: [329, 1054],
+            point3: [310, 996],
+            ani: 0,
+            speed: 5,
+          },
+          mask11:{
+            point1: [263, 996],
+            endpoint: [263, 276],
+            width:258,
+            height:732,
+            ani: 0,
+            speed: 9,
+          },
+          mask12:{
+            point1: [484, 276],
+            point2: [485, 210],
+            point3: [622, 241],
+            ani: 0,
+            speed: 5,
+          },
+          mask13:{
+            point1: [616, 241],
+            point2: [683, 270],
+            point3: [701, 281],
+            ani: 0,
+            speed: 5,
+            size:12
+          },
+          mask14:{
+            point1: [651, 281],
+            endpoint: 348,
+            width:80,
+            height:1,
+            ani: 0,
+            speed: 5,
           },
           timeout: null,
           playing: false
@@ -705,7 +750,6 @@ export default {
           currPoint: 0,
           totalPoint: translate.length,
           dur: dur,
-          currDur: 1
         },
         division: 1,
         animating: false,
