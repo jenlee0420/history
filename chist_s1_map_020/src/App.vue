@@ -213,7 +213,7 @@ export default {
       questionItem2: ["A. 少數民族入侵",
         "B. 天子未能穩定列國的秩序",
         "C. 天子收回異姓諸侯封地"],
-      rightans2: 1,
+      rightans2: 2,
       showWrong2: 0,
       currAns2: null,
       data: [],
@@ -348,7 +348,9 @@ export default {
     muteMe() {
       this.m01.pause();
       this.m02.pause();
-      this.license.pause();
+      this.m03.pause();
+      this.m04.pause();
+      //this.license.pause();
     },
     showCanvas(index) {
       let c = this.canvasObj[this.canvasData[index]];
@@ -356,46 +358,50 @@ export default {
       this.muteMe();
       switch (index) {
         case 0:
+          if (swip && !this.noVoice) {
+            this.m01.currentTime = 0;
+            this.m01.play();
+          }
           this.sharpCity(this.control.capital,swip)
           this.control.tripod = swip
           
           break;
         case 1:
           if (swip && !this.noVoice) {
-            this.m01.currentTime = 0;
-            this.m01.play();
+            this.m02.currentTime = 0;
+            this.m02.play();
           }
           this.control.country = swip
           // this.drawRedPath(swip)
           break;
         case 2:
           if (swip && !this.noVoice) {
-            this.m02.currentTime = 0;
-            this.m02.play();
+            this.m03.currentTime = 0;
+            this.m03.play();
           }
           // this.control.WesternZhou = swip
           if(swip){
             this.timer1[0]= setTimeout(() => {
               this.control.c1=swip
-            }, 1000);
+            }, 2500);
             this.timer1[1]= setTimeout(() => {
               this.control.c2=swip
-            }, 1000);
+            }, 3500);
             this.timer1[2]= setTimeout(() => {
               this.control.c3=swip
-            }, 1000);
+            }, 4500);
             this.timer1[3]= setTimeout(() => {
               this.control.c4=swip
-            }, 1000);
+            }, 6200);
             this.timer1[4]= setTimeout(() => {
               this.control.c5=swip
-            }, 1000);
+            }, 7200);
             this.timer1[5]= setTimeout(() => {
               this.control.c6=swip
-            }, 1000);
+            },12000);
             this.timer1[6]= setTimeout(() => {
               this.control.c7=swip
-            }, 1000);
+            }, 13000);
           }
           else{
             for(var i=0;i<7;i++){
@@ -406,8 +412,8 @@ export default {
           break;
         case 3:
           if (swip && !this.noVoice) {
-            this.m02.currentTime = 0;
-            this.m02.play();
+            this.m04.currentTime = 0;
+            this.m04.play();
           }
           this.control.minority = swip
           break;
@@ -555,11 +561,13 @@ export default {
       this.m04 = document.createElement("audio");
       this.m05 = document.createElement("audio");
       this.license = document.createElement("audio");
-      this.m01.src = require("../static/img/vo/Map013-2.mp3");
-      this.m02.src = require("../static/img/vo/Map013-3.mp3");
-      this.license.src = require("../static/img/vo/Commons.mp3");
-      this.license.loop='loop'
-      this.license.volume =0.3
+      this.m01.src = require("../static/img/vo/Chist_s1_map_020_1.mp3");
+      this.m02.src = require("../static/img/vo/Chist_s1_map_020_2.mp3");
+      this.m03.src = require("../static/img/vo/Chist_s1_map_020_3.mp3");
+      this.m04.src = require("../static/img/vo/Chist_s1_map_020_4.mp3");
+      // this.license.src = require("../static/img/vo/Commons.mp3");
+      // this.license.loop='loop'
+      // this.license.volume =0.3
       // Variable init
 
       var route = new Image();

@@ -20,14 +20,14 @@
           :style="{'width':canvasW+'px','height':canvasH+'px'}"
         >
           <div class="mapBackground" id="canvasInnerDiv" ref="canvasInnerDiv">
-            <imageview :imgsrc="'map.png'" :static="false" :zindex="1" @update="updateImg"></imageview>
-            <imageview :imgsrc="'mapDetail.png'" :static="false" :zindex="2" @update="updateImg"></imageview>
+            <imageview :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
+            <imageview :imgsrc="'mapDetail.png'" :static="true" :zindex="2" @update="updateImg"></imageview>
             <imageview :imgsrc="'capital.png'" :static="control.capital.show" :zindex="2" @update="updateImg"></imageview>
             <!-- <imageview :imgsrc="'Qinborder.png'" :static="true" :zindex="2" @update="updateImg"></imageview> -->
             <imageview :imgsrc="'Qin.png'" :static="control.Qin.show" :zindex="2" @update="updateImg"></imageview>
             <imageview :imgsrc="'gate.png'" :static="control.gate" :zindex="2" @update="updateImg"></imageview>
             <imageview :imgsrc="'mountain1.png'" :static="control.mountain" :zindex="2" @update="updateImg"></imageview>
-             <imageview :imgsrc="'soldier.png'" :static="control.soldier" :zindex="2" @update="updateImg"></imageview>
+             <imageview :imgsrc="'soldier.png'" :static="control.soldier.show" :zindex="4" @update="updateImg"></imageview>
             
           </div>
         </div>
@@ -192,7 +192,8 @@ export default {
         country:false,
         gate:false,
         mountain:false,
-        soldier:false,
+        soldier:{play:false,
+        show:false},
       },
       load: true,
       noVoice: false,
@@ -301,7 +302,8 @@ export default {
       imgCount:0,
       imgTotal:8,
       roadAniEnd:false,
-    licenseTimer:null
+    licenseTimer:null,
+    isShowAll:false
     };
   },
   watch: {
@@ -343,7 +345,9 @@ export default {
     muteMe() {
       this.m01.pause();
       this.m02.pause();
-      this.license.pause();
+      this.m03.pause();
+      this.m04.pause();
+      // this.license.pause();
     },
     showCanvas(index) {
       let c = this.canvasObj[this.canvasData[index]];
@@ -351,13 +355,17 @@ export default {
       this.muteMe();
       switch (index) {
         case 0:
+          if (swip && !this.noVoice) {
+            this.m01.currentTime = 0;
+            this.m01.play();
+          }
           // this.sharpCity(this.control.Qin,swip)
           this.drawRedPath(swip)
           break;
         case 1:
           if (swip && !this.noVoice) {
-            this.m01.currentTime = 0;
-            this.m01.play();
+            this.m02.currentTime = 0;
+            this.m02.play();
           }
           // this.control.Qin = swip
           this.sharpCity(this.control.capital,swip)
@@ -365,24 +373,38 @@ export default {
           break;
         case 2:
           if (swip && !this.noVoice) {
-            this.m02.currentTime = 0;
-            this.m02.play();
+            this.m03.currentTime = 0;
+            this.m03.play();
+            this.timer1[0] = setTimeout(() => {
+              this.control.soldier.show =false
+            }, 28000);
+            if(this.isShowAll){
+              this.timer1[0] = setTimeout(() => {
+                this.control.soldier.show =false
+              }, 3000);
+            }
+          }
+          if(this.noVoice && swip){
+            this.timer1[0] = setTimeout(() => {
+              this.control.soldier.show =false
+            }, 3000);
+          }
+          if(!this.control.soldier.play){
+            this.control.soldier.show = swip
+            this.control.soldier.play = true
+          }
+          if(!swip){
+            this.control.soldier.show = false
+            this.control.soldier.play = false
+            clearTimeout(this.timer2)
           }
           this.control.gate = swip
-          if(swip){
-            this.timer1[0]= setTimeout(() => {
-              this.control.soldier=swip
-            }, 1000);
-          }
-          else{
-              clearTimeout(this.timer1[0])
-              this.control.soldier =false
-          }
+          
           break;
         case 3:
           if (swip && !this.noVoice) {
-            this.m02.currentTime = 0;
-            this.m02.play();
+            this.m04.currentTime = 0;
+            this.m04.play();
           }
           this.control.mountain = swip
           break;
@@ -494,6 +516,7 @@ export default {
       canvasStatic.ani = true;
     },
     showall(type) {
+      this.isShowAll = type
       this.list.forEach((e, index) => {
         if (!this.list[index].type) {
           if (type) {
@@ -530,11 +553,13 @@ export default {
       this.m04 = document.createElement("audio");
       this.m05 = document.createElement("audio");
       this.license = document.createElement("audio");
-      this.m01.src = require("../static/img/vo/Map013-2.mp3");
-      this.m02.src = require("../static/img/vo/Map013-3.mp3");
-      this.license.src = require("../static/img/vo/Commons.mp3");
-      this.license.loop='loop'
-      this.license.volume =0.3
+      this.m01.src = require("../static/img/vo/Chist_s1_map_021_1.mp3");
+      this.m02.src = require("../static/img/vo/Chist_s1_map_021_2.mp3");
+      this.m03.src = require("../static/img/vo/Chist_s1_map_021_3.mp3");
+      this.m04.src = require("../static/img/vo/Chist_s1_map_021_4.mp3");
+      // this.license.src = require("../static/img/vo/Commons.mp3");
+      // this.license.loop='loop'
+      // this.license.volume =0.3
       // Variable init
 
       var route = new Image();
@@ -555,7 +580,7 @@ export default {
             pointOrg2: [1323, 1699],
             pointOrg3: [1363, 1336],
             ani: 0,
-            speed: 5,
+            speed: 3,
             size:10
           },
           mask2:{
@@ -563,7 +588,7 @@ export default {
             point2: [666, 613],
             point3: [759, 613],
             ani: 0,
-            speed: 5,
+            speed: 3,
             size:4
           },
           mask3:{
@@ -571,7 +596,7 @@ export default {
             point2: [735, 641],
             point3: [710, 664],
             ani: 0,
-            speed: 5,
+            speed: 3,
             size:4
           },
           mask4:{
@@ -579,21 +604,21 @@ export default {
             point2: [765, 657],
             point3: [785, 718],
             ani: 0,
-            speed: 5,
+            speed: 3,
           },
           mask5:{
             point1: [785, 718],
             point2: [755, 730],
             point3: [700, 690],
             ani: 0,
-            speed: 5,
+            speed: 3,
           },
           mask6:{
             point1: [700, 690],
             point2: [590, 650],
             point3: [590, 705],
             ani: 0,
-            speed: 5,
+            speed: 3,
           },
           mask7:{
             point1: [571, 700],
