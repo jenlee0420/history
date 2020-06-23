@@ -547,13 +547,9 @@ export default {
           width: this.baseWidth,
           height: this.baseHeight,
           mask1:{
-            
             point1: [668, 630],
             point2: [642, 660],
             point3: [702, 669],
-            pointOrg1: [1328, 1371],
-            pointOrg2: [1323, 1699],
-            pointOrg3: [1363, 1336],
             ani: 0,
             speed: 5,
             size:10
@@ -598,15 +594,15 @@ export default {
           mask7:{
             point1: [571, 700],
             // endpoint: [571, 797],
-            endpoint:104,
+            endpoint:100,
             width:112,
             height:1,
             ani: 0,
             speed: 5,
           },
           mask8:{
-            point1: [637, 804],
-            point2: [690, 786],
+            point1: [637, 802],
+            point2: [695, 786],
             point3: [635, 845],
             ani: 0,
             speed: 5,
@@ -628,6 +624,7 @@ export default {
           mask11:{
             point1: [263, 996],
             endpoint: [263, 276],
+            pointOrg1: [263, 996],
             width:258,
             height:732,
             ani: 0,
