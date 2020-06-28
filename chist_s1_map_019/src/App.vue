@@ -23,7 +23,7 @@
             <imageview :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
             <imageview :imgsrc="'mapDetail.png'" :static="true" :zindex="2" @update="updateImg"></imageview>
             <imageview :imgsrc="'capital.png'" :static="control.capital.show" :zindex="4" @update="updateImg"></imageview>
-            <imageview :imgsrc="'city.png'" :static="control.city" :zindex="2" @update="updateImg"></imageview>
+            <imageview :imgsrc="'city.png'" :static="control.city.show" :zindex="2" @update="updateImg"></imageview>
             <imageview :imgsrc="'EasternZhou.png'" :static="control.EasternZhou" :zindex="2" @update="updateImg"></imageview>
             <imageview :imgsrc="'WesternZhou.png'" :static="control.WesternZhou" :zindex="2" @update="updateImg"></imageview>
             <imageview :imgsrc="'zhou.png'" :static="control.zhou.show" :zindex="2" @update="updateImg"></imageview>
@@ -183,7 +183,11 @@ export default {
           ani:false,
           timer:null
         },
-        city:false,
+        city:{
+          show:false,
+          ani:false,
+          timer:null,
+        },
         EasternZhou:false,
         WesternZhou:false,
         zhou:{play:false,
@@ -291,6 +295,7 @@ export default {
       chenTimer: null,
       timer1: null,
       timer2: null,
+      timer3: null,
       scaleZoom: 0,
       debug: "",
       canvasObj: {},
@@ -383,18 +388,24 @@ export default {
             clearTimeout(this.timer1)
           }
           this.sharpCity(this.control.capital,swip)
+          this.sharpCity(this.control.city,swip)
 
           break;
         case 1:
           if (swip && !this.noVoice) {
             this.m02.currentTime = 0;
             this.m02.play();
+            this.timer3 = setTimeout(() => {
+              this.drawRedPath(swip)
+            }, 19000);
+          }
+          if(this.noVoice){
+            this.drawRedPath(swip)
           }
           if(!swip){
-            this.roadAniEnd = false
-            // this.sharpCity(this.control.city,swip)
+            this.drawRedPath(false)
+            clearTimeout(this.timer3)
           }
-          this.drawRedPath(swip)
           break;
         case 2:
           if (swip && !this.noVoice) {
@@ -451,7 +462,7 @@ export default {
     controller(){
       // let swip1 = this.list[1].show
       this.control.capital.show = this.list[0].show
-      this.control.city = this.list[3].show
+      this.control.city.show = this.list[0].show
       let swip2 = this.list[2].show
       let swip1 = this.list[1].show
       if(swip2){
@@ -459,9 +470,10 @@ export default {
       }
       if(swip1){
         this.control.capital.show = swip1
+        this.control.city.show = swip1
       }
       if(swip1 && this.roadAniEnd){
-        this.control.city = swip1
+        this.control.city.show = swip1
       }
     },
     oriChange() {

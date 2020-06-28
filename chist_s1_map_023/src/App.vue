@@ -442,6 +442,9 @@ export default {
           }
           this.drawbluePath(swip)
           this.drawHousePromise3(swip)
+          if(!swip){
+            this.drawbluePath2(swip)
+          }
           break;
         case 8:
           this.mapPop = swip;
@@ -470,7 +473,8 @@ export default {
       this.control.uprise2 = this.control.uprise3 = swip2;
         this.control.main_city1 = this.control.main_city2=swip1;
         this.control.gate1 = this.control.gate2=swip3;
-        this.control.capital.show = swip0;
+        this.control.capital.show = swip0
+        this.control.battlefield = swip6;
       if(swip4){
         this.control.uprise1 = true;
         this.control.main_city1 = true;
@@ -595,7 +599,7 @@ export default {
       var divTag = this.$refs.canvasInnerDiv;
       let list = [
         { name: "GreenAnimRoad", zindex: 3 },
-        { name: "BlueAnimRoad", zindex: 3 },
+        { name: "BlueAnimRoad", zindex: 4 },
         { name: "Blue2AnimRoad", zindex: 3 },
         { name: "myCanvasAnimRoad", zindex: 3 },
         { name: "myCanvasAnimHorse", zindex: 5 },

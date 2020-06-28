@@ -83,10 +83,10 @@ const animate = {
                   this.drawRedPath(flag);
               }, 30);
           } else{
-            this.roadAniEnd = true
-            if(this.list[1].show){
-              this.control.city=true
-            }
+            // this.roadAniEnd = true
+            // if(this.list[1].show){
+            //   this.control.city.show=true
+            // }
           }
       } else {
           canvasAnimPath.style.visibility = "hidden";

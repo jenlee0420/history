@@ -78,8 +78,8 @@
       <div slot="modalCont">
         <div>
           <div class="question">
-            <div class="">
-              1. 東周時期<span class="dot">，</span>少數民族的威脅主要來自北方<span class="dot">，</span>哪一族在周室的東方構成威脅？
+            <div class="flex">
+              <em class="mr5">1.  </em> <em> 東周時期<span class="dot">，</span>少數民族的威脅主要來自北方<span class="dot">，</span>哪一族在周室的東方構成威脅？</em>
             </div>
             <div>
               <span
@@ -97,7 +97,7 @@
             ></div>
           </div>
           <div class="question question2">
-            <div>2. 以下哪項與「春秋霸政」的出現背景<font class="underlint">無關</font>？</div>
+            <div><font class="mr5">2.</font>以下哪項與「春秋霸政」的出現背景<font class="underline">無關</font>？</div>
             <div>
               <span
                 class="item"
@@ -126,7 +126,7 @@
     >
       <div slot="modalCont">
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14067139.357771862!2d93.5156862106047!3d37.87614588714345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x36786f68f2d04437%3A0x61f85ae8c6c72215!2z5Lit5ZyL5rKz5Y2X55yB5rSb6Zm95biC!5e0!3m2!1szh-TW!2shk!4v1587367216745!5m2!1szh-TW!2shk"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d30509159.285277206!2d83.83656667681826!3d38.28600442429529!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x36786f68f2d04437%3A0x61f85ae8c6c72215!2z5Lit5ZyL5rKz5Y2X55yB5rSb6Zm95biC!5e0!3m2!1szh-TW!2shk!4v1592992217997!5m2!1szh-TW!2shk"
           :width="bodytWidth/1.8"
           :height="bodyHeight/1.8"
           frameborder="0"
