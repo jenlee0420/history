@@ -152,11 +152,15 @@ const animate = {
             // }
         } else {
             canvasAnimPath.style.visibility = "hidden";
-            for (var i = 1; i < 2; i++) {
+            for (var i = 1; i < 15; i++) {
                 let element = pathObject['mask' + i]
                 element.ani = 0
-                    // element.currOriginX = element.originX;
-                    // element.currOriginY = element.originY;
+                if (i == 7 || i == 14) {
+                    element.height = 1
+                }
+                if (i == 11) {
+                    element.point1[1] = element.pointOrg1[1]
+                }
             }
             pathObject.playing = false;
             clearTimeout(pathObject.timeout);

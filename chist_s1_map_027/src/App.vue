@@ -9,7 +9,7 @@
       :style="{'width':docWidth+'px','height':docHeight+'px','display':load?'none':'block'}"
     >
       <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
-        <span>秦國地理形勢圖 (約公元前403年)</span>
+        <span>東漢末年群雄割據形勢圖（199年）</span>
         <div id="soundCon" :class="{'mute':noVoice}" @click="setVoice"></div>
       </div>
       <div class="main_box">
@@ -23,12 +23,11 @@
             <imageview :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
             <imageview :imgsrc="'mapDetail.png'" :static="true" :zindex="2" @update="updateImg"></imageview>
             <imageview :imgsrc="'capital.png'" :static="control.capital.show" :zindex="2" @update="updateImg"></imageview>
-            <!-- <imageview :imgsrc="'Qinborder.png'" :static="true" :zindex="2" @update="updateImg"></imageview> -->
-            <imageview :imgsrc="'Qin.png'" :static="control.Qin.show" :zindex="2" @update="updateImg"></imageview>
-            <imageview :imgsrc="'gate.png'" :static="control.gate" :zindex="2" @update="updateImg"></imageview>
-            <imageview :imgsrc="'mountain1.png'" :static="control.mountain" :zindex="2" @update="updateImg"></imageview>
-             <imageview :imgsrc="'soldier.png'" :static="control.soldier.show" :zindex="2" @update="updateImg"></imageview>
-            
+            <imageview :imgsrc="'main_city.png'" :static="control.maincity" :zindex="2" @update="updateImg"></imageview>
+            <imageview :imgsrc="'city.png'" :static="control.city" :zindex="2" @update="updateImg"></imageview>
+            <imageview :imgsrc="'separatist.png'" :static="control.separatist" :zindex="2" @update="updateImg"></imageview>
+            <imageview :imgsrc="'region.png'" :static="control.region" :zindex="2" @update="updateImg"></imageview>
+           
           </div>
         </div>
         <div id="menu_container" style="float: right;">
@@ -69,13 +68,13 @@
       headTitle="問題"
       :hideFooter="true"
       v-if="popWindow"
-      @cancel-event="popWindow=false;list[5].show=false"
+      @cancel-event="popWindow=false;list[6].show=false"
     >
       <div slot="modalCont">
         <div>
           <div class="question">
             <div class="flex">
-              <em class="mr5">1. </em><em>根據地圖所示<span class="dot">，</span>咸陽東部有哪一個重要關口作為屏障<span class="dot">，</span>使秦國較少參與東方六國的戰爭？</em>
+              <em class="mr5">1.  </em> <em>根據地圖所示<span class="dot">，</span>以下哪位割據者的勢力範圍<span class="underline">不是</span>位於長江流域？</em>
             </div>
             <div>
               <span
@@ -92,8 +91,8 @@
               v-if="currAns!=null"
             ></div>
           </div>
-          <div class="question question2">
-            <div><em class="mr5">2.</em>以下哪項關於秦國地理形勢的描述是<font class="underlint">不正確</font>的？</div>
+          <div class="question">
+            <div><font class="mr5">2.</font>根據地圖所示<span class="dot">，</span>東漢首都洛陽位於哪位群雄的割據範圍內？</div>
             <div>
               <span
                 class="item"
@@ -115,14 +114,14 @@
     </modal>
     <modal
       class
-      :headTitle="list[4].text"
+      :headTitle="list[5].text"
       :hideFooter="true"
       v-if="mapPop"
-      @cancel-event="mapPop=false;list[4].show=false"
+      @cancel-event="mapPop=false;list[5].show=false"
     >
       <div slot="modalCont">
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14067139.357771862!2d93.5156862106047!3d37.87614588714345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x36786f68f2d04437%3A0x61f85ae8c6c72215!2z5Lit5ZyL5rKz5Y2X55yB5rSb6Zm95biC!5e0!3m2!1szh-TW!2shk!4v1587367216745!5m2!1szh-TW!2shk"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d18725314.073896565!2d91.56545729970401!3d38.07992713660924!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x35d6c2d965024153%3A0x910c83aacb158459!2z5Lit5ZyL5rKz5Y2X55yB6Kix5piM5biC!5e0!3m2!1szh-TW!2shk!4v1588160330318!5m2!1szh-TW!2shk"
           :width="bodytWidth/1.8"
           :height="bodyHeight/1.8"
           frameborder="0"
@@ -151,8 +150,7 @@ export default {
   created() {
     const that = this;
     that.timer = setInterval(function() {
-      // console.log(document.readyState);
-      if (document.readyState === "complete" && that.imgCount >= that.imgTotal) {
+      if (document.readyState === "complete" && that.imgCount == that.imgTotal) {
         that.load = false;
         window.clearInterval(that.timer);
       }
@@ -184,60 +182,59 @@ export default {
           ani:false,
           timer:null
         },
-        Qin:{
-          show:false,
-          ani:false,
-          timer:null
-        },
-        country:false,
-        gate:false,
-        mountain:false,
-        soldier:{play:false,
-        show:false},
+        city:false,
+        maincity:false,
+        region:false,
+        separatist:false,
       },
       load: true,
       noVoice: false,
       zoomObj: null,
       questionItem: [
-        "A. 函谷關",
-        "B. 潼關",
-        "C. 秦嶺關"
+        "A. 公孫度",
+        "B. 孫策",
+        "C. 劉表"
       ],
       rightans: 0,
       showWrong: 0,
       currAns: null,
-      questionItem2: ["A. 秦國領土的南部是巴蜀盆地",
-        "B. 都城咸陽位於長江流域",
-        "C. 秦國佔有黃河中游位置"],
-      rightans2: 1,
+      questionItem2: ["A. 劉璋",
+        "B. 袁紹",
+        "C. 曹操"],
+      rightans2: 2,
       showWrong2: 0,
       currAns2: null,
       data: [],
       mapPop: false,
       list: [
         {
-          ico: require("../static/img/icon/Qinborder_icon.png"),
-          text: "秦國的國界（前403年）",
+          ico: require("../static/img/icon/capital_icon.png"),
+          text: "首都",
+          show: false
+        },
+        {
+          ico: require("../static/img/icon/main_city_icon.png"),
+          text: "郡治",
+          show: false
+        },
+        {
+          ico: require("../static/img/icon/city_icon.png"),
+          text: "都城（東漢末年）",
+          show: false
+        },
+        {
+          ico: require("../static/img/icon/separatist_icon.png"),
+          text: "割據者",
+          show: false
+        },
+        {
+          ico: require("../static/img/icon/region1_icon.png"),
+          text: "州治",
           show: false
         },
         {
           ico: require("../static/img/icon/capital_icon.png"),
-          text: "都城",
-          show: false
-        },
-        {
-          ico: require("../static/img/icon/gate_icon.png"),
-          text: "關口",
-          show: false
-        },
-        {
-          ico: require("../static/img/icon/mountain1_icon.png"),
-          text: "山",
-          show: false
-        },
-        {
-          ico: require("../static/img/icon/capital_icon.png"),
-          text: "咸陽（今咸陽市）",
+          text: "許（今許昌市）",
           show: false,
           type: "map",
         },
@@ -300,7 +297,7 @@ export default {
       canvasObj: {},
       contextObj: {},
       imgCount:0,
-      imgTotal:8,
+      imgTotal:7,
       roadAniEnd:false,
     licenseTimer:null
     };
@@ -342,10 +339,12 @@ export default {
       this.zoomObj.setTransform(false);
     },
     muteMe() {
-       this.m01.pause();
+      this.m01.pause();
       this.m02.pause();
       this.m03.pause();
       this.m04.pause();
+      this.m05.pause();
+      //this.license.pause();
     },
     showCanvas(index) {
       let c = this.canvasObj[this.canvasData[index]];
@@ -357,46 +356,22 @@ export default {
             this.m01.currentTime = 0;
             this.m01.play();
           }
-          // this.sharpCity(this.control.Qin,swip)
-          this.drawRedPath(swip)
+          this.sharpCity(this.control.capital,swip)          
           break;
         case 1:
           if (swip && !this.noVoice) {
             this.m02.currentTime = 0;
             this.m02.play();
           }
-          // this.control.Qin = swip
-          this.sharpCity(this.control.capital,swip)
+          this.control.maincity = swip
           // this.drawRedPath(swip)
           break;
         case 2:
           if (swip && !this.noVoice) {
             this.m03.currentTime = 0;
             this.m03.play();
-            this.timer1[0] = setTimeout(() => {
-              this.control.soldier.show =false
-            }, 28000);
-            if(this.isShowAll){
-              this.timer1[0] = setTimeout(() => {
-                this.control.soldier.show =false
-              }, 3000);
-            }
           }
-          if(this.noVoice && swip){
-            this.timer1[0] = setTimeout(() => {
-              this.control.soldier.show =false
-            }, 3000);
-          }
-          if(!this.control.soldier.play){
-            this.control.soldier.show = swip
-            this.control.soldier.play = true
-          }
-          if(!swip){
-            this.control.soldier.show = false
-            this.control.soldier.play = false
-            clearTimeout(this.timer2)
-          }
-          this.control.gate = swip
+          this.control.city = swip
           
           break;
         case 3:
@@ -404,12 +379,19 @@ export default {
             this.m04.currentTime = 0;
             this.m04.play();
           }
-          this.control.mountain = swip
+          this.control.separatist = swip
           break;
         case 4:
+          if (swip && !this.noVoice) {
+            this.m05.currentTime = 0;
+            this.m05.play();
+          }
+          this.control.region = swip
+          break;  
+        case 5:
           this.mapPop = swip;
           break;
-        case 5:
+        case 6:
           this.popWindow = swip;
           this.currAns = null;
           this.currAns2 = null;
@@ -537,7 +519,7 @@ export default {
     createMap() {
       var divTag = this.$refs.canvasInnerDiv;
       let list = [
-        { name: "myCanvasAnimborder", zindex: 3 },
+        { name: "myCanvasAnimRoad", zindex: 3 },
         // { name: "myCanvasAnimHorse", zindex: 3 },
       ];
       let obj = this.createCanvas(list, divTag);
@@ -550,10 +532,12 @@ export default {
       this.m04 = document.createElement("audio");
       this.m05 = document.createElement("audio");
       this.license = document.createElement("audio");
-      this.m01.src = require("../static/img/vo/Chist_s1_map_021_1.mp3");
-      this.m02.src = require("../static/img/vo/Chist_s1_map_021_2.mp3");
-      this.m03.src = require("../static/img/vo/Chist_s1_map_021_3.mp3");
-      this.m04.src = require("../static/img/vo/Chist_s1_map_021_4.mp3");
+      this.m01.src = require("../static/img/vo/Chist_s1_map_027_1.mp3");
+      this.m02.src = require("../static/img/vo/Chist_s1_map_027_2.mp3");
+      this.m03.src = require("../static/img/vo/Chist_s1_map_027_3.mp3");
+      this.m04.src = require("../static/img/vo/Chist_s1_map_027_4.mp3");
+      this.m05.src = require("../static/img/vo/Chist_s1_map_027_5.mp3");
+      
       // this.license.src = require("../static/img/vo/Commons.mp3");
       // this.license.loop='loop'
       // this.license.volume =0.3
@@ -568,119 +552,23 @@ export default {
           originY: 0,
           width: this.baseWidth,
           height: this.baseHeight,
-          mask1:{
-            point1: [668, 630],
-            point2: [642, 660],
-            point3: [702, 669],
-            ani: 0,
-            speed: 3,
-            size:10
-          },
-          mask2:{
-            point1: [702, 669],
-            point2: [666, 613],
-            point3: [759, 613],
-            ani: 0,
-            speed: 3,
-            size:4
-          },
-          mask3:{
-            point1: [759, 613],
-            point2: [735, 641],
-            point3: [710, 664],
-            ani: 0,
-            speed: 3,
-            size:4
-          },
-          mask4:{
-            point1: [710, 664],
-            point2: [765, 657],
-            point3: [785, 718],
-            ani: 0,
-            speed: 3,
-          },
-          mask5:{
-            point1: [785, 718],
-            point2: [755, 730],
-            point3: [700, 690],
-            ani: 0,
-            speed: 3,
-          },
-          mask6:{
-            point1: [700, 690],
-            point2: [590, 650],
-            point3: [590, 705],
-            ani: 0,
-            speed: 3,
-          },
-          mask7:{
-            point1: [571, 700],
-            // endpoint: [571, 797],
-            endpoint:100,
-            width:112,
-            height:1,
-            ani: 0,
-            speed: 3,
-          },
-          mask8:{
-            point1: [637, 802],
-            point2: [695, 786],
-            point3: [635, 845],
-            ani: 0,
-            speed: 3,
-          },
-          mask9:{
-            point1: [635, 845],
-            point2: [565, 958],
-            point3: [417, 1020],
-            ani: 0,
-            speed: 3,
-          },
-          mask10:{
-            point1: [417, 1020],
-            point2: [329, 1054],
-            point3: [310, 996],
-            ani: 0,
-            speed: 3,
-          },
-          mask11:{
-            point1: [263, 996],
-            endpoint: [263, 276],
-            pointOrg1: [263, 996],
-            width:258,
-            height:732,
-            ani: 0,
-            speed: 9,
-          },
-          mask12:{
-            point1: [484, 276],
-            point2: [485, 210],
-            point3: [622, 241],
-            ani: 0,
-            speed: 3,
-          },
-          mask13:{
-            point1: [616, 241],
-            point2: [683, 270],
-            point3: [701, 281],
-            ani: 0,
-            speed: 3,
-            size:12
-          },
-          mask14:{
-            point1: [651, 281],
-            endpoint: 348,
-            width:80,
-            height:1,
-            ani: 0,
-            speed: 3,
+          mask1: {
+            originX: 156,
+            originY: 766,
+            width: 251,
+            height: 182,
+            currOriginX: 156,
+            currOriginY: 766,
+            shiftX: 5,
+            shiftY: 0,
+            endPoint:358
           },
           timeout: null,
           playing: false
         };
-      this.insterCanvas2(route,'Qinborder.png',()=>{
-        this.pathObject.source = route
-      })
+      // this.insterCanvas2(route,'route.png',()=>{
+      //   this.pathObject.source = route
+      // })
 
       // this.insterCanvas2(imageHorse,'Tangtrader.png',()=>{
       //   var translate = [[540, 896], [730, 726],[730, 726]];
@@ -769,6 +657,7 @@ export default {
           currPoint: 0,
           totalPoint: translate.length,
           dur: dur,
+          currDur: 1
         },
         division: 1,
         animating: false,
