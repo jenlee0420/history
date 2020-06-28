@@ -49,7 +49,7 @@ const animate = {
       let canvasAnimPath = document.getElementById("GreenAnimRoad");
       let contextAnimPath = canvasAnimPath.getContext("2d");
       let pathObject = this.pathObject;
-      if (flag == true) {
+      if (flag == true) {        
           if (pathObject.mask1.currOriginX > pathObject.mask1.endPoint) {
               pathObject.playing = true;
               this.canvasClear(canvasAnimPath);
@@ -173,7 +173,7 @@ const animate = {
           }
       } else {
           canvasAnimPath.style.visibility = "hidden";
-          for (var i=1;i<6;i++) {
+          for (var i=1;i<8;i++) {
             let element= pathObject['mask'+i]
             element.currOriginX = element.originX;
             element.currOriginY = element.originY;
@@ -282,7 +282,7 @@ drawbluePath2(flag) {
               pathObject.width,
               pathObject.height
           );
-          console.log(pathObject.mask1.currOriginY,pathObject.mask1.endPoint)
+
           if (pathObject.mask1.currOriginY <= pathObject.mask1.endPoint) {
               pathObject.mask1.currOriginY += pathObject.mask1.shiftY;
           } else {

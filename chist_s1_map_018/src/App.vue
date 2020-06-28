@@ -631,7 +631,7 @@ export default {
             height: 960,
             currOriginX: 4,
             currOriginY: 290,
-            shiftX: 5,
+            shiftX: 2.5,
             shiftY: 0,
             endPoint:1340
           },

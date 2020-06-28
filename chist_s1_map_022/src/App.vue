@@ -74,13 +74,13 @@
       headTitle="問題"
       :hideFooter="true"
       v-if="popWindow"
-      @cancel-event="popWindow=false;list[6].show=false"
+      @cancel-event="popWindow=false;list[9].show=false"
     >
       <div slot="modalCont">
         <div>
           <div class="question">
-            <div class="">
-              1. 根據地圖所示<span class="dot">，</span>匈奴在北方構成威脅<span class="dot">，</span>以下哪項<font class="underline">不是</font>秦朝的應對措施？
+            <div class="flex">
+              <em class="mr5">1.</em> <em>根據地圖所示<span class="dot">，</span>匈奴在北方構成威脅<span class="dot">，</span>以下哪項<font class="underline">不是</font>秦朝的應對措施？</em>
             </div>
             <div>
               <span
@@ -97,8 +97,8 @@
               v-if="currAns!=null"
             ></div>
           </div>
-          <div class="question">
-            <div>2. 根據地圖所示<span class="dot">，</span>以下哪項關於秦代建設的描述是正確的？</div>
+          <div class="question question2">
+            <div><em class="mr5">2.</em>根據地圖所示<span class="dot">，</span>以下哪項關於秦代建設的描述是正確的？</div>
             <div>
               <span
                 class="item"
@@ -120,10 +120,10 @@
     </modal>
     <modal
       class
-      :headTitle="list[5].text"
+      :headTitle="list[8].text"
       :hideFooter="true"
       v-if="mapPop"
-      @cancel-event="mapPop=false;list[5].show=false"
+      @cancel-event="mapPop=false;list[8].show=false"
     >
       <div slot="modalCont">
         <iframe
@@ -309,6 +309,7 @@ export default {
       m04: null,
       m05: null,
       m06: null,
+      m07: null,
       train:null,
       train1:null,
       license: null,
@@ -376,7 +377,10 @@ export default {
       this.m01.pause();
       this.m02.pause();
       this.m03.pause();
-      this.license.pause();
+      this.m04.pause();
+      this.m05.pause();
+      this.m06.pause();
+      this.m07.pause();
     },
     showCanvas(index) {
       let c = this.canvasObj[this.canvasData[index]];
@@ -412,16 +416,32 @@ export default {
           this.control.route =  swip
           break;
         case 4:
+          if (swip && !this.noVoice) {
+            this.m04.currentTime = 0;
+            this.m04.play();
+          }
           this.control.zhidao =  swip
           break;
         case 5:
+          if (swip && !this.noVoice) {
+            this.m05.currentTime = 0;
+            this.m05.play();
+          }
           this.control.greatwall =  swip
           break;
         case 6:
+          if (swip && !this.noVoice) {
+            this.m06.currentTime = 0;
+            this.m06.play();
+          }
           this.control.canal1 =  swip
           this.control.canal2 =  swip
           break;
         case 7:
+          if (swip && !this.noVoice) {
+            this.m07.currentTime = 0;
+            this.m07.play();
+          }
           this.control.border =  swip
           break;
         case 8:
@@ -578,13 +598,20 @@ export default {
       this.m03 = document.createElement("audio");
       this.m04 = document.createElement("audio");
       this.m05 = document.createElement("audio");
+      this.m06 = document.createElement("audio");
+      this.m07 = document.createElement("audio");
       this.license = document.createElement("audio");
-      this.m01.src = require("../static/img/vo/Map015-1.mp3");
-      this.m02.src = require("../static/img/vo/Map015-3.mp3");
-      this.m03.src = require("../static/img/vo/Map015-4.mp3");
-      this.license.src = require("../static/img/vo/production.mp3");
-      this.license.loop='loop'
-      this.license.volume =0.3
+      this.m01.src = require("../static/img/vo/Chist_s1_map_022_1.mp3");
+      this.m02.src = require("../static/img/vo/Chist_s1_map_022_3.mp3");
+      this.m03.src = require("../static/img/vo/Chist_s1_map_022_4.mp3");
+      this.m04.src = require("../static/img/vo/Chist_s1_map_022_5.mp3");
+      this.m05.src = require("../static/img/vo/Chist_s1_map_022_6.mp3");
+      this.m06.src = require("../static/img/vo/Chist_s1_map_022_7.mp3");
+      this.m07.src = require("../static/img/vo/Chist_s1_map_022_8.mp3");
+
+      // this.license.src = require("../static/img/vo/production.mp3");
+      // this.license.loop='loop'
+      // this.license.volume =0.3
       // Variable init
 
       var route = new Image();
@@ -665,7 +692,7 @@ export default {
       this.insterCanvas2(imageHorse,'gharry.png',()=>{
         var translate = [[580, 436], [678, 356], [728,258],[808, 160]];
         var scale = [1, 1,1,0];
-        var dur = [10, 10,20,20];
+        var dur = [25, 20,30,20];
         var sharpPoint = ''
         this.horseObject1 = this.initHorseObject(
           translate,
@@ -674,9 +701,9 @@ export default {
           sharpPoint,
           imageHorse
         );
-        var translate = [[580, 436], [868, 458],[963,542],[1232,630]];
+        var translate = [[580, 436], [868, 458],[963,542],[1252,635]];
         var scale = [1, 1,1,0];
-        var dur = [30, 10, 10,10];
+        var dur = [35, 10, 25,10];
         var sharpPoint = ''
         this.horseObject2 = this.initHorseObject(
           translate,
@@ -685,9 +712,9 @@ export default {
           sharpPoint,
           imageHorse
         );
-        var translate = [[580, 436], [932,676],[1188, 874]];
+        var translate = [[580, 436], [932,676],[1200, 880]];
         var scale = [1,1, 0];
-        var dur = [30,20,20];
+        var dur = [45,20,30];
         var sharpPoint = ''
         this.horseObject3 = this.initHorseObject(
           translate,
