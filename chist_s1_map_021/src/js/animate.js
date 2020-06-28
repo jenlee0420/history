@@ -161,8 +161,6 @@ const animate = {
                 if (i == 11) {
                     element.point1[1] = element.pointOrg1[1]
                 }
-                // element.currOriginX = element.originX;
-                // element.currOriginY = element.originY;
             }
             pathObject.playing = false;
             clearTimeout(pathObject.timeout);
