@@ -478,6 +478,15 @@ drawbluePath2(flag) {
         }
         return [canvasObj, contextObj]
     },
-
+    imagesCanvas(){
+      this.canvasClear(this.canvasObj['canvasImages']);
+      this.canvasObj['canvasImages'].style.visibility = 'visible'
+      Object.keys(this.control).forEach(e => {
+        // console.log(e,this.imageObj[e])
+        if(this.control[e]==true && this.imageObj[e]){
+          this.contextObj['canvasImages'].drawImage(this.imageObj[e],0,0,this.baseWidth,this.baseHeight);
+        }
+      });
+    }
 }
 export default animate;

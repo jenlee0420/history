@@ -9,7 +9,7 @@
       :style="{'width':docWidth+'px','height':docHeight+'px','display':load?'none':'block'}"
     >
       <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
-        <span>秦末群雄起事路線圖(公元前209年-前206年) </span>
+        <span>秦末群雄起事路線圖 (公元前209-前206 年) </span>
         <div id="soundCon" :class="{'mute':noVoice}" @click="setVoice"></div>
       </div>
       <div class="main_box">
@@ -25,12 +25,12 @@
             <imageview :imgsrc="'capital.png'" :static="control.capital.show" :zindex="4" @update="updateImg"></imageview>
             <imageview :imgsrc="'main_city1.png'" :static="control.main_city1" :zindex="4" @update="updateImg"></imageview>
             <imageview :imgsrc="'main_city2.png'" :static="control.main_city2" :zindex="4" @update="updateImg"></imageview>
-            <imageview :imgsrc="'uprise1.png'" :static="control.uprise1" :zindex="2" @update="updateImg"></imageview>
+            <!-- <imageview :imgsrc="'uprise1.png'" :static="control.uprise1" :zindex="2" @update="updateImg"></imageview>
             <imageview :imgsrc="'uprise2.png'" :static="control.uprise2" :zindex="2" @update="updateImg"></imageview>
             <imageview :imgsrc="'uprise3.png'" :static="control.uprise3" :zindex="2" @update="updateImg"></imageview>
 <imageview :imgsrc="'gate1.png'" :static="control.gate1" :zindex="2" @update="updateImg"></imageview>
 <imageview :imgsrc="'gate2.png'" :static="control.gate2" :zindex="2" @update="updateImg"></imageview>
-<imageview :imgsrc="'battlefield.png'" :static="control.battlefield" :zindex="2" @update="updateImg"></imageview>
+<imageview :imgsrc="'battlefield.png'" :static="control.battlefield" :zindex="2" @update="updateImg"></imageview> -->
 
             
           </div>
@@ -53,7 +53,7 @@
                 <span class="icon">
                   <img :src="item.ico" />
                 </span>
-                <span>{{item.text}}</span>
+                <span v-html="item.text"></span>
               </div>
             </div>
           </div>
@@ -125,7 +125,7 @@
     >
       <div slot="modalCont">
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d19016453.28336233!2d90.42752519058033!3d39.04671453518677!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3663847664f98611%3A0x4694b2f767ca6286!2z5Lit5ZyL6Zmd6KW_55yB5ZK46Zm95biC!5e0!3m2!1szh-TW!2shk!4v1588157715476!5m2!1szh-TW!2shk"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d34218861.99550422!2d76.78552909549408!3d38.34216191201391!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3663847664f98611%3A0x4694b2f767ca6286!2z5Lit5ZyL6Zmd6KW_55yB5ZK46Zm95biC!5e0!3m2!1szh-TW!2shk!4v1595938361768!5m2!1szh-TW!2shk"
           :width="bodytWidth/1.8"
           :height="bodyHeight/1.8"
           frameborder="0"
@@ -181,6 +181,14 @@ export default {
   },
   data() {
     return {
+      imageObj:{
+          uprise1:null,
+          uprise2:null,
+          uprise3:null,
+          gate1:null,
+          gate2:null,
+          battlefield:null,
+        },
       control:{
         capital:{
           show:false,
@@ -232,16 +240,17 @@ export default {
           text: "起事地點",
           show: false
         },
-        {
+       {
           ico: require("../static/img/icon/gate_icon.png"),
           text: "關口",
           show: false
         },
         {
           ico: require("../static/img/icon/route_green_023_icon.png"),
-          text: "陳勝、吳廣進軍路線",
+          text: `陳勝<span class="dot">、</span>吳廣進軍路線`,
           show: false
         },
+         
          {
           ico: require("../static/img/icon/route_red_023_icon.png"),
           text: "劉邦進軍路線",
@@ -347,12 +356,12 @@ export default {
       },
       deep: true
     },
-    imgCount:function(n,o){
-      // if(n == this.imgTotal && document.readyState == "complete"){
-      //   console.log(n)
-      //   // this.load = false;
-      // }
-    }
+    control:{
+        handler(n,o){
+          this.imagesCanvas()
+        },
+        deep: true
+      }
   },
   methods: {
     updateImg(){
@@ -433,12 +442,16 @@ export default {
           this.drawHousePromise2(swip)
           break;
         case 6:
+          if (swip && !this.noVoice) {
+            this.m06.currentTime = 0;
+            this.m06.play();
+          }
           this.control.battlefield =  swip
           break;
         case 7:
           if (swip && !this.noVoice) {
-            this.m06.currentTime = 0;
-            this.m06.play();
+            this.m07.currentTime = 0;
+            this.m07.play();
           }
           this.drawbluePath(swip)
           this.drawHousePromise3(swip)
@@ -605,6 +618,7 @@ export default {
         { name: "myCanvasAnimHorse", zindex: 5 },
         { name: "myCanvasAnimHorse2", zindex: 5 },
         { name: "myCanvasAnimHorse3", zindex: 5 },
+        { name: "canvasImages", zindex: 2 },
       ];
       let obj = this.createCanvas(list, divTag);
       this.canvasObj = obj[0];
@@ -636,6 +650,18 @@ export default {
       var route3 = new Image();
       var route4 = new Image();
       var imageHorse = new Image();
+      this.imageObj.uprise1 = new Image();
+      this.imageObj.uprise2 = new Image();
+      this.imageObj.uprise3 = new Image();
+      this.imageObj.gate1 = new Image();
+      this.imageObj.gate2 = new Image();
+      this.imageObj.battlefield = new Image();
+      this.insterCanvas(this.imageObj.uprise1,'uprise1.png','canvasImages',false)
+      this.insterCanvas(this.imageObj.uprise2,'uprise2.png','canvasImages',false)
+      this.insterCanvas(this.imageObj.uprise3,'uprise3.png','canvasImages',false)
+      this.insterCanvas(this.imageObj.gate1,'gate1.png','canvasImages',false)
+      this.insterCanvas(this.imageObj.gate2,'gate2.png','canvasImages',false)
+      this.insterCanvas(this.imageObj.battlefield,'battlefield.png','canvasImages',false)
 
       this.pathObject = routeObject1(this.baseWidth,this.baseHeight)
       this.insterCanvas2(route,'route1.png',()=>{
@@ -655,7 +681,7 @@ export default {
       })
 
       this.insterCanvas2(imageHorse,'infantryman.png',()=>{
-        var translate = [[927, 803], [839, 756], [713, 782],[458,691],[347,709],[261,640],[159,680],[55,758]];
+        var translate = [[927, 803], [839, 756], [713, 782],[458,691],[347,709],[261,640],[159,680],[130,782]];
         var scale = [1, 1, 1,1,1,1,1,0];
         var dur = [15, 25, 30,15,15,15,15];
         var sharpPoint = ''
@@ -679,10 +705,10 @@ export default {
           sharpPoint,
           imageHorse
         );
-        var translate = [[1341, 1099], [1239,1028],[1117, 875],[1025,732],[820,661],[650,504],[668,326],
+        var translate = [[1351, 1059], [1239,1028],[1117, 875],[1025,732],[820,661],[650,504],[668,326],
         [585,518],[486,605],[243,641],[57,749]];
         var scale = [1,1,1,1,1,1,1,1,1,1, 0];
-        var dur = [10,10,10,10,10,15,10,10,15,20,15];
+        var dur = [15,15,15,15,15,18,13,13,18,23,18];
         var sharpPoint = ''
         this.horseObject3 = this.initHorseObject(
           translate,

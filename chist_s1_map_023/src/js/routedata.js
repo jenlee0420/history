@@ -136,7 +136,7 @@ function routeObject3(baseWidth, baseHeight) {
             height: 210,
             currOriginX: 968,
             currOriginY: 675,
-            shiftX: 8,
+            shiftX: 5,
             shiftY: 0,
             endPoint: 728
         },
@@ -148,7 +148,7 @@ function routeObject3(baseWidth, baseHeight) {
             currOriginX: 610,
             currOriginY: 680,
             shiftX: 0,
-            shiftY: 8,
+            shiftY: 5,
             endPoint: 420
         },
         timeout: null,
@@ -171,7 +171,7 @@ function routeObject4(baseWidth, baseHeight) {
             currOriginX: 598,
             currOriginY: 169,
             shiftX: 0,
-            shiftY: 8,
+            shiftY: 5,
             endPoint: 429
         },
         mask2: {
@@ -181,7 +181,7 @@ function routeObject4(baseWidth, baseHeight) {
             height: 194,
             currOriginX: 598,
             currOriginY: 645,
-            shiftX: 8,
+            shiftX: 5,
             shiftY: 0,
             endPoint: 81
         },
