@@ -9,7 +9,7 @@
       :style="{'width':docWidth+'px','height':docHeight+'px','display':load?'none':'block'}"
     >
       <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
-        <span>春秋時期形勢圖 (約公元前770年-前403年)</span>
+        <span>春秋時期形勢圖 (約公元前770-前403 年)</span>
         <div id="soundCon" :class="{'mute':noVoice}" @click="setVoice"></div>
       </div>
       <div class="main_box">

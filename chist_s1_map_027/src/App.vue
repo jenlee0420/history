@@ -9,7 +9,7 @@
       :style="{'width':docWidth+'px','height':docHeight+'px','display':load?'none':'block'}"
     >
       <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
-        <span>東漢末年群雄割據形勢圖（199年）</span>
+        <span>東漢末年群雄割據形勢圖 (199 年)</span>
         <div id="soundCon" :class="{'mute':noVoice}" @click="setVoice"></div>
       </div>
       <div class="main_box">
@@ -121,7 +121,7 @@
     >
       <div slot="modalCont">
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d18725314.073896565!2d91.56545729970401!3d38.07992713660924!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x35d6c2d965024153%3A0x910c83aacb158459!2z5Lit5ZyL5rKz5Y2X55yB6Kix5piM5biC!5e0!3m2!1szh-TW!2shk!4v1588160330318!5m2!1szh-TW!2shk"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d34629772.920808874!2d78.24540853591917!3d39.54342743160811!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x35d6c2d965024153%3A0x910c83aacb158459!2z5Lit5ZyL5rKz5Y2X55yB6Kix5piM5biC!5e0!3m2!1szh-TW!2shk!4v1595938628886!5m2!1szh-TW!2shk"
           :width="bodytWidth/1.8"
           :height="bodyHeight/1.8"
           frameborder="0"

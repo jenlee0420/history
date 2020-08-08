@@ -1,5 +1,6 @@
 const animate = {
     sharpCity(obj, bool) {
+        return new Promise((resolve, rej) => {
         if (!bool) {
             clearInterval(obj.timer);
             obj.show = false
@@ -15,12 +16,14 @@ const animate = {
         obj.timer = setInterval(() => {
             if (times == 0) {
                 clearInterval(obj.timer);
+                resolve('success')
                 return;
             }
             obj.show = show
             show = !show;
             times -= 1;
         }, 260)
+    })
     },
     showCityAni(canvasStatic, bool) {
         if (!bool) {

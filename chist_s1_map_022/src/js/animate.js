@@ -155,7 +155,7 @@ const animate = {
                 )}
                 )
                 });
-            }, 70);
+            }, 100);
         } else {
             clearInterval(this.drawHorsesTimeout2);
             this.canvasClear(this.canvasAnimHorse);
@@ -294,6 +294,27 @@ const animate = {
         }
         return [canvasObj, contextObj]
     },
-
+    imagesCanvas(){
+      this.canvasClear(this.canvasObj['canvasImages']);
+      this.canvasObj['canvasImages'].style.visibility = 'visible'
+      if(this.control.canal1){
+        this.contextObj['canvasImages'].drawImage(this.imageObj.canal1,0,0,this.baseWidth,this.baseHeight);
+      }
+      if(this.control.canal2){
+        this.contextObj['canvasImages'].drawImage(this.imageObj.canal2,0,0,this.baseWidth,this.baseHeight);
+      }
+      if(this.control.route){
+        this.contextObj['canvasImages'].drawImage(this.imageObj.route,0,0,this.baseWidth,this.baseHeight);
+      }
+      if(this.control.zhidao){
+        this.contextObj['canvasImages'].drawImage(this.imageObj.zhidao,0,0,this.baseWidth,this.baseHeight);
+      }
+      if(this.control.greatwall){
+        this.contextObj['canvasImages'].drawImage(this.imageObj.GreatWall,0,0,this.baseWidth,this.baseHeight);
+      }
+      if(this.control.border){
+        this.contextObj['canvasImages'].drawImage(this.imageObj.border,0,0,this.baseWidth,this.baseHeight);
+      }
+    }
 }
 export default animate;

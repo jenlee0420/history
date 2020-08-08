@@ -9,7 +9,7 @@
       :style="{'width':docWidth+'px','height':docHeight+'px','display':load?'none':'block'}"
     >
       <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
-        <span>秦國地理形勢圖 (約公元前403年)</span>
+        <span>秦國地理形勢圖 (約公元前403 年)</span>
         <div id="soundCon" :class="{'mute':noVoice}" @click="setVoice"></div>
       </div>
       <div class="main_box">
@@ -25,8 +25,8 @@
             <imageview :imgsrc="'capital.png'" :static="control.capital.show" :zindex="2" @update="updateImg"></imageview>
             <!-- <imageview :imgsrc="'Qinborder.png'" :static="true" :zindex="2" @update="updateImg"></imageview> -->
             <imageview :imgsrc="'Qin.png'" :static="control.Qin.show" :zindex="2" @update="updateImg"></imageview>
-            <imageview :imgsrc="'gate.png'" :static="control.gate" :zindex="2" @update="updateImg"></imageview>
-            <imageview :imgsrc="'mountain1.png'" :static="control.mountain" :zindex="2" @update="updateImg"></imageview>
+            <imageview :imgsrc="'gate.png'" :static="control.gate" :zindex="4" @update="updateImg"></imageview>
+            <imageview :imgsrc="'mountain1.png'" :static="control.mountain" :zindex="4" @update="updateImg"></imageview>
              <imageview :imgsrc="'soldier.png'" :static="control.soldier.show" :zindex="2" @update="updateImg"></imageview>
             
           </div>
@@ -93,7 +93,7 @@
             ></div>
           </div>
           <div class="question question2">
-            <div><em class="mr5">2.</em>以下哪項關於秦國地理形勢的描述是<font class="underlint">不正確</font>的？</div>
+            <div><em class="mr5">2.</em>以下哪項關於秦國地理形勢的描述是<font class="underline">不正確</font>的？</div>
             <div>
               <span
                 class="item"
@@ -357,8 +357,12 @@ export default {
             this.m01.currentTime = 0;
             this.m01.play();
           }
-          // this.sharpCity(this.control.Qin,swip)
-          this.drawRedPath(swip)
+          this.sharpCity(this.control.Qin,swip).then(()=>{
+            this.drawRedPath(swip)
+          })
+          if(!swip){
+            this.drawRedPath(swip)
+          }
           break;
         case 1:
           if (swip && !this.noVoice) {
@@ -582,7 +586,7 @@ export default {
             point3: [759, 613],
             ani: 0,
             speed: 3,
-            size:4
+            size:10
           },
           mask3:{
             point1: [759, 613],
@@ -616,25 +620,26 @@ export default {
           mask7:{
             point1: [571, 700],
             // endpoint: [571, 797],
-            endpoint:100,
+            endpoint:101,
             width:112,
             height:1,
             ani: 0,
             speed: 3,
           },
           mask8:{
-            point1: [637, 802],
+            point1: [632, 802],
             point2: [695, 786],
-            point3: [635, 845],
+            point3: [642, 845],
             ani: 0,
             speed: 3,
           },
           mask9:{
             point1: [635, 845],
-            point2: [565, 958],
+            point2: [575, 958],
             point3: [417, 1020],
             ani: 0,
             speed: 3,
+            size:10
           },
           mask10:{
             point1: [417, 1020],
@@ -837,7 +842,7 @@ export default {
     // background: url("../static/img/map.png");
     background-size: cover;
   }
-
+  em{font-style: normal;}
   #canvasInnerDiv {
     width: 1432px;
     height: 1317px;

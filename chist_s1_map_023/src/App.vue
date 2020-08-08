@@ -22,7 +22,7 @@
           <div class="mapBackground" id="canvasInnerDiv" ref="canvasInnerDiv">
             <imageview :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
             <imageview :imgsrc="'mapDetail.png'" :static="true" :zindex="2" @update="updateImg"></imageview>
-            <imageview :imgsrc="'capital.png'" :static="control.capital.show" :zindex="4" @update="updateImg"></imageview>
+            <!-- <imageview :imgsrc="'capital.png'" :static="control.capital.show" :zindex="4" @update="updateImg"></imageview> -->
             <imageview :imgsrc="'main_city1.png'" :static="control.main_city1" :zindex="4" @update="updateImg"></imageview>
             <imageview :imgsrc="'main_city2.png'" :static="control.main_city2" :zindex="4" @update="updateImg"></imageview>
             <!-- <imageview :imgsrc="'uprise1.png'" :static="control.uprise1" :zindex="2" @update="updateImg"></imageview>
@@ -402,7 +402,8 @@ export default {
             this.m01.currentTime = 0;
             this.m01.play();
           }
-          this.sharpCity(this.control.capital,swip)
+          // this.sharpCity(this.control.capital,swip)
+          this.showCityAni(this.canvasObj['canvascapital'],swip)
           break;
         case 1:
           this.control.main_city1 = swip
@@ -456,7 +457,7 @@ export default {
           this.drawbluePath(swip)
           this.drawHousePromise3(swip)
           if(!swip){
-            this.drawbluePath2(swip)
+            this.drawbluePath(swip)
           }
           break;
         case 8:
@@ -619,6 +620,7 @@ export default {
         { name: "myCanvasAnimHorse2", zindex: 5 },
         { name: "myCanvasAnimHorse3", zindex: 5 },
         { name: "canvasImages", zindex: 2 },
+        { name: "canvascapital", zindex: 2 },
       ];
       let obj = this.createCanvas(list, divTag);
       this.canvasObj = obj[0];
@@ -650,18 +652,22 @@ export default {
       var route3 = new Image();
       var route4 = new Image();
       var imageHorse = new Image();
+      var capitalImg=new Image()
       this.imageObj.uprise1 = new Image();
       this.imageObj.uprise2 = new Image();
       this.imageObj.uprise3 = new Image();
       this.imageObj.gate1 = new Image();
       this.imageObj.gate2 = new Image();
       this.imageObj.battlefield = new Image();
+      this.insterCanvas(capitalImg,'capital.png','canvascapital',false)
       this.insterCanvas(this.imageObj.uprise1,'uprise1.png','canvasImages',false)
       this.insterCanvas(this.imageObj.uprise2,'uprise2.png','canvasImages',false)
       this.insterCanvas(this.imageObj.uprise3,'uprise3.png','canvasImages',false)
       this.insterCanvas(this.imageObj.gate1,'gate1.png','canvasImages',false)
       this.insterCanvas(this.imageObj.gate2,'gate2.png','canvasImages',false)
       this.insterCanvas(this.imageObj.battlefield,'battlefield.png','canvasImages',false)
+      
+      
 
       this.pathObject = routeObject1(this.baseWidth,this.baseHeight)
       this.insterCanvas2(route,'route1.png',()=>{
@@ -760,6 +766,7 @@ export default {
       }
     },
     insterCanvas(img, src,contextStatic, bool) {
+      console.log(src)
       img.src = require(`../static/img/${src}`);
       img.onload = () => {
         this.imgCount++
