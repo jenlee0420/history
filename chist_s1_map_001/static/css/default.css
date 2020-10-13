@@ -28,11 +28,6 @@ body {
     /* height: calc(100vh - 4px); */
 }
 
-#canvasInnerDiv {
-    width: 1430px;
-    height: 1315px;
-    overflow: hidden;
-}
 
 .purpleGradient {
     box-shadow: 0px -10px 20px #8580C8 inset, 0px 10px 20px #8580C8 inset;

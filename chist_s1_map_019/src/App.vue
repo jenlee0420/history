@@ -444,6 +444,7 @@ export default {
           this.control.EasternZhou = swip
           
           
+          
           break;
         case 4:
           this.mapPop = swip;
@@ -465,12 +466,16 @@ export default {
       this.control.city.show = this.list[0].show
       let swip2 = this.list[2].show
       let swip1 = this.list[1].show
+      let swip3 = this.list[3].show
       if(swip2){
         this.control.capital.show = swip2
       }
       if(swip1){
         this.control.capital.show = swip1
         this.control.city.show = swip1
+      }
+      if(swip3){
+        this.control.city.show = swip3
       }
       if(swip1 && this.roadAniEnd){
         this.control.city.show = swip1

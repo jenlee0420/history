@@ -2,7 +2,13 @@ $(function() {
     $(window).load(function() {
         var main_container = $("#main_container");
         var mp4_container = $("#mp4_container");
-
+        if(isApp){
+            main_container.css({
+                transform: 'rotate(-90deg)',
+                'margin-top':this.pageMarginTop+'px',
+                'margin-left':(this.pageMarginLeft *-1) +'px' 
+            })
+        }
         var ori_width = canvasW;
         var ori_height = canvasH;
             // var ori_width = $(window).innerWidth() - $(window).innerWidth() * 0.2;
@@ -46,16 +52,6 @@ $(function() {
                 //     ui.helper.width(),
                 //     ui.helper.height(),
                 // ]))
-
-                /*
-                $("#main_container").data("redBox").css({
-                    "top": top,
-                    "left": -newLeft/ori_width*(ori_width/ratio).toFixed(0)
-                })
-                */
-                // if (ui.position.top<0) { ui.position.top = ori_height - ui.helper.height(); }
-                // if(ui.position.left+580<580) { ui.position.left = 0; }
-                // if(ui.position.top+550<550) { ui.position.top = 0; }
 
             }
         }).swipe({
@@ -123,7 +119,6 @@ $(function() {
             disabled: true,
             containment: "parent",
             drag: function(e, ui) {
-
                 $("#main_container").data("mapCanvas").css({
                     "top": -ui.position.top / ui.helper.height() * (ori_height),
                     "left": -ui.position.left / ui.helper.width() * (ori_width)
@@ -150,7 +145,7 @@ $(function() {
                     }).hide(),               
                     "<span>隋代運河分佈圖 (581-618 年)</span>"+
                     "<div id='soundCon'> </div>"
-                   
+                
                 ),
                 $("<div class='main_box'/>").append(
                     $("<div/>", {
@@ -301,14 +296,17 @@ $(function() {
         bind_map_func(main_container, mp4_container);
         mp4_container.dialog({
             autoOpen: false,
+            draggable:isApp?false:true,
             modal: true,
             resizable: false,
             width: 'auto',
             close:function () {
                 $(this).empty()
             }
-           
-        });
+        });        
+        if(isApp){
+            $('.ui-dialog').css({transform: 'rotate(-90deg)'})
+        }
         bind_ques($("#question"), 'B')
         bind_ques2($("#question2"), 'C')
         bind_sound($("#soundCon"))

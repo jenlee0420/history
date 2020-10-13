@@ -141,7 +141,7 @@ function bind_map_func(div, mp4div) {
             $(".ansBox").hide();
             var q = $(".question").clone(true);
             // $.extend(q,$('.question'))
-            mp4div.append(q.css('display', 'block'));
+            mp4div.append(q.css({'display':'block'}));
             mp4div.dialog("option", "title", title).dialog('open');
         } else {
             target.toggleClass("clicked");

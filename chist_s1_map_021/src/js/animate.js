@@ -53,16 +53,16 @@ const animate = {
         let canvasAnimPath = document.getElementById("myCanvasAnimborder");
         let contextAnimPath = canvasAnimPath.getContext("2d");
         let pathObject = this.pathObject;
-        if (flag == true) {
-
+        if (flag == true) {            
             // if (pathObject.mask1.currOriginX <= pathObject.mask1.endPoint) {
             pathObject.playing = true;
             this.canvasClear(canvasAnimPath);
+            // return
             contextAnimPath.save();
             contextAnimPath.beginPath();
             contextAnimPath.strokeStyle = 'red';
             contextAnimPath.lineWidth = 3
-
+            
             // 
             _this.d2_(contextAnimPath, pathObject.mask1);
             if (pathObject.mask1.ani < 100 - pathObject.mask1.speed) {
@@ -342,12 +342,14 @@ const animate = {
             canvasStatic.id = canvasList[i].name;
             canvasStatic.style.position = "absolute";
             canvasStatic.style.zIndex = canvasList[i].zindex
+            // canvasStatic.style.visibility='hidden'
             canvasStatic.width = this.baseWidth;
             canvasStatic.height = this.baseHeight;
             // canvasList.obj = canvasStatic
             canvasObj[canvasList[i].name] = canvasStatic
             contextObj[canvasList[i].name] = contextStatic
             divTag.appendChild(canvasStatic);
+            this.canvasClear(canvasStatic)
         }
         return [canvasObj, contextObj]
     },

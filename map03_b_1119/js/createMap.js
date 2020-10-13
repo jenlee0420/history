@@ -31,10 +31,14 @@ var bodyHeight = $(window).innerHeight(),
 var rem = 50,
     u_agent = navigator.userAgent;
 var o, orienta;
+var isApp=false,pageMarginTop='auto',pageMarginLeft="auto"
 
 $(document).ready(function () {
     window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", load, false);
     setRemUnit();
+    if(window.location.search.indexOf('type=app')>=0){
+        isApp = true
+    }
 });
 // window.addEventListener('orientationchange', setRemUnit)
 
@@ -43,14 +47,13 @@ function load() {
 }
 
 function setRemUnit() {
-
     if (window.orientation === 0 || window.orientation === 180) {
         //竖屏
-        console.log('竖屏', bodytWidth);
+        // console.log('竖屏', bodytWidth);
         orienta = 1;
     } else if (window.orientation === 90 || window.orientation === -90) {
         //横屏
-        console.log('横屏', bodytWidth);
+        // console.log('横屏', bodytWidth);
         orienta = 2;
     }
     var selffun = function selffun() {
@@ -77,7 +80,7 @@ function setRemUnit() {
         docHeight = 1396 * boxscale;
         canvasW = Math.ceil(1430 * boxscale);
         canvasH = Math.ceil(1315 * boxscale);
-
+        pageMarginTop =pageMarginLeft=(docWidth - docHeight) /2
         // console.log('b', boxscale)
 
         // $('#debug1').text([boxscale, canvasW, canvasH].join(','))

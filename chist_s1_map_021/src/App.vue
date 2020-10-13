@@ -122,7 +122,7 @@
     >
       <div slot="modalCont">
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14067139.357771862!2d93.5156862106047!3d37.87614588714345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x36786f68f2d04437%3A0x61f85ae8c6c72215!2z5Lit5ZyL5rKz5Y2X55yB5rSb6Zm95biC!5e0!3m2!1szh-TW!2shk!4v1587367216745!5m2!1szh-TW!2shk"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d52692235.274668075!2d67.95427432160982!3d36.286137530707585!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3663847664f98611%3A0x4694b2f767ca6286!2z5Lit5ZyL6Zmd6KW_55yB5ZK46Zm95biC!5e0!3m2!1szh-TW!2shk!4v1597904797475!5m2!1szh-TW!2shk"
           :width="bodytWidth/1.8"
           :height="bodyHeight/1.8"
           frameborder="0"

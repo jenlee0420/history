@@ -291,6 +291,7 @@ const animate = {
             canvasObj[canvasList[i].name] = canvasStatic
             contextObj[canvasList[i].name] = contextStatic
             divTag.appendChild(canvasStatic);
+            this.canvasClear(canvasStatic)
         }
         return [canvasObj, contextObj]
     },

@@ -50,7 +50,7 @@ const animate = {
             }
         } else {
             canvasAnimPath.style.visibility = "hidden";
-
+            console.log(pathObject)
             pathObject.mask3.currOriginX = pathObject.mask3.originX;
             pathObject.mask3.currOriginY = pathObject.mask3.originY;
             pathObject.mask3.width = 1;

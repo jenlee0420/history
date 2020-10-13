@@ -95,7 +95,7 @@
         <div>
           <div class="question">
             <div class="flex">
-              <em class="mr5">1.</em><em> 玄奘選取了較遠的路線，取道向西北絲路進發，再南下天竺，為了避開哪一個邊族的統治區？</em>
+              <em class="mr5">1.</em><em> 玄奘選取了較遠的路線<span class="dot">，</span>取道向西北絲路進發<span class="dot">，</span>再南下天竺<span class="dot">，</span>為了避開哪一個邊族的統治區？</em>
             </div>
             <div>
               <span
@@ -116,8 +116,7 @@
           <div class="question">
             <div class="flex">
               <em class="mr5">2.</em>
-              <em>
-              玄奘從哪一個關口離開大唐國境，展開他的取經求法之旅？</em></div>
+              <em> 玄奘從哪一個關口離開大唐國境<span class="dot">，</span>展開他的取經求法之旅？</em></div>
             <div>
               <span
                 class="item"

@@ -311,6 +311,7 @@ Zoom.prototype.setTransform = function(needAnimation, originX, originY) {
     originY = originY == undefined ? (this.originLeft + 'px') : originY;
     this.el.style.transformOrigin = 'left top';
     this.el.style.transform = 'matrix(' + scale + ',0,0,' + scale + ',' + distanceX + ',' + distanceY + ')';
+    this.el.style.zIndex=0
 
     this.left = distanceX
 

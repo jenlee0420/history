@@ -1,8 +1,8 @@
 <template>
-  <div id="app">
+  <div id="app" >
     <!-- <div class="pos_a" style="font-size:0.5rem">{{debug}}</div> -->
     <div v-if="load" id="loading" style="width:820px;"><img :src="require('../static/img/loading.gif')"></div>
-    <div  id="main_container" :style="{'width':docWidth+'px','height':docHeight+'px','display':load?'none':'block'}">
+    <div  id="main_container" :style="mainBoxStyle ">
       <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
         <span>隋滅陳路線圖 (588-589 年)</span>
         <div id="soundCon" :class="{'mute':noVoice}" @click="setVoice"> </div>
@@ -37,7 +37,7 @@
         </div>
       </div>
     </div>
-    <modal class="" headTitle="問題" :hideFooter="true" v-if="popWindow" @cancel-event="popWindow=false;list[6].show=false">
+    <modal :style="AppStyle" :dragable="!isApp" headTitle="問題" :hideFooter="true" v-show="popWindow" @cancel-event="popWindow=false;list[6].show=false">
       <div slot="modalCont">
         <div>
           <div class="question">
@@ -58,10 +58,10 @@
         
       </div>
     </modal>
-    <modal class=""  headTitle="建康（今南京市）" :hideFooter="true" v-if="mapPop" @cancel-event="mapPop=false;list[5].show=false">
+    <modal :style="AppStyle"  :dragable="!isApp" headTitle="建康（今南京市）" :hideFooter="true" v-show="mapPop" @cancel-event="mapPop=false;list[5].show=false">
       <div slot="modalCont">
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d24894379.013818808!2d87.03961028287168!3d36.20145956714316!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x35b58c9b668dcd83%3A0x8ffbb60b79df1b06!2z5Lit5ZyL5rGf6JiH55yB5Y2X5Lqs5biC!5e0!3m2!1szh-TW!2shk!4v1575951096356!5m2!1szh-TW!2shk"
-          :width="bodytWidth/1.8" :height="bodyHeight/1.8" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
+          :width="isApp?docWidth/1.8:bodytWidth/1.8" :height="isApp?docHeight/1.8:bodyHeight/1.8" frameborder="0" style="border:0;" allowfullscreen=""></iframe>
       </div>
     </modal>
   </div>
@@ -69,6 +69,7 @@
 
 <script>
   import zoom from './js/zoom.js'
+  import zoomApp from './js/zoomApp.js'
   import modal from "./components/modal";
   import bar from "./components/bar";
   export default {
@@ -80,13 +81,38 @@
     beforeCreate() {},
     created () {
     const that = this
-    // that.timer = setInterval(function () {
-    //     console.log(document.readyState)
-    //     if (document.readyState === 'complete') {
-    //         that.load = false;
-    //         window.clearInterval(that.timer)
-    //     }
-    // }, 10)
+    },
+    computed:{
+      mainBoxStyle(){
+        var css = {'width':this.docWidth+'px',
+        'height':this.docHeight+'px',
+        'display':this.load?'none':'block',       
+        transform:this.pageTransform,
+        'margin-top':this.pageMarginTop+'px',
+        'margin-left':(this.pageMarginLeft *-1) +'px'    
+        }
+        return css
+      },
+      AppStyle() {
+        var css = {}
+        if (this.isApp) {
+          css = {
+            'width': this.docWidth + 'px',
+            'height': this.docHeight + 'px',
+            transform: this.pageTransform,
+            'margin-top': this.pageMarginTop + 'px',
+            'margin-left': (this.pageMarginLeft * -1) + 'px'
+          }
+        }
+        return css
+      },
+      isApp(){
+        if(window.location.search.indexOf('app')>=0){
+          return true
+        }else{
+          return false
+        }
+      }
     },
     mounted() {
       this.createMap()
@@ -96,8 +122,12 @@
         window.addEventListener("resize", this.setRemUnit, false)
       }
       // window.addEventListener("onorientationchange" in window ?"orientationchange":"resize", this.setRemUnit, false);
-      this.zoomObj = require('./js/zoom.js')
-      this.setRemUnit()
+      
+      if(this.isApp){
+        this.forApp()
+      }else{
+        this.setRemUnit()
+      }
       this.initCanvas()
       
       document.getElementById('map_container').addEventListener("touchmove", this.bodyScroll, {
@@ -106,6 +136,9 @@
     },
     data() {
       return {
+        pageTransform:'0',
+        pageMarginLeft:'auto',
+        pageMarginTop:'auto',
         load: true,
         noVoice: false,
         zoomObj: null,
@@ -332,6 +365,42 @@
           this.setRemUnit()
         }, 100)
       },
+      forApp(){
+        const u_agent = navigator.userAgent
+        var selffun = () => {
+          this.bodyHeight = window.innerHeight
+          this.bodytWidth = window.innerWidth
+          var offest = (this.bodytWidth / this.bodyHeight)
+          if (offest > 0.5) {
+              this.boxscale = this.bodyHeight / 2048
+              this.o = 1396 * this.boxscale
+          }else{
+            this.boxscale = this.bodytWidth / 1396
+            this.o = this.bodytWidth
+          }
+          this.docWidth = 2048 * this.boxscale
+          this.docHeight = 1396 * this.boxscale
+          this.canvasW = Math.ceil(1430 * this.boxscale)
+          this.canvasH = Math.ceil(1315 * this.boxscale)
+          this.titleH = this.docHeight - this.canvasH
+          var s = 10
+          this.dpr = window.devicePixelRatio || 1
+          if (/iPad|iPhone|Android|Adr/i.test(u_agent)) {
+            this.dpr = 2;
+          }
+          if (this.dpr >= 2) {
+            this.dpr = 2;
+            this.rem = this.o / this.dpr / 5.2;
+          } else {
+            this.rem = this.o / 10 / this.dpr;
+          }
+          document.documentElement.style.fontSize = (this.rem) + 'px'
+          this.pageTransform = 'rotate3d(0,0,1,-90deg)'
+          this.pageMarginTop =this.pageMarginLeft=(this.docWidth - this.docHeight) /2
+        }
+        selffun()
+        this.setZoom()
+      },
       setRemUnit() {
         const u_agent = navigator.userAgent
         if (window.orientation === 0 || window.orientation === 180) {
@@ -377,7 +446,7 @@
           } else {
             this.rem = this.o / 10 / this.dpr;
           }
-          console.log(this.boxscale, this.o, this.dpr, this.rem)
+          // console.log(this.boxscale, this.o, this.dpr, this.rem)
           document.documentElement.style.fontSize = (this.rem) + 'px'
         }
         selffun()
@@ -610,7 +679,7 @@
       divTag.appendChild(canvasStatic1);
       divTag.appendChild(canvasStatic2);
       divTag.appendChild(canvasStatic4);
-      divTag.appendChild(canvasStatic5);
+      // divTag.appendChild(canvasStatic5);
       divTag.appendChild(canvasAnimGreenPath2);
       divTag.appendChild(canvasAnimGreenPath3);
       divTag.appendChild(canvasAnimGreenPath);
@@ -638,7 +707,7 @@
       canvasAnimGreenPath.style.zIndex = "2";
       canvasAnimGreenPath2.style.zIndex = "2";
       canvasAnimGreenPath3.style.zIndex = "2";
-      canvasAnimHorse.style.zIndex = "6";
+      canvasAnimHorse.style.zIndex = "5";
       canvasAnimGreenPath.width = this.baseWidth;
       canvasAnimGreenPath.height = this.baseHeight;
       canvasAnimGreenPath2.width = this.baseWidth;
@@ -868,7 +937,8 @@
       if (!document.getElementById('canvasInnerDiv')) {
         return
       }
-      this.zoomObj = new zoom(document.getElementById('canvasInnerDiv'), {
+      if(this.isApp){
+        this.zoomObj = new zoomApp(document.getElementById('canvasInnerDiv'), {
         width: this.baseWidth,
         height: this.baseHeight,
         top: 0,
@@ -878,8 +948,19 @@
         warpWidth: this.boxscale * this.baseWidth,
         warpHeight: this.boxscale * this.baseHeight
       })
+      }else{
+        this.zoomObj = new zoom(document.getElementById('canvasInnerDiv'), {
+        width: this.baseWidth,
+        height: this.baseHeight,
+        top: 0,
+        left: 0,
+        minScale: this.boxscale,
+        // maxScale: this.boxscale * 10,
+        warpWidth: this.boxscale * this.baseWidth,
+        warpHeight: this.boxscale * this.baseHeight
+      })
+      }
       this.zoomObj.setScale(this.boxscale)
-      // this.zoomObj.setTransform(false,0,0)
     },
     initHorseObject(translate, scale, dur, sharpPoint, imageHorse) {
       var object = {
@@ -957,12 +1038,14 @@
   #app {
     .pos_a {
       position: absolute;
+      z-index: 1;
     }
     
     .mapBackground {
       display: inline-block;
       background: url('../static/img/map.png');
       background-size: cover;
+      z-index: 1;
     }
     .detail_div {
       display: inline-block;
