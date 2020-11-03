@@ -124,17 +124,17 @@ const animate = {
         this.drawHorsesTimeout1 = setInterval(() => {
             this.canvasClear(canvasAnimHorse);
             this.drawHorse2(
-                this.horseObject2,
+                this.horseObject1,
                 contextAnimHorse,
-                this.horseObject2.source,
+                this.horseObject1.source,
                 x,y
             )
-        }, 250);
+        }, 60);
     } else {
         clearInterval(this.drawHorsesTimeout1);
         this.canvasClear(canvasAnimHorse);
         canvasAnimHorse.style.visibility = "hidden";
-        this.resetHorseObject(this.horseObject2)
+        this.resetHorseObject(this.horseObject1)
     }
 },
    
@@ -259,8 +259,8 @@ const animate = {
                 object.height,
                 x,
                 y,
-                object.width * 0.5,
-                object.height * 0.5);
+                object.width * 1,
+                object.height * 1);
             contextS.restore();
             // Anim Position control
             if (

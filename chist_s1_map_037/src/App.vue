@@ -482,7 +482,7 @@
       oriChange() {
         setTimeout(() => {
           this.setRemUnit();
-        }, 100);
+        }, 200);
       },
       forApp(){
         const u_agent = navigator.userAgent

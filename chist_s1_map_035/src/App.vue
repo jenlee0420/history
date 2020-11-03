@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <!-- <canvas id="testCanvas"></canvas> -->
-          this.
     <!-- <div class="pos_a" style="font-size:0.5rem">{{debug}}</div> -->
     <div v-if="load" id="loading" style="width:820px;">
       <img :src="require('../static/img/loading.gif')" />
@@ -435,7 +434,7 @@
       oriChange() {
         setTimeout(() => {
           this.setRemUnit();
-        }, 100);
+        }, 200);
       },
       forApp() {
         const u_agent = navigator.userAgent
@@ -467,7 +466,7 @@
             this.rem = this.o / 10 / this.dpr;
           }
           document.documentElement.style.fontSize = (this.rem) + 'px'
-          this.pageTransform = 'rotate(-90deg)'
+          this.pageTransform = 'rotate3d(0,0,1,-90deg)'
           this.pageMarginTop = this.pageMarginLeft = (this.docWidth - this.docHeight) / 2
         }
         selffun()

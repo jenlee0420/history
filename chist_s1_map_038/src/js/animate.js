@@ -22,7 +22,13 @@ const animate = {
       times -= 1;
     }, 260)
   },
+  stopCityAni(canvasStatic){
+    clearInterval(canvasStatic.timeout);
+    canvasStatic.style.visibility = "visible";
+    canvasStatic.ani = false;
+  },
   showCityAni(canvasStatic, bool) {
+    return new Promise((resolve, rej) => {
     if (!bool) {
       clearInterval(canvasStatic.timeout);
       canvasStatic.style.visibility = "hidden";
@@ -37,6 +43,7 @@ const animate = {
     canvasStatic.timeout = setInterval(() => {
       if (times == 0) {
         clearInterval(canvasStatic.timeout);
+        resolve('end')
         return;
       }
       canvasStatic.style.visibility = show ? "visible" : "hidden";
@@ -44,6 +51,7 @@ const animate = {
       times -= 1;
     }, 260);
     canvasStatic.ani = true;
+  })
   },
   drawRedPath(flag) {
     let canvasAnimPath = document.getElementById("canvasroute");
@@ -140,25 +148,202 @@ const animate = {
     }
   },
   drawHousePromise(flag) {
-    this.canvasAnimHorse = document.getElementById("canvaszhangqian");
-    let contextAnimHorse = this.canvasAnimHorse.getContext("2d");
-    clearInterval(this.drawHorsesTimeout2);
+    let canvasAnimHorse = document.getElementById("canvaszhangqian");
+    let contextAnimHorse = canvasAnimHorse.getContext("2d");
+    clearInterval(this.drawHorsesTimeout);
     if (flag) {
-      this.canvasAnimHorse.style.visibility = "visible";
-      this.drawHorsesTimeout2 = setInterval(() => {
-        this.canvasClear(this.canvasAnimHorse);
+      canvasAnimHorse.style.visibility = "visible";
+      this.drawHorsesTimeout = setInterval(() => {
+        this.canvasClear(canvasAnimHorse);
         this.drawHorse(
           this.horseObject1,
           contextAnimHorse,
-          this.horseObject1.source
+          this.horseObject1.source,
+          true,
+          0.45
+        )
+      }, 250);
+    } else {
+      clearInterval(this.drawHorsesTimeout);
+      this.canvasClear(canvasAnimHorse);
+      canvasAnimHorse.style.visibility = "hidden";
+      this.resetHorseObject(this.horseObject1)
+    }
+  },
+  drawCity(flag) {
+    let canvasAnimHorse = document.getElementById("canvastemple");
+    let contextAnimHorse = canvasAnimHorse.getContext("2d");
+    clearInterval(this.drawHorsesTimeout2);
+    if (flag) {
+      // console.log(flag,'.....')
+      canvasAnimHorse.style.visibility = "visible";
+      this.drawHorsesTimeout2 = setInterval(() => {
+        this.canvasClear(canvasAnimHorse);
+        this.drawHorse(
+          this.horseObject2,
+          contextAnimHorse,
+          this.horseObject2.source,
+          false
         )
       }, 120);
     } else {
       clearInterval(this.drawHorsesTimeout2);
+      this.canvasClear(canvasAnimHorse);
+      canvasAnimHorse.style.visibility = "hidden";
+      this.resetHorseObject(this.horseObject2)
+    }
+  },
+  drawCity2(flag) {
+    let canvasAnimHorse = document.getElementById("canvastemple2");
+    let contextAnimHorse = canvasAnimHorse.getContext("2d");
+    clearInterval(this.drawHorsesTimeout3);
+    if (flag) {
+      canvasAnimHorse.style.visibility = "visible";
+      this.drawHorsesTimeout3 = setInterval(() => {
+        this.canvasClear(canvasAnimHorse);
+        this.drawHorse(
+          this.horseObject3,
+          contextAnimHorse,
+          this.horseObject3.source,
+          false
+        )
+      }, 120);
+    } else {
+      clearInterval(this.drawHorsesTimeout3);
+      this.canvasClear(canvasAnimHorse);
+      canvasAnimHorse.style.visibility = "hidden";
+      this.resetHorseObject(this.horseObject3)
+    }
+  },
+  drawStatue(flag) {    
+    this.canvasAnimHorse = document.getElementById("canvasStatue");
+    let contextAnimHorse = this.canvasAnimHorse.getContext("2d");
+    clearInterval(this.drawHorsesTimeout4);
+    if (flag) {
+     
+      this.canvasAnimHorse.style.visibility = "visible";
+      this.drawHorsesTimeout4 = setInterval(() => {
+        this.canvasClear(this.canvasAnimHorse);
+        this.drawHorse(
+          this.horseObject4,
+          contextAnimHorse,
+          this.horseObject4.source,
+          false
+        ).then((res)=>{
+          this.timer1[6] = setTimeout(() => {
+            this.drawStatuePath2(true)
+          }, 15000)
+          clearInterval(this.drawHorsesTimeout4);
+        })
+      }, 120);
+    } else {
+      clearInterval(this.drawHorsesTimeout4);
       this.canvasClear(this.canvasAnimHorse);
       this.canvasAnimHorse.style.visibility = "hidden";
-      this.resetHorseObject(this.horseObject1)
+      this.resetHorseObject(this.horseObject4)
     }
+  },
+    drawStatue2(flag) {
+    let canvasAnimHorse = document.getElementById("canvasStatue2");
+    let contextAnimHorse = canvasAnimHorse.getContext("2d");
+    clearInterval(this.drawHorsesTimeout5);
+    if (flag) {
+      canvasAnimHorse.style.visibility = "visible";
+      this.drawHorsesTimeout5 = setInterval(() => {
+        this.canvasClear(canvasAnimHorse);
+        this.drawHorse(
+          this.horseObject5,
+          contextAnimHorse,
+          this.horseObject5.source,
+          false
+        ).then((res)=>{         
+          clearInterval(this.drawHorsesTimeout5);
+        })
+      }, 120);
+    } else {
+      clearInterval(this.drawHorsesTimeout5);
+      this.canvasClear(canvasAnimHorse);
+      canvasAnimHorse.style.visibility = "hidden";
+      this.resetHorseObject(this.horseObject5)
+    }
+  },
+  drawStatue3(flag) {
+    let canvasAnimHorse = document.getElementById("canvasStatue3");
+    let contextAnimHorse = canvasAnimHorse.getContext("2d");
+    clearInterval(this.drawHorsesTimeout6);
+    if (flag) {
+      canvasAnimHorse.style.visibility = "visible";
+      this.drawHorsesTimeout6 = setInterval(() => {
+        this.canvasClear(canvasAnimHorse);
+        this.drawHorse(
+          this.horseObject6,
+          contextAnimHorse,
+          this.horseObject6.source,
+          false
+        ).then((res)=>{         
+          clearInterval(this.drawHorsesTimeout6);
+        })
+      }, 120);
+    } else {
+      clearInterval(this.drawHorsesTimeout6);
+      this.canvasClear(canvasAnimHorse);
+      canvasAnimHorse.style.visibility = "hidden";
+      this.resetHorseObject(this.horseObject6)
+    }
+  },
+  drawStatue4(flag) {
+    let canvasAnimHorse = document.getElementById("canvasStatue4");
+    let contextAnimHorse = canvasAnimHorse.getContext("2d");
+    clearInterval(this.drawHorsesTimeout7);
+    if (flag) {
+      canvasAnimHorse.style.visibility = "visible";
+      this.drawHorsesTimeout7 = setInterval(() => {
+        this.canvasClear(canvasAnimHorse);
+        this.drawHorse(
+          this.horseObject7,
+          contextAnimHorse,
+          this.horseObject7.source,
+          false
+        ).then((res)=>{         
+          clearInterval(this.drawHorsesTimeout7);
+        })
+      }, 120);
+    } else {
+      clearInterval(this.drawHorsesTimeout7);
+      this.canvasClear(canvasAnimHorse);
+      canvasAnimHorse.style.visibility = "hidden";
+      this.resetHorseObject(this.horseObject7)
+    }
+  },
+  drawStatue5(flag) {
+    let canvasAnimHorse = document.getElementById("canvasStatue5");
+    let contextAnimHorse = canvasAnimHorse.getContext("2d");
+    clearInterval(this.drawHorsesTimeout8);
+    if (flag) {
+      canvasAnimHorse.style.visibility = "visible";
+      this.drawHorsesTimeout8 = setInterval(() => {
+        this.canvasClear(canvasAnimHorse);
+        this.drawHorse(
+          this.horseObject8,
+          contextAnimHorse,
+          this.horseObject8.source,
+          false
+        ).then((res)=>{         
+          clearInterval(this.drawHorsesTimeout8);
+        })
+      }, 120);
+    } else {
+      clearInterval(this.drawHorsesTimeout8);
+      this.canvasClear(canvasAnimHorse);
+      canvasAnimHorse.style.visibility = "hidden";
+      this.resetHorseObject(this.horseObject8)
+    }
+  },
+  drawStatuePath2(flag){
+    this.drawStatue3(flag)
+    this.drawStatue4(flag)
+    this.drawStatue5(flag)
+
   },
   drawHousePromise2(flag, canvasId, x, y) {
     let canvasAnimHorse = document.getElementById(canvasId);
@@ -169,9 +354,9 @@ const animate = {
       this.drawHorsesTimeout1 = setInterval(() => {
         this.canvasClear(canvasAnimHorse);
         this.drawHorse2(
-          this.horseObject2,
+          this.horseObject9,
           contextAnimHorse,
-          this.horseObject2.source,
+          this.horseObject9.source,
           x, y
         )
       }, 250);
@@ -181,12 +366,36 @@ const animate = {
       canvasAnimHorse.style.visibility = "hidden";
     }
   },
+  drawHousePromise3(flag, canvasId, x, y) {
+    let canvasAnimHorse = document.getElementById(canvasId);
+    let contextAnimHorse = canvasAnimHorse.getContext("2d");
+    clearInterval(this.drawHorsesTimeout9);
+    if (flag) {
+      canvasAnimHorse.style.visibility = "visible";
+      this.drawHorsesTimeout9 = setInterval(() => {
+        this.canvasClear(canvasAnimHorse);
+        this.drawHorse2(
+          this.horseObject9,
+          contextAnimHorse,
+          this.horseObject9.source,
+          x, y
+        )
+      }, 250);
+    } else {
+      clearInterval(this.drawHorsesTimeout9);
+      this.canvasClear(canvasAnimHorse);
+      canvasAnimHorse.style.visibility = "hidden";
+    }
+  },
 
-  drawHorse(object, contextS, imageHorse, imageHorse2) {
-
+  drawHorse(object, contextS, imageHorse, isStop,scale) {
+    var Sscale = scale?scale:0.5
     return new Promise((resolve, rej) => {
       // 
-      // if () {
+      if(object.source.src.indexOf('buddhastatue')>-1 && this.list[6].show == true && object.position.currPoint == 2 && !this.btn2Play){
+        console.log(object.source.src)
+        this.btn2Play = true
+      }
 
       contextS.save();
       // if (object.point==-1) {
@@ -240,10 +449,13 @@ const animate = {
             object.position.points[object.position.currPoint + 1][1] *
             object.position.currDur) /
           object.position.dur[object.position.currPoint];
-      } else {
+      } else if(isStop) { 
         scale =1
         position[0] = object.position.points[object.position.totalPoint - 1][0]
         position[1] = object.position.points[object.position.totalPoint - 1][1]
+      }else{
+        // console.log('end')
+        resolve('end')
       }
       contextS.drawImage(
         imageHorse,
@@ -253,8 +465,8 @@ const animate = {
         object.height,
         position[0],
         position[1],
-        object.width * scale,
-        object.height * scale);
+        object.width * scale *Sscale,
+        object.height * scale *Sscale);
 
       contextS.restore();
       // Anim Position control
@@ -271,42 +483,39 @@ const animate = {
     });
   },
   drawHorse2(object, contextS, imageHorse, x, y) {
-    // console.log(x,y)
     return new Promise((resolve, rej) => {
       contextS.save();
       var position = new Array();
       var scale;
       if (object.currFrame < object.totalFrame - 1) {
-        object.currFrame++;
+          object.currFrame++;
       } else {
-        object.currFrame = 0;
+          object.currFrame = 0;
       }
       contextS.drawImage(
-        imageHorse,
-        object.currFrame * object.width,
-        0,
-        object.width,
-        object.height,
-        x,
-        y,
-        object.width,
-        object.height);
+          imageHorse,
+          object.currFrame * object.width,
+          0,
+          object.width,
+          object.height,
+          x,
+          y,
+          object.width * 0.45,
+          object.height * 0.45);
       contextS.restore();
       // Anim Position control
       if (
-        object.position.currDur <=
-        object.position.dur[object.position.currPoint]
+          object.position.currDur <=
+          object.position.dur[object.position.currPoint]
       ) {
-        object.position.currDur++;
+          object.position.currDur++;
       } else {
-        object.position.currDur = 1;
-        object.position.currPoint++;
+          object.position.currDur = 1;
+          object.position.currPoint++;
       }
       // return "ok";
 
-    });
-
-    // })
+  });
   },
   createCanvas(canvasList, divTag) {
     let canvasObj = {},

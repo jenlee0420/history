@@ -15,7 +15,7 @@
           <div class="mapBackground" id="canvasInnerDiv" ref="canvasInnerDiv">
             <imageview :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
             <imageview :imgsrc="'mapDetail.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
-            <imageview :imgsrc="'capital.png'" :static="control.capital.show" :zindex="2" @update="updateImg"></imageview>
+            <!-- <imageview :imgsrc="'capital.png'" :static="control.capital.show" :zindex="2" @update="updateImg"></imageview> -->
           </div>
         </div>
         <div id="menu_container" style="float: right;">
@@ -201,11 +201,11 @@
           xiyu2: null,
         },
         control: {
-          capital: {
-            show: false,
-            ani: false,
-            timer: null
-          },
+          // capital: {
+          //   show: false,
+          //   ani: false,
+          //   timer: null
+          // },
           route1:false,
           // route2:false,
           main_city: false,
@@ -394,7 +394,8 @@
               this.m01.currentTime = 0;
               this.m01.play();
             }
-            this.sharpCity(this.control.capital, swip);
+            // this.sharpCity(this.control.capital, swip);
+            this.showCityAni(this.canvasObj['canvascity'],swip)
             break;
           case 1:
             if (swip && !this.noVoice) {
@@ -463,12 +464,14 @@
       conflict() {
         let swip5 = this.list[5].show;
         let swip6 = this.list[6].show;
-        this.control.capital.show = this.list[0].show;
+        // this.control.capital.show = this.list[0].show;
+        this.canvasObj['canvascity'].style.visibility = this.list[0].show ? "visible" : "hidden";
         this.control.main_city = this.list[2].show;
         this.control.xiyu1=this.control.xiyu2= this.list[3].show;
         this.control.mountain =this.list[4].show
         if (swip5) {
-          this.control.capital.show = true
+          // this.control.capital.show = true
+          this.canvasObj['canvascity'].style.visibility = "visible";
           this.control.main_city = true
           this.control.xiyu1 = true
           this.control.xiyu2 = true
@@ -481,7 +484,7 @@
       oriChange() {
         setTimeout(() => {
           this.setRemUnit();
-        }, 100);
+        }, 200);
       },
       forApp(){
         const u_agent = navigator.userAgent
@@ -513,7 +516,7 @@
             this.rem = this.o / 10 / this.dpr;
           }
           document.documentElement.style.fontSize = (this.rem) + 'px'
-          this.pageTransform = 'rotate(-90deg)'
+          this.pageTransform = 'rotate3d(0,0,1,-90deg)'
           this.pageMarginTop =this.pageMarginLeft=(this.docWidth - this.docHeight) /2
         }
         selffun()
@@ -595,7 +598,11 @@
       },
       createMap() {
         var divTag = this.$refs.canvasInnerDiv;
-        let list = [{
+        let list = [
+          {
+            name: "canvascity",
+            zindex: 2
+          },{
             name: "canvasImages",
             zindex: 3
           },
@@ -636,10 +643,12 @@
           this.imageObj[element] = new Image();
           this.insterCanvas(this.imageObj[element], String(element)+'.png', 'canvasImages', false)
         });
+        var city = new Image();
         var zhangqian = new Image();
         var zhangqian_b = new Image();
         var flagman = new Image();
         var route = new Image();
+        this.insterCanvas(city, 'capital.png', 'canvascity', false)
         this.insterCanvas2(route, 'route2.png', () => {
           this.pathObject = {
           source: route,

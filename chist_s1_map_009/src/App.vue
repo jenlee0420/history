@@ -372,7 +372,7 @@ export default {
     oriChange() {
       setTimeout(() => {
         this.setRemUnit();
-      }, 100);
+      }, 200);
     },
     setRemUnit() {
       const u_agent = navigator.userAgent;

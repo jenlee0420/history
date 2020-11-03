@@ -21,7 +21,7 @@
         <div id="menu_container" style="float: right;">
           <div id="action_container" class="greyContainer" style="padding: 1px 0.03em 0.03em; height: auto; flex: 1 1 0%;">
             <div class="sample_title">圖例</div>
-            <div class="sample blueButton action" :class="{ clicked: item.show }" v-for="(item, index) in list" :key="index" @click="showCanvas(index)">
+            <div class="sample blueButton action" :class="{ clicked: item.show }" v-for="(item, index) in list" :key="index" @click="clickFun(index)">
               <div class="iconItem">
                 <span class="icon"><img :src="item.ico"/></span>
                 <span class="">{{ item.text }}</span>
@@ -339,9 +339,19 @@
         timerGroup: [],
         isShowall: false,
         drawRiverTimeout: false,
-        animatePlay:false,
         route1:null,
-        route2:null
+        route2:null,
+        ship2Pos:{
+         w: 10,
+      x :620,
+        },
+        ship1Pos:{
+      h:50,
+      y:1200,
+      xx:1154,
+      ww:220,
+    
+        }
       };
     },
     watch: {
@@ -396,22 +406,33 @@
         this.m08.pause();
          this.waveSound.pause();
           this.winSound.pause();
+          this.m01.currentTime = 0;
+           this.m02.currentTime = 0;
+            this.m03.currentTime = 0;
+             this.m04.currentTime = 0;
+              this.m05.currentTime = 0;
+               this.m06.currentTime = 0;
+                this.m07.currentTime = 0;
+                 this.m08.currentTime = 0;
+      },
+      clickFun(index){
+        this.muteMe();
+        this.showCanvas(index)
       },
       showCanvas(index) {
         let swip = !this.list[index].show;
-        this.muteMe();
         switch (index) {
           case 0:
             //首都
-            if (swip && !this.noVoice) {
-              this.m01.currentTime = 0;
+            if (swip && !this.noVoice && !this.isShowall) {
+              
               this.m01.play();
             }
             this.showCityAni(this.canvasObj['capital'], swip);
             break;
           case 1:
-            if (swip && !this.noVoice) {
-              this.m02.currentTime = 0;
+            if (swip && !this.noVoice && !this.isShowall) {
+              // this.m02.currentTime = 0;
               this.m02.play();
             }
             this.showCityAni(this.canvasObj['dongdu'], swip);
@@ -420,15 +441,15 @@
             this.showCityAni(this.canvasObj['main_city'], swip);
             break;
           case 3:
-            if (swip && !this.noVoice) {
-              this.m03.currentTime = 0;
+            if (swip && !this.noVoice && !this.isShowall) {
+              // this.m03.currentTime = 0;
               this.m03.play();
             }
             this.showCityAni(this.canvasObj['gate'], swip);
             break;
           case 4:
             this.drawRiverTimeout = '';
-              for (var i = 0; i < this.timerGroup.length; i++) {
+            for (var i = 0; i < this.timerGroup.length; i++) {
                 clearTimeout(this.timerGroup[i]);
               }
             if(swip){
@@ -438,29 +459,42 @@
                 this.drawRiverPathNoVoice(swip)
               }
             }else{
+              
               this.control.river01=false
               this.control.river02=false
               this.control.river03=false
               this.control.river04=false
               this.control.river05=false
+              
             }
             break;
           case 5:
-            if (swip && !this.noVoice) {
+            if (swip && !this.noVoice && !this.isShowall) {
               this.waveSound.volume = 0.1
               this.waveSound.play();
             }
-            this.ship1(swip);
+            // this.ship1(swip);
+            // this.drawRedPath(swip)
+            // let canvasAnimRedPath = this.canvasObj['canvasAnimRedPath']
+            // if (!canvasAnimRedPath.playing) {
+            //   this.drawHousePromise(swip);
+            //   canvasAnimRedPath.playing = true;
+            // }
+            // if(!swip){
+            //   this.drawHousePromise(false);
+            //   canvasAnimRedPath.playing = false;
+            // }
             break;
           case 6:
-            if (swip && !this.noVoice) {
+            if (swip && !this.noVoice && !this.isShowall) {
               this.waveSound.volume = 0.1
               this.waveSound.play();
             }
             this.ship2(swip);
+            // this.drawHousePromise(swip);
             break;
           case 7:
-            if (swip && !this.noVoice) {
+            if (swip && !this.noVoice && !this.isShowall) {
               this.winSound.currentTime = 0;
               this.winSound.play();
             }
@@ -590,19 +624,16 @@
         this.setZoom();
       },
       initCanvas() {},
-      showall(type) {
+      showall(type) {  
+        
         this.isShowall = type
         this.list.forEach((e, index) => {
           if (!this.list[index].type) {
-            if (type) {
-              this.list[index].show = false
-            } else {
-              this.list[index].show = true;
-            }
+            this.list[index].show = !type
             this.showCanvas(index);
           }
         });
-        this.muteMe();
+        // this.muteMe();      
       },
       resetHorseObject(object) {
         object.currFrame = 0;
@@ -692,23 +723,45 @@
         this.insterCanvas2(this.route1, 'route1/xianlu1a0090.png',false)
         this.insterCanvas2(this.route2, 'route2/xianlu2b0050.png',false)
         var imageHorse = new Image();
-        // this.insterCanvas2(route, 'ship.png', () => {
+        // this.insterCanvas2(this.route1, 'route1/xianlu1a0090.png', () => {
         //   this.pathObject = {
-        //   source: route,
+        //   source: this.route1,
         //   originX: 0,
         //   originY: 0,
         //   width: this.baseWidth,
         //   height: this.baseHeight,
         //   mask1: {
-        //     originX: 265,
-        //     originY: 774,
-        //     width: 289,
-        //     height: 148,
-        //     currOriginX: 265,
-        //     currOriginY: 774,
-        //     shiftX: 2,
+        //     originX: 1155,
+        //     originY: 1176,
+        //     width: 244,
+        //     height: 339,
+        //     currOriginX: 1155,
+        //     currOriginY: 1176,
+        //     shiftX: 0,
+        //     shiftY: 8,
+        //     endPoint: 854
+        //   },
+        //   mask2: {
+        //     originX: 1155,
+        //     originY: 752,
+        //     width: 700,
+        //     height: 162,
+        //     currOriginX: 1155,
+        //     currOriginY: 752,
+        //     shiftX: 12,
         //     shiftY: 0,
-        //     endPoint: 5
+        //     endPoint: 490
+        //   },
+        //   mask3: {
+        //     originX: 656,
+        //     originY: 762,
+        //     width: 298,
+        //     height: 580,
+        //     currOriginX: 656,
+        //     currOriginY: 762,
+        //     shiftX: 0,
+        //     shiftY: 12,
+        //     endPoint: 190
         //   },
         //   }
         // })
@@ -989,6 +1042,24 @@
     }
     .mr5 {
       margin-right: 5px;
+    }
+  }
+  .ciytAni{
+    animation: sharp .6s linear 3;
+  }
+
+  @keyframes sharp {
+    0%{
+      opacity: 1;
+      // display: block
+    }
+  50%{
+      opacity: 0;
+      // display:none
+    }
+    100%{
+      opacity: 1;
+      // display: block
     }
   }
 </style>

@@ -545,7 +545,7 @@ export default {
     oriChange() {
       setTimeout(() => {
         this.setRemUnit();
-      }, 100);
+      }, 200);
     },
     forApp(){
         const u_agent = navigator.userAgent
@@ -577,7 +577,7 @@ export default {
             this.rem = this.o / 10 / this.dpr;
           }
           document.documentElement.style.fontSize = (this.rem) + 'px'
-          this.pageTransform = 'rotate(-90deg)'
+          this.pageTransform = 'rotate3d(0,0,1,-90deg)'
           this.pageMarginTop =this.pageMarginLeft=(this.docWidth - this.docHeight) /2
         }
         selffun()

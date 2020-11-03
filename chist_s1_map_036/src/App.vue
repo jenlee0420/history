@@ -14,7 +14,7 @@
         <div id="map_container" class="modal_content" ref="map_container" :style="{ width: canvasW + 'px', height: canvasH + 'px' }">
           <div class="mapBackground" id="canvasInnerDiv" ref="canvasInnerDiv">
             <imageview :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
-            <imageview :imgsrc="'mapDetail.png'" :static="true" :zindex="2" @update="updateImg"></imageview>
+            <imageview :imgsrc="'mapDetail.png'" :static="true" :zindex="3" @update="updateImg"></imageview>
           </div>
         </div>
         <div id="menu_container" style="float: right;">
@@ -191,20 +191,20 @@
     data() {
       return {
         imageObj: {
-          
+          border:null,
           weiguo:null,
           shuguo:null,
           wuguo:null,
-          zhanchang:null,
-          border:null,
+          
+          
         },
         control: {
-          
+          border:false,
           weiguo:false,
           shuguo:false,
           wuguo:false,
-          zhanchang:false,
-          border:false,
+          
+          
         },
         canvasImagesObj: {
           city1: null,
@@ -419,24 +419,29 @@
                 this.m04.play();
                 this.m04.onended=()=>{
                   this.timer1[0] = setTimeout(()=>{
-                    this.canvasObj['canvasburning'].style.visibility = 'hidden';
+                    // this.canvasObj['canvasburning'].style.visibility = 'hidden';
+                    this.drawHousePromise2(false,'canvasburning',895,690)
                   },3000)
                 }
                 this.timer1[3] = setTimeout(()=>{
-                  this.canvasObj['canvasburning'].style.visibility = 'visible';
+                  // this.canvasObj['canvasburning'].style.visibility = 'visible';
+                  this.drawHousePromise2(true,'canvasburning',895,690)
                 },38000)
               }else if(this.noVoice || this.isShowall){
                 this.timer1[4] = setTimeout(()=>{
-                  this.canvasObj['canvasburning'].style.visibility = 'visible';
+                  // this.canvasObj['canvasburning'].style.visibility = 'visible';
+                  this.drawHousePromise2(true,'canvasburning',895,690)
                 },3000)
                 this.timer1[0] = setTimeout(()=>{
-                  this.canvasObj['canvasburning'].style.visibility = 'hidden';
+                  // this.canvasObj['canvasburning'].style.visibility = 'hidden';
+                  this.drawHousePromise2(false,'canvasburning',895,690)
                 },6000)
               }
             }else{              
-              this.canvasObj['canvasburning'].style.visibility = 'hidden';
+              this.drawHousePromise2(false,'canvasburning',932,740)
             }
-            this.control.zhanchang = swip
+            // this.control.zhanchang = swip
+            this.canvasObj['zhanchang'].style.visibility = swip?'visible':'hidden'
             break;
           case 4:
             if (swip && !this.noVoice) {
@@ -499,7 +504,7 @@
       oriChange() {
         setTimeout(() => {
           this.setRemUnit();
-        }, 100);
+        }, 200);
       },
       forApp(){
         const u_agent = navigator.userAgent
@@ -531,7 +536,7 @@
             this.rem = this.o / 10 / this.dpr;
           }
           document.documentElement.style.fontSize = (this.rem) + 'px'
-          this.pageTransform = 'rotate(-90deg)'
+          this.pageTransform = 'rotate3d(0,0,1,-90deg)'
           this.pageMarginTop =this.pageMarginLeft=(this.docWidth - this.docHeight) /2
         }
         selffun()
@@ -619,31 +624,35 @@
           },
           {
             name: "city1",
-            zindex: 2
+            zindex: 3
           },
           {
             name: "city2",
-            zindex: 2
+            zindex: 3
           },
           {
             name: "city3",
-            zindex: 2
+            zindex: 3
           },
           {
             name: "canvasshu",
-            zindex: 2
+            zindex: 3
           },
           {
             name: "canvaswei",
-            zindex: 2
+            zindex: 3
           },
           {
             name: "canvaswu",
-            zindex: 2
+            zindex: 3
           },
           {
             name: "canvasburning",
-            zindex: 2
+            zindex: 3
+          },
+          {
+            name: "zhanchang",
+            zindex: 3
           },
         ];
         let obj = this.createCanvas(list, divTag);
@@ -678,12 +687,18 @@
         var canvaswu = new Image();
         var canvaswei = new Image();
         var canvasshu = new Image();
+        var zhanchang = new Image();
         this.insterCanvas(canvasshu, 'shu.png', 'canvasshu', true)
         this.insterCanvas(canvaswei, 'wei.png', 'canvaswei', true)
         this.insterCanvas(canvaswu, 'wu.png', 'canvaswu', true)
-        this.insterCanvas(canvasburning, 'burningships1.png', 'canvasburning', false)
+        this.insterCanvas(zhanchang, 'zhanchang.png', 'zhanchang', false)
+        // this.insterCanvas(canvasburning, 'burningships1.png', 'canvasburning', false)
 
-
+this.insterCanvas2(canvasburning, 'burningships.png', () => {
+    this.horseObject1 = this.initHorseObject2(            
+            canvasburning
+          );
+})
         // this.insterCanvas2(Hutrooper, 'Hutrooper.png', () => {
         //   var translate = [
         //     [225, 148], [394.1,514],[544.1, 726]
@@ -786,10 +801,10 @@
       initHorseObject2(imageHorse) {
       var object = {
         source: imageHorse,
-        totalFrame: 1,
+        totalFrame: 16,
         currFrame: 0,
-        width: 270,
-        height: 400,
+        width: 153.2,
+        height: 100,
         position: {
           currPoint: 0,
           dur: 1,

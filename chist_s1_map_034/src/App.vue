@@ -14,10 +14,10 @@
         <div id="map_container" class="modal_content" ref="map_container" :style="{ width: canvasW + 'px', height: canvasH + 'px' }">
           <div class="mapBackground" id="canvasInnerDiv" ref="canvasInnerDiv">
             <imageview :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
-            <imageview :imgsrc="'mapDetail.png'" :static="true" :zindex="4" @update="updateImg"></imageview>
+            <!-- <imageview :imgsrc="'mapDetail.png'" :static="true" :zindex="4" @update="updateImg"></imageview>
             <imageview :imgsrc="'wenzi.png'" :static="true" :zindex="4" @update="updateImg"></imageview>
             <imageview :imgsrc="'border.png'" :static="true" :zindex="4" @update="updateImg"></imageview>
-            <imageview :imgsrc="'GreatWall.png'" :static="control.GreatWall" :zindex="4" @update="updateImg"></imageview>
+            <imageview :imgsrc="'GreatWall.png'" :static="control.GreatWall" :zindex="4" @update="updateImg"></imageview> -->
           </div>
         </div>
         <div id="menu_container" style="float: right;">
@@ -26,7 +26,7 @@
             <div class="sample blueButton action" :class="{ clicked: item.show }" v-for="(item, index) in list" :key="index" @click="showCanvas(index)">
               <div class="iconItem">
                 <span class="icon"><img :src="item.ico"/></span>
-                <span>{{ item.text }}</span>
+                <span v-html="item.text "></span>
               </div>
             </div>
           </div>
@@ -193,6 +193,10 @@
     },
     data() {
       return {
+        imageObj2:{mapDetail:null,
+        wenzi:null,
+        border:null,
+        GreatWall:null,},
         imageObj: {
           di:null,
           jie: null,
@@ -248,7 +252,7 @@
           },
           {
             ico: require("../static/img/icon/di_icon.png"),
-            text: "氐",
+            text: "<font class='dot'>氐</font>",
             show: false
           },
           {
@@ -467,7 +471,7 @@
       oriChange() {
         setTimeout(() => {
           this.setRemUnit();
-        }, 100);
+        }, 200);
       },
       forApp(){
         const u_agent = navigator.userAgent
@@ -499,7 +503,7 @@
             this.rem = this.o / 10 / this.dpr;
           }
           document.documentElement.style.fontSize = (this.rem) + 'px'
-          this.pageTransform = 'rotate(-90deg)'
+          this.pageTransform = 'rotate3d(0,0,1,-90deg)'
           this.pageMarginTop =this.pageMarginLeft=(this.docWidth - this.docHeight) /2
         }
         selffun()
@@ -586,6 +590,10 @@
             zindex: 3
           },
           {
+            name: "canvasImages2",
+            zindex: 4
+          },
+          {
             name: "canvascapital",
             zindex: 3
           },
@@ -617,6 +625,10 @@
         Object.keys(this.imageObj).forEach(element => {
           this.imageObj[element] = new Image();
           this.insterCanvas(this.imageObj[element], String(element)+'.png', 'canvasImages', false)
+        });
+        Object.keys(this.imageObj2).forEach(element => {
+          this.imageObj2[element] = new Image();
+          this.insterCanvas(this.imageObj2[element], String(element)+'.png', 'canvasImages2', true)
         });
         var capital = new Image();
         var Hutrooper = new Image();
@@ -820,6 +832,9 @@
     .pos_a {
       position: absolute;
     } // 
+    .pp{
+      font-family:'PMingLiu'
+    }
     .mapBackground {
       display: inline-block; // background: url("../static/img/map.png");
       background-size: cover;

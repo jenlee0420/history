@@ -531,7 +531,7 @@ export default {
     oriChange() {
       setTimeout(() => {
         this.setRemUnit();
-      }, 100);
+      }, 200);
     },
     setRemUnit() {
       const u_agent = navigator.userAgent;
@@ -870,7 +870,7 @@ export default {
   .pos_a {
     position: absolute;
   }
-  // font-family: Verdana, Arial, sans-serif;
+  font-family: Verdana, Arial, sans-serif;
   .mapBackground {
     display: inline-block;
     // background: url("../static/img/map.png");

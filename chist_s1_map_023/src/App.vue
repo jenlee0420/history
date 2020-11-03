@@ -458,6 +458,7 @@ export default {
           this.drawHousePromise3(swip)
           if(!swip){
             this.drawbluePath(swip)
+            this.drawbluePath2(swip)
           }
           break;
         case 8:
@@ -511,7 +512,7 @@ export default {
     oriChange() {
       setTimeout(() => {
         this.setRemUnit();
-      }, 100);
+      }, 200);
     },
     setRemUnit() {
       const u_agent = navigator.userAgent;
@@ -766,7 +767,7 @@ export default {
       }
     },
     insterCanvas(img, src,contextStatic, bool) {
-      console.log(src)
+      // console.log(src)
       img.src = require(`../static/img/${src}`);
       img.onload = () => {
         this.imgCount++

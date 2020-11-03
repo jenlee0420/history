@@ -10,9 +10,8 @@ Object.keys(global).forEach(key => {
 });
 import Vconsole from 'vconsole';
 
-let vConsole = new Vconsole();
-
-export default vConsole
+// let vConsole = new Vconsole();
+// export default vConsole
 new Vue({
   render: h => h(App),
 }).$mount('#app')

@@ -236,7 +236,7 @@ const animate = {
                 this.drawbluePath(flag);
             }, 30);
         }else{
-          console.log('////')
+          // console.log('////')
           // resolve('end')
           this.drawbluePath2(flag)
         }

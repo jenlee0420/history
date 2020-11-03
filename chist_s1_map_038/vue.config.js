@@ -1,6 +1,6 @@
 
 
-const url ='chist_s1_map_037'
+const url ='chist_s1_map_038'
 var webpackConfig ={
     publicPath: "./",
     outputDir: url,
