@@ -24,8 +24,7 @@ const animate = {
   },
   showCityAni(canvasStatic, bool) {
     if (!bool) {
-      // clearInterval(canvasStatic.timeout);
-      clearTimeout(canvasStatic.timeout)
+      clearInterval(canvasStatic.timeout);
       canvasStatic.style.visibility = "hidden";
       canvasStatic.ani = false;
       return;
@@ -33,34 +32,18 @@ const animate = {
     if (canvasStatic.ani == true) {
       return;
     }
-    // return new Promise((resolve, rej) => {
-    
     let show = false;
     let times = 6;
-    let visiblefun =()=>{      
+    canvasStatic.timeout = setInterval(() => {
+      if (times == 0) {
+        clearInterval(canvasStatic.timeout);
+        return;
+      }
       canvasStatic.style.visibility = show ? "visible" : "hidden";
       show = !show;
       times -= 1;
-      if (times > 0) {
-        // console.log(times)
-      canvasStatic.timeout = setTimeout(()=>{
-        visiblefun()
-      },260)
-    }
-    }
-    
-    visiblefun()
-    // canvasStatic.timeout = setInterval(() => {
-    //   if (times == 0) {
-    //     clearInterval(canvasStatic.timeout);
-    //     return;
-    //   }
-    //   canvasStatic.style.visibility = show ? "visible" : "hidden";
-    //   show = !show;
-    //   times -= 1;
-    // }, 260);
+    }, 260);
     canvasStatic.ani = true;
-  // })
   },
   drawRedPath(flag) {
     let canvasAnimPath = document.getElementById("canvasAnimRedPath");

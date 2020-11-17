@@ -408,13 +408,13 @@
               if(!this.noVoice && !this.isShowall){
                 this.m04.currentTime = 0;
                 this.m04.play();
-                this.m04.onended=()=>{
+                // this.m04.onended=()=>{
                   this.timer1[0] = setTimeout(()=>{
                     this.drawHousePromise(false)
                     this.control.refugee2 =false
                     this.drawHousePromise2(false,'canvaszhangqian2')
-                  },3000)
-                }
+                  },28000)
+                // }
               }else if(this.noVoice || this.isShowall){
                 this.timer1[0] = setTimeout(()=>{
                   this.control.refugee2 =false

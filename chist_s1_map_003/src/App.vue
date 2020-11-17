@@ -473,7 +473,7 @@
               this.waveSound.volume = 0.1
               this.waveSound.play();
             }
-            // this.ship1(swip);
+            this.ship1(swip);
             // this.drawRedPath(swip)
             // let canvasAnimRedPath = this.canvasObj['canvasAnimRedPath']
             // if (!canvasAnimRedPath.playing) {

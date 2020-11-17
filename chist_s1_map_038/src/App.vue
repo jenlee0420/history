@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    {{debug}}
     <!-- <canvas id="testCanvas"></canvas> -->
     <!-- <div class="pos_a" style="font-size:0.5rem">{{debug}}</div> -->
     <div v-if="load" id="loading" style="width:820px;">
@@ -7,7 +8,7 @@
     </div>
     <div v-show="!load" id="main_container" :style="mainBoxStyle">
       <div class="title_bar purpleGradient" :style="{ height: titleH + 'px' }">
-        <span>佛教傳入中國路線與主要石窟分佈圖了 (公元前6世紀-公元5世紀)</span>
+        <span>佛教傳入中國路線與主要石窟分佈圖 (公元前6世紀-公元5世紀)</span>
         <div id="soundCon" :class="{ mute: noVoice }" @click="setVoice"></div>
       </div>
       <div class="main_box">
@@ -153,20 +154,25 @@ export default {
     imageview
   },
   name: "App",
-  beforeCreate() {},
+  beforeCreate() {
+  },
   created() {
+     
     const that = this;
     that.timer = setInterval(function() {
       //
+      
       if (
         document.readyState === "complete" &&
         that.imgCount >= that.imgTotal
       ) {
         // console.log(document.readyState, that.imgCount)
+        
         that.load = false;
         window.clearInterval(that.timer);
       }
     }, 500);
+    
   },
   computed: {
     mainBoxStyle() {
@@ -248,7 +254,7 @@ export default {
       noVoice: false,
       zoomObj: null,
       imgCount: 0,
-      imgTotal: 11,
+      imgTotal: 15,
       questionItem: ["A. 雲岡石窟", "B. 龍門石窟", "C. 莫高窟 "],
       rightans: 2,
       showWrong: 0,
@@ -381,7 +387,6 @@ export default {
       handler(n, o) {
         this.scaleindex =
           ((n.scale - n.minScale) / (n.maxScale - n.minScale)) * 10;
-        this.debug = n.scale + "---" + n.maxScale + "--" + this.scaleindex;
       },
       deep: true
     },
