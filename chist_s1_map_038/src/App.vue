@@ -16,7 +16,7 @@
           id="map_container"
           class="modal_content"
           ref="map_container"
-          :style="{ width: canvasW + 'px', height: canvasH + 'px' }"
+          :style="{ 'width': canvasW + 'px', 'height': canvasH + 'px' }"
         >
           <div class="mapBackground" id="canvasInnerDiv" ref="canvasInnerDiv">
             <imageview :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
@@ -158,20 +158,20 @@ export default {
   },
   created() {
      
-    const that = this;
-    that.timer = setInterval(function() {
-      //
+    // const that = this;
+    // that.timer = setInterval(function() {
+    //   //
       
-      if (
-        document.readyState === "complete" &&
-        that.imgCount >= that.imgTotal
-      ) {
-        // console.log(document.readyState, that.imgCount)
+    //   if (
+    //     document.readyState === "complete" &&
+    //     that.imgCount >= that.imgTotal
+    //   ) {
+    //     // console.log(document.readyState, that.imgCount)
         
-        that.load = false;
-        window.clearInterval(that.timer);
-      }
-    }, 500);
+    //     that.load = false;
+    //     window.clearInterval(that.timer);
+    //   }
+    // }, 500);
     
   },
   computed: {
@@ -209,20 +209,24 @@ export default {
   },
   mounted() {
     // this.testCanvas()
-    this.createMap();
-    if ("onorientationchange" in window) {
+    this.createMap();    
+    
+    // window.addEventListener("onorientationchange" in window ?"orientationchange":"resize", this.setRemUnit, false);
+    // this.zoomObj = require("./js/zoom.js");
+    
+    if (this.isApp) {
+      this.forApp();
+    } else {
+      if ("onorientationchange" in window) {
       window.addEventListener("orientationchange", this.oriChange, false);
     } else {
       window.addEventListener("resize", this.setRemUnit, false);
     }
-    // window.addEventListener("onorientationchange" in window ?"orientationchange":"resize", this.setRemUnit, false);
-    // this.zoomObj = require("./js/zoom.js");
-    if (this.isApp) {
-      this.forApp();
-    } else {
       this.setRemUnit();
     }
+    
     this.initCanvas();
+    
     document
       .getElementById("map_container")
       .addEventListener("touchmove", this.bodyScroll, {
@@ -231,6 +235,7 @@ export default {
   },
   data() {
     return {
+      windowTimer:null,
       imageObj: {
         route: null,
         monk02: null
@@ -327,8 +332,8 @@ export default {
       o: "",
       dpr: 1,
       rem: "",
-      canvasH: "",
-      canvasW: "",
+      canvasH: 0,
+      canvasW: 0,
       docWidth: "",
       docHeight: "",
       horseObject1: {},
@@ -647,15 +652,17 @@ export default {
       }
     },
     oriChange() {
-      setTimeout(() => {
-        this.setRemUnit();
-      }, 200);
+      this.windowTimer=setTimeout(() => {
+          this.clearTimeout(this.windowTimer)
+          this.setRemUnit();
+        }, 200)
     },
     forApp() {
       const u_agent = navigator.userAgent;
       var selffun = () => {
         this.bodyHeight = window.innerHeight;
         this.bodytWidth = window.innerWidth;
+        
         var offest = this.bodytWidth / this.bodyHeight;
         if (offest > 0.5) {
           this.boxscale = this.bodyHeight / 2048;
@@ -666,8 +673,11 @@ export default {
         }
         this.docWidth = 2048 * this.boxscale;
         this.docHeight = 1396 * this.boxscale;
-        this.canvasW = Math.ceil(1430 * this.boxscale);
+        
         this.canvasH = Math.ceil(1315 * this.boxscale);
+
+        this.canvasW = Math.ceil(1430 * this.boxscale);
+                
         this.titleH = this.docHeight - this.canvasH;
         var s = 10;
         this.dpr = window.devicePixelRatio || 1;
@@ -681,11 +691,14 @@ export default {
           this.rem = this.o / 10 / this.dpr;
         }
         document.documentElement.style.fontSize = this.rem + "px";
+
         this.pageTransform = "rotate3d(0,0,1,-90deg)";
         this.pageMarginTop = this.pageMarginLeft =
           (this.docWidth - this.docHeight) / 2;
       };
+      
       selffun();
+      
       this.setZoom();
     },
     setRemUnit() {
@@ -699,8 +712,10 @@ export default {
       }
       // var that = this
       var selffun = () => {
+        
         this.bodyHeight = window.innerHeight;
         this.bodytWidth = window.innerWidth;
+         
         // console.log(u_agent, this.bodyHeight, this.bodytWidth)
         if (this.bodytWidth > this.bodyHeight) {
           this.boxscale = this.bodyHeight / 1396;
@@ -714,6 +729,7 @@ export default {
           this.boxscale = this.bodytWidth / 2048;
           this.o = this.bodytWidth;
         }
+       
         this.docWidth = 2048 * this.boxscale;
         this.docHeight = 1396 * this.boxscale;
         this.canvasW = Math.ceil(1430 * this.boxscale);
@@ -735,7 +751,7 @@ export default {
         }
         document.documentElement.style.fontSize = this.rem + "px";
       };
-      selffun();
+      selffun();      
       this.setZoom();
     },
     initCanvas() {},
@@ -1000,6 +1016,7 @@ export default {
       this.$nextTick(() => {
         this.setZoom();
       });
+      
     },
     setZoom() {
       if (!document.getElementById("canvasInnerDiv")) {
@@ -1029,6 +1046,9 @@ export default {
         });
       }
       this.zoomObj.setScale(this.boxscale);
+      this.windowTimer = setTimeout(() => {
+          this.load = false;
+        }, 500);
     },
     insterCanvas(img, src, contextStatic, bool) {
       img.src = require(`../static/img/${src}`);

@@ -121,15 +121,16 @@
     name: "App",
     beforeCreate() {},
     created() {
-      const that = this;
-      that.timer = setInterval(function() {
-        //
-        if (document.readyState === "complete" && that.imgCount >= that.imgTotal) {
-          // console.log(document.readyState, that.imgCount)
-          that.load = false;
-          window.clearInterval(that.timer);
-        }
-      }, 500);
+      console.time('s')
+      // const that = this;
+      // that.timer = setInterval(function() {
+      //   //
+      //   if (document.readyState === "complete" && that.imgCount >= that.imgTotal) {
+      //     // console.log(document.readyState, that.imgCount)
+      //     that.load = false;
+      //     window.clearInterval(that.timer);
+      //   }
+      // }, 500);
     },
     computed: {
       mainBoxStyle() {
@@ -167,14 +168,15 @@
     mounted() {
       // this.testCanvas()
       this.createMap();
-      if ("onorientationchange" in window) {
+      
+      if (this.isApp) {
+        this.forApp()
+      } else {
+        if ("onorientationchange" in window) {
         window.addEventListener("orientationchange", this.oriChange, false);
       } else {
         window.addEventListener("resize", this.setRemUnit, false);
       }
-      if (this.isApp) {
-        this.forApp()
-      } else {
         this.setRemUnit()
       }
       this.initCanvas();
@@ -186,6 +188,7 @@
     },
     data() {
       return {
+        windowTimer:null,
         imageObj: {
           river01: null,
           river02: null,
@@ -294,7 +297,6 @@
         boxscale: 1,
         o: "",
         dpr: 1,
-        rem: "",
         canvasH: "",
         canvasW: "",
         docWidth: "",
@@ -533,15 +535,18 @@
         }
       },
       oriChange() {
-        setTimeout(() => {
+        this.windowTimer=setTimeout(() => {
+          this.clearTimeout(this.windowTimer)
           this.setRemUnit();
         }, 200);
       },
       forApp() {
         const u_agent = navigator.userAgent
+        var rem = ''
         var selffun = () => {
-          this.bodyHeight = window.innerHeight
-          this.bodytWidth = window.innerWidth
+          this.bodyHeight = document.body.innerHeight
+          this.bodytWidth = document.body.clientWidth
+          console.log(window.innerWidth,document.body.clientWidth)
           var offest = (this.bodytWidth / this.bodyHeight)
           if (offest > 0.5) {
             this.boxscale = this.bodyHeight / 2048
@@ -562,11 +567,11 @@
           }
           if (this.dpr >= 2) {
             this.dpr = 2;
-            this.rem = this.o / this.dpr / 5.2;
+            rem = this.o / this.dpr / 5.2;
           } else {
-            this.rem = this.o / 10 / this.dpr;
+            rem = this.o / 10 / this.dpr;
           }
-          document.documentElement.style.fontSize = (this.rem) + 'px'
+          document.documentElement.style.fontSize = (rem) + 'px'
           this.pageTransform =  'rotate3d(0,0,1,-90deg)'
           this.pageMarginTop = this.pageMarginLeft = (this.docWidth - this.docHeight) / 2
         }
@@ -575,6 +580,7 @@
       },
       setRemUnit() {
         const u_agent = navigator.userAgent;
+        var rem =''
         if (window.orientation === 0 || window.orientation === 180) {
           //竖屏
           this.orienta = 1;
@@ -611,14 +617,14 @@
           }
           if (this.dpr >= 2) {
             this.dpr = 2;
-            this.rem = this.o / this.dpr / 7.5;
+            rem = this.o / this.dpr / 7.5;
             if (this.orienta == 2) {
-              this.rem = this.o / this.dpr / 5.2;
+              rem = this.o / this.dpr / 5.2;
             }
           } else {
-            this.rem = this.o / 10 / this.dpr;
+            rem = this.o / 10 / this.dpr;
           }
-          document.documentElement.style.fontSize = this.rem + "px";
+          document.documentElement.style.fontSize = rem + "px";
         };
         selffun();
         this.setZoom();
@@ -644,6 +650,7 @@
         object.times = null;
       },
       createMap() {
+        
         var divTag = this.$refs.canvasInnerDiv;
         let list = [{
             name: "canvasImages",
@@ -821,8 +828,13 @@
         // document.getElementById('map_container').append(divTag)
         // divTag.append(divTag)
         this.$nextTick(() => {
-          this.setZoom();
+          this.setZoom();           
         });
+        console.timeEnd('s')
+        
+        this.windowTimer = setTimeout(() => {
+          this.load = false;
+        }, 500);
       },
       setZoom() {
         if (!document.getElementById('canvasInnerDiv')) {

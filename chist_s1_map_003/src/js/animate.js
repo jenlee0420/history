@@ -259,7 +259,7 @@ addRadial() {
         this.addRadial2();
       }, 50);
     } else {
-      // clearTimeout(this.greedTimer);
+      clearTimeout(this.greedTimer);
     }
   },
   ship2(flag) {
