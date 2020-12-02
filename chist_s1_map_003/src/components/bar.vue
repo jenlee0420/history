@@ -110,7 +110,7 @@ export default {
 .slider{
   // transform: rotate(-90deg);
   width: 50%!important;
-  height: 0.52rem!important;
+  height: 0.6rem!important;
   display: inherit!important;
   .range-slider-rail{
      width: 100%;

@@ -77,6 +77,7 @@ const animate = {
 
       if (h < 1170) {
         this.redTimer = setTimeout(()=> {
+          this.canvasClear(canvasAnimRedPath);
           addRadial();
         }, 50);
       } else {
@@ -144,6 +145,7 @@ const animate = {
       w += 10;
       if (x > 90) {
         this.greedTimer = setTimeout(()=> {
+          this.canvasClear(canvasAnimGreenPath);
           addRadial2();
         }, 50);
       } else {
