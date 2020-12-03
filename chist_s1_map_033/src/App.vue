@@ -22,7 +22,7 @@
           <div class="mapBackground" id="canvasInnerDiv" ref="canvasInnerDiv">
             <imageview :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
             <imageview :imgsrc="'mapDetail.png'" :static="true" :zindex="3" @update="updateImg"></imageview>
-            <imageview :imgsrc="'capital.png'" :static="control.capital.show" :zindex="2" @update="updateImg"></imageview>
+            <imageview :imgsrc="'capital.png'" :static="control.capital.show" :zindex="3" @update="updateImg"></imageview>
             <!-- <imageview :imgsrc="'zhou.png'" :static="control.zhou.show" :zindex="3" @update="updateImg"></imageview> -->
             <imageview :imgsrc="'lingtu.png'" :static="control.lingtu" :zindex="2" @update="updateImg"></imageview>            
            

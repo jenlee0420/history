@@ -171,6 +171,9 @@
       
       if (this.isApp) {
         this.forApp()
+        document.body.addEventListener('touchmove',function(e){
+          e.preventDefault(); 
+        },{ passive: false })
       } else {
         if ("onorientationchange" in window) {
         window.addEventListener("orientationchange", this.oriChange, false);

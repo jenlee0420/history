@@ -141,7 +141,9 @@ const animate = {
             that.drawHorse(
               that.horseObject2,
                   contextAnimHorse,
-                  that.horseObject2.source
+                  that.horseObject2.source,
+                  false,
+                  true
               );
           }, 100);
       } else {
@@ -176,7 +178,7 @@ const animate = {
     }
 },
    
-    drawHorse(object, contextS, imageHorse,imageHorse2) {
+    drawHorse(object, contextS, imageHorse,imageHorse2,isRoute3) {
       
         return new Promise((resolve, rej) => {
           // console.log(object.position)
@@ -194,7 +196,7 @@ const animate = {
               object.currFrame = 0;
             }
             // console.log(object.position.currPoint,this.list[5].show)
-            if(this.list[5].show==true && object.position.currPoint==4){
+            if(this.list[5].show==true && object.position.currPoint==4 && isRoute3){
               this.route3=true
             }
             if (
