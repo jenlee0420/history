@@ -8,8 +8,7 @@ Vue.config.productionTip = false
 Object.keys(global).forEach(key => {
   Vue.prototype[key] = global[key];
 });
-import Vconsole from 'vconsole';
-
+// import Vconsole from 'vconsole';
 // let vConsole = new Vconsole();
 // export default vConsole
 new Vue({

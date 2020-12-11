@@ -1,3 +1,29 @@
+function Timer(){
+  this.timeID=null
+  this.func=null
+}
+Timer.prototype.repeat=function(func,ms){
+  if(this.func===null){
+    this.func=func
+  }
+  if(this.func!==func){
+    return
+  }
+  this.timeID=setTimeout(()=>{
+    func()
+    this.repeat(func,ms)
+  },ms)
+}
+Timer.prototype.clear=function(){
+  this.func=null
+  clearTimeout(this.timeID)
+}
+
+const timeship1 = new Timer()
+const timeship2 = new Timer()
+const timeship3 = new Timer()
+const timeship4 = new Timer()
+
 const animate = {
   sharpCity(obj, bool) {
     if (!bool) {
@@ -22,9 +48,11 @@ const animate = {
       times -= 1;
     }, 260)
   },
-  showCityAni(canvasStatic, bool) {
+  showCityAni(canvasStatic, bool) {    
+    // console.time('sharp')
     if (!bool) {
       clearInterval(canvasStatic.timeout);
+      // this.canvasClear(canvasStatic)
       canvasStatic.style.visibility = "hidden";
       canvasStatic.ani = false;
       return;
@@ -32,14 +60,23 @@ const animate = {
     if (canvasStatic.ani == true) {
       return;
     }
+    // canvasStatic.style.visibility='visible'
+    // console.log('///')
     let show = false;
     let times = 6;
     canvasStatic.timeout = setInterval(() => {
       if (times == 0) {
         clearInterval(canvasStatic.timeout);
+        // console.timeEnd('sharp')
         return;
       }
       canvasStatic.style.visibility = show ? "visible" : "hidden";
+      // if(show){
+      //   console.log(this.canvasObjTemp[canvasStatic.id+'temp'].style.visibility)
+      //   canvasStatic.getContext("2d").drawImage(this.canvasObjTemp[canvasStatic.id+'temp'],0,0)
+      // }else{
+      //   this.canvasClear(canvasStatic)
+      // }
       show = !show;
       times -= 1;
     }, 260);
@@ -119,6 +156,7 @@ const animate = {
     }
 },
 addRadial() {
+  let offset=20
   let canvasAnimRedPath = this.canvasObj['canvasAnimRedPath']
   let contextAnimRedPath = this.contextObj['canvasAnimRedPath']
   this.canvasClear(canvasAnimRedPath);
@@ -126,18 +164,18 @@ addRadial() {
   contextAnimRedPath.save(); //保存当前绘图状态
   contextAnimRedPath.beginPath(); //开始创建路径
   if (pos.xx <= 600) {
-    pos.y -= 15;
-    pos.h += 15;
+    pos.y -= offset;
+    pos.h += offset;
   } else if (pos.y <= 820) {
-    pos.xx -= 15;
-    pos.ww += 15;
+    pos.xx -= offset;
+    pos.ww += offset;
     pos.y = 785;
   } else if (pos.y <= 1200) {
-    pos.y -= 15;
-    pos.h += 15;
+    pos.y -= offset;
+    pos.h += offset;
   }
   contextAnimRedPath.rect(pos.xx, pos.y, pos.ww, pos.h);
-  // contextAnimRedPath.closePath(); //关闭路径
+  // contextAnimRedPath.closePath(); //关闭路径 
   contextAnimRedPath.clip();
   contextAnimRedPath.drawImage(this.route1, 0, 0, this.baseWidth, this.baseHeight);
   contextAnimRedPath.rect(0, 0, this.baseWidth, this.baseHeight);
@@ -146,12 +184,15 @@ addRadial() {
   if (pos.h < 1170) {
     this.redTimer = setTimeout(()=> {      
       this.addRadial(canvasAnimRedPath);
-    }, 50);
+    }, 80);
   } else {
+    console.timeEnd('ship')
+    
     clearTimeout(this.redTimer);
   }
 },
   ship1(flag) {
+    console.time('ship')
     let canvasAnimRedPath = this.canvasObj['canvasAnimRedPath']
     let contextAnimRedPath = this.contextObj['canvasAnimRedPath']
     let canvasAnimHorse = this.canvasObj['canvasAnimHorse']
@@ -213,6 +254,10 @@ addRadial() {
 
       // drawHorsesTimeout = setTimeout(function () { ship1(flag); }, 1 / 30 * 1000);
     } else {
+      timeship1.clear()
+      timeship2.clear()
+      timeship3.clear()
+      timeship4.clear()
       this.showCityAni(canvasAnimHorse, false);
       canvasAnimRedPath.playing = false;
       clearTimeout(this.redTimer);
@@ -257,14 +302,14 @@ addRadial() {
     if (pos.x > 90) {
       this.greedTimer = setTimeout(()=> {        
         this.addRadial2();
-      }, 50);
+      }, 60);
     } else {
       clearTimeout(this.greedTimer);
     }
   },
   ship2(flag) {
     let canvasAnimGreenPath = this.canvasObj['canvasAnimGreenPath']
-    let ship2 = this.canvasObj['canvasAnimHorse2']
+    let canvasAnimHorse2 = this.canvasObj['canvasAnimHorse2']
     if (flag == true) {
         canvasAnimGreenPath.style.visibility = "visible";
         if (!canvasAnimGreenPath.playing) {
@@ -274,7 +319,7 @@ addRadial() {
         }
     } else {
       // console.log('clear')
-      this.showCityAni(ship2, false);
+      this.showCityAni(canvasAnimHorse2, false);
       canvasAnimGreenPath.playing = false;
       clearTimeout(this.greedTimer);
       canvasAnimGreenPath.style.visibility = "hidden";
@@ -282,9 +327,9 @@ addRadial() {
       for (var i = 0; i <this.horsetimerGroup2.length; i++) {
         clearTimeout(this.horsetimerGroup2[i]);
       }
-      ship2.style.visibility = "hidden";
+      canvasAnimHorse2.style.visibility = "hidden";
       this.resetHorseObject(this.horseObject5);
-      this.canvasClear(ship2);
+      this.canvasClear(canvasAnimHorse2);
       clearInterval(this.drawHorsesTimeout2);
       this.ship2Pos={
         w: 10,
@@ -369,42 +414,48 @@ addRadial() {
     contextAnimHorse.drawImage(this.horseObject1.source, this.horseObject1.position.points[0][0], this.horseObject1.position.points[0][1], this.horseObject1.width * 0.25, this.horseObject1.height * 0.25);
     this.showCityAni(canvasAnimHorse, true)
     this.horsetimerGroup[0] = setTimeout(()=> {
-      this.drawHorsesTimeout[0] = setInterval(()=>{
+      timeship1.repeat(()=>{
         this.canvasClear(canvasAnimHorse);
         this.drawHorse(this.horseObject1, false, canvasAnimHorse, contextAnimHorse).then(()=>{
-          clearInterval(this.drawHorsesTimeout[0]);
+          timeship1.clear()
         })
-      }, 60);
+      },90)
+      // this.drawHorsesTimeout[0] = setInterval(()=>{
+      //   this.canvasClear(canvasAnimHorse);
+      //   this.drawHorse(this.horseObject1, false, canvasAnimHorse, contextAnimHorse).then(()=>{
+      //     clearInterval(this.drawHorsesTimeout[0]);
+      //   })
+      // }, 90);
     }, 1200);
 
     this.horsetimerGroup[1] = setTimeout(()=> {
-      this.drawHorsesTimeout[1] = setInterval(()=> {
+      timeship2.repeat(()=>{
         this.canvasClear(canvasAnimHorse);
         this.drawHorse(this.horseObject2, false, canvasAnimHorse, contextAnimHorse).then(()=>{
-          clearInterval(this.drawHorsesTimeout[1]);
+          timeship2.clear()
         })
-      }, 60);
-    }, 2250);
+      }, 90);
+    }, 2380);
     this.horsetimerGroup[2] = setTimeout(()=>{
-      this.drawHorsesTimeout[2] = setInterval(()=> {
+      timeship3.repeat(()=>{
         this.canvasClear(canvasAnimHorse);
         this.drawHorse(this.horseObject3, false, canvasAnimHorse, contextAnimHorse).then(()=>{
-          clearInterval(this.drawHorsesTimeout[2]);
+          timeship3.clear()
         })
-      }, 60);
-    }, 3000);
+      },60);
+    }, 3350);
     this.horsetimerGroup[3] = setTimeout(()=> {
-     this.drawHorsesTimeout[3] = setInterval(()=> {
+      timeship4.repeat(()=>{
       this.canvasClear(canvasAnimHorse);
-        this.drawHorse(this.horseObject4, false, false, contextAnimHorse).then(()=>{
-          clearInterval(this.drawHorsesTimeout[3]);
+        this.drawHorse(this.horseObject4, false, canvasAnimHorse, contextAnimHorse).then(()=>{
+          timeship4.clear()
           this.horsetimerGroup[4] = setTimeout(()=> {
             this.canvasClear(canvasAnimHorse);
             this.waveSound.pause();
           }, 1000);
         })
-      }, 60);
-    }, 4300);
+      }, 90);
+    }, 4500);
   }else{
     this.showCityAni(canvasAnimHorse, false);
       canvasAnimRedPath.playing = false;
@@ -425,9 +476,9 @@ addRadial() {
   },
 
 
-  drawHorse(object, isInvert, endfun, contextS) {
+  drawHorse(object, isInvert, canvasS, contextS) {
     return new Promise((resolve, rej) => {
-    let imageHorse = object.source
+    let imageHorse = canvasS.id?this.canvasObjTemp[canvasS.id+'temp']:object.source
     // return new Promise((resolve, reject) => {
 
     if (object.position.currPoint + 1 < object.position.totalPoint) {
@@ -517,26 +568,29 @@ addRadial() {
     this.horsetimerGroup2[0] = setTimeout(()=>{
       this.drawHorsesTimeout1 = setInterval(()=> {
         this.canvasClear(canvasAnimHorse2);
-        this.drawHorse(this.horseObject5, false, false, contextAnimHorse2).then(()=>{
+        this.drawHorse(this.horseObject5, false, this.canvasObj['canvasAnimHorse'], contextAnimHorse2).then(()=>{
           this.horsetimerGroup2[1] = setTimeout(()=> {
             this.waveSound.pause();
           }, 1000);
           clearInterval(this.drawHorsesTimeout1);
         })
-      }, 60);
+      }, 90);
       
     }, 2000);
   },
 
   createCanvas(canvasList, divTag) {
     let canvasObj = {},
-      contextObj = {}
+      contextObj = {},
+      temp={}
 
     for (var i = 0; i < canvasList.length; i++) {
       var canvasStatic = document.createElement("canvas");
+      var canvasStaticTemp = document.createElement("canvas");
       var contextStatic = canvasStatic.getContext("2d");
       // 
       canvasStatic.id = canvasList[i].name;
+      canvasStaticTemp.id = canvasList[i].name+'temp';
       canvasStatic.style.position = "absolute";
       canvasStatic.style.zIndex = canvasList[i].zindex
       canvasStatic.width = this.baseWidth;
@@ -544,9 +598,10 @@ addRadial() {
       // canvasList.obj = canvasStatic
       canvasObj[canvasList[i].name] = canvasStatic
       contextObj[canvasList[i].name] = contextStatic
+      temp[canvasStaticTemp.id] = canvasStaticTemp
       divTag.appendChild(canvasStatic);
     }
-    return [canvasObj, contextObj]
+    return [canvasObj, contextObj,temp]
   },
   imagesCanvas() {
     this.canvasClear(this.canvasObj['canvasImages']);
