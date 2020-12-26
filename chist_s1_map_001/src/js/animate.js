@@ -50,7 +50,8 @@ const animate = {
             }
         } else {
             canvasAnimPath.style.visibility = "hidden";
-            console.log(pathObject)
+            this.canvasClear(canvasAnimPath);
+            // console.log(pathObject)
             pathObject.mask3.currOriginX = pathObject.mask3.originX;
             pathObject.mask3.currOriginY = pathObject.mask3.originY;
             pathObject.mask3.width = 1;
@@ -97,14 +98,13 @@ const animate = {
             }, 60);
             // }, 500)
         } else {
-
+            canvasAnimHorse.style.visibility = "hidden";
             // for(var i= 0; i<this.drawHorsesTimeout2.length;i++){
             //     clearInterval(this.drawHorsesTimeout2[i])
             // }
             // clearTimeout(this.horsetimerGroup)
             clearInterval(this.drawHorsesTimeout3)
-            this.canvasClear(this.canvasAnimHorse);
-            this.canvasAnimHorse.style.visibility = 'hidden'
+            this.canvasClear(canvasAnimHorse);
             this.resetHorseObject(this.horseObject3)
             this.resetHorseObject(this.horseObject4)
             this.resetHorseObject(this.horseObject5)

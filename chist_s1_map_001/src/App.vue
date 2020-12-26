@@ -273,7 +273,7 @@
         this.m01.pause()
         this.m02.pause()
         this.m03.pause()
-        this.m04.pause()
+        // this.m04.pause()
         this.license.pause()
       },
       showCanvas(index) {
@@ -298,8 +298,7 @@
           case 2:
             c.style.visibility = swip ? 'visible' : 'hidden'
             break;
-          case 3:
-    
+          case 3:    
             if (swip) {
               if (!this.noVoice) {
                 this.m03.currentTime = 0
@@ -314,12 +313,7 @@
                     this.drawGreenPath2(true)
                   },2300)
                   this.drawHousePromise(true)
-                  this.line3timer = setTimeout(() => {
-                    if (!this.noVoice && this.showStatic == false) {
-                      this.m03.pause()
-                      this.m04.currentTime = 0
-                      this.m04.play()
-                    }
+                  this.line3timer = setTimeout(() => {                    
                     this.drawGreenPath_part2(true)
                     this.drawHousePromise_part2(true)
                   },20000)
@@ -339,12 +333,10 @@
             //   this.m04.currentTime = 0
             //   this.m04.play()
             // }
-            if (swip) {
-              this.borderAni = false
-            } else {
-              this.borderAni = true
-              clearTimeout(this.chenTimer)
-            }
+            
+              this.borderAni = !swip
+            
+              
             break;
           case 5:
             this.mapPop = swip
@@ -368,8 +360,8 @@
       forApp(){
         const u_agent = navigator.userAgent
         var selffun = () => {
-          this.bodyHeight = window.innerHeight
-          this.bodytWidth = window.innerWidth
+          this.bodyHeight = document.body.innerHeight;
+        this.bodytWidth = document.body.clientWidth;
           var offest = (this.bodytWidth / this.bodyHeight)
           if (offest > 0.5) {
               this.boxscale = this.bodyHeight / 2048
@@ -593,29 +585,30 @@
 
         let canvasAnimPath2 = document.getElementById('myCanvasAnimGreenPath2')
         let contextAnimPath2 = canvasAnimPath2.getContext('2d');
-        let pathObject = this.pathObject
+        let pathObject_2 = this.pathObject
+        // console.log(this.pathObject.mask2)
         if (flag == true) {
-          if(pathObject.mask2.width <= 580){
+          if(pathObject_2.mask2.width <= 580){
               this.canvasClear(canvasAnimPath2);
               contextAnimPath2.save();
               contextAnimPath2.beginPath();
-              contextAnimPath2.rect(pathObject.mask2.currOriginX, pathObject.mask2.currOriginY, pathObject.mask2.width, pathObject.mask2.height);
+              contextAnimPath2.rect(pathObject_2.mask2.currOriginX, pathObject_2.mask2.currOriginY, pathObject_2.mask2.width, pathObject_2.mask2.height);
               contextAnimPath2.clip();
-              contextAnimPath2.drawImage(pathObject.mask2.source, pathObject.originX, pathObject.originY, pathObject.width, pathObject.height);
+              contextAnimPath2.drawImage(pathObject_2.mask2.source, pathObject_2.originX, pathObject_2.originY, pathObject_2.width, pathObject_2.height);
               contextAnimPath2.restore();
-              pathObject.mask2.width += pathObject.mask2.shiftX;
+              pathObject_2.mask2.width += pathObject_2.mask2.shiftX;
         
         canvasAnimPath2.style.visibility = "visible";
-         pathObject.mask2.timeout = setTimeout(() => {
+         pathObject_2.mask2.timeout = setTimeout(() => {
               this.drawGreenPath2(flag);
             }, 30);
           }
         }else{
           canvasAnimPath2.style.visibility = "hidden";
-          clearTimeout(pathObject.mask2.timeout)
-          pathObject.mask2.currOriginX = pathObject.mask2.originX;
-          pathObject.mask2.currOriginY = pathObject.mask2.originY;
-          pathObject.mask2.width = 1;
+          clearTimeout(pathObject_2.mask2.timeout)
+          pathObject_2.mask2.currOriginX = pathObject_2.mask2.originX;
+          pathObject_2.mask2.currOriginY = pathObject_2.mask2.originY;
+          pathObject_2.mask2.width = 1;
         }
       
     },
@@ -671,8 +664,8 @@
       this.license = document.createElement('audio')
       this.m01.src = require('../static/img/vo/Map001-1.mp3')
       this.m02.src = require('../static/img/vo/Map001-2.mp3')
-      this.m03.src = require('../static/img/vo/Map001-4_1.mp3')
-      this.m04.src = require('../static/img/vo/Map001-4_2.mp3')
+      this.m03.src = require('../static/img/vo/Map001-4.mp3')
+      // this.m04.src = require('../static/img/vo/Map001-4_2.mp3')
       this.license.src = require('../static/img/vo/License.mp3')
       this.license.loop = 'loop';
       // Variable init

@@ -6,7 +6,7 @@
     </div>
     <div
       id="main_container"
-      :style="{'width':docWidth+'px','height':docHeight+'px','display':load?'none':'block'}"
+      :style="mainBoxStyle"
     >
       <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
         <span>黃巾之亂形勢圖 (184 年)</span>
@@ -25,6 +25,7 @@
             <imageview :imgsrc="'capital.png'" :static="control.capital.show" :zindex="4" @update="updateImg"></imageview>
             <imageview :imgsrc="'huangjinjun01.png'" :static="control.huangjinjun01" :zindex="4" @update="updateImg"></imageview>
             <imageview :imgsrc="'line.png'" :static="control.line.show" :zindex="4" @update="updateImg"></imageview>
+             <imageview :imgsrc="'mingbian.png'" :static="control.mingbian" :zindex="2" @update="updateImg"></imageview>
             
           </div>
         </div>
@@ -63,6 +64,7 @@
     </div>
     <modal
       class
+      :style="AppStyle" :dragable="!isApp"
       headTitle="問題"
       :hideFooter="true"
       v-if="popWindow"
@@ -111,6 +113,7 @@
     </modal>
     <modal
       class
+      :style="AppStyle" :dragable="!isApp"
       :headTitle="list[6].text"
       :hideFooter="true"
       v-if="mapPop"
@@ -119,8 +122,7 @@
       <div slot="modalCont">
         <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d21200397.26449837!2d88.33577732423723!3d37.4423923875481!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x36786f68f2d04437%3A0x61f85ae8c6c72215!2z5Lit5ZyL5rKz5Y2X55yB5rSb6Zm95biC!5e0!3m2!1szh-TW!2shk!4v1588159610710!5m2!1szh-TW!2shk"
-          :width="bodytWidth/1.8"
-          :height="bodyHeight/1.8"
+          :width="(isApp?docWidth:bodytWidth)/1.8" :height="(isApp?docHeight:bodyHeight)/1.8"
           frameborder="0"
           style="border:0;"
           allowfullscreen
@@ -135,6 +137,7 @@ import zoom from "./js/zoom.js";
 import modal from "./components/modal";
 import bar from "./components/bar";
 import imageview from "./components/ImageView";
+import zoomApp from './js/zoomApp.js'
 import {routeObject1,routeObject2,routeObject3,routeObject4} from './js/routedata.js';
 export default {
   components: {
@@ -154,6 +157,39 @@ export default {
       }
     }, 10);
   },
+  computed:{
+      mainBoxStyle(){
+        var css = {'width':this.docWidth+'px',
+        'height':this.docHeight+'px',
+        'display':this.load?'none':'block',       
+        transform:this.pageTransform,
+        'margin-top':this.pageMarginTop+'px',
+        'margin-left':(this.pageMarginLeft *-1) +'px'    
+        }
+        return css
+      },
+      AppStyle() {
+        var css = {}
+        if (this.isApp) {
+          css = {
+            'width': this.docWidth + 'px',
+            'height': this.docHeight + 'px',
+            transform: this.pageTransform,
+            'margin-top': this.pageMarginTop + 'px',
+            'margin-left': (this.pageMarginLeft * -1) + 'px'
+          }
+        }
+        return css
+      },
+      isApp(){
+        if(window.location.search.indexOf('app')>=0){
+          return true
+        }else{
+          return false
+        }
+      }
+    },
+
   mounted() {
     this.createMap();
     if ("onorientationchange" in window) {
@@ -163,7 +199,12 @@ export default {
     }
     // window.addEventListener("onorientationchange" in window ?"orientationchange":"resize", this.setRemUnit, false);
     this.zoomObj = require("./js/zoom.js");
-    this.setRemUnit();
+    if(this.isApp){
+        this.forApp()
+      }else{
+        this.setRemUnit()
+      }
+
     this.initCanvas();
 
     document
@@ -176,7 +217,7 @@ export default {
     return {
       imageObj:{
           border:null,
-          mingbian:null,
+          // mingbian:null,
           diming:null,
           route1:null,
           route2:null,
@@ -479,6 +520,43 @@ export default {
         this.setRemUnit();
       }, 200);
     },
+    forApp(){
+        const u_agent = navigator.userAgent
+        var selffun = () => {
+          this.bodyHeight = document.body.innerHeight;
+          this.bodytWidth = document.body.clientWidth;
+          var offest = (this.bodytWidth / this.bodyHeight)
+          if (offest > 0.5) {
+              this.boxscale = this.bodyHeight / 2048
+              this.o = 1396 * this.boxscale
+          }else{
+            this.boxscale = this.bodytWidth / 1396
+            this.o = this.bodytWidth
+          }
+          this.docWidth = 2048 * this.boxscale
+          this.docHeight = 1396 * this.boxscale
+          this.canvasW = Math.ceil(1430 * this.boxscale)
+          this.canvasH = Math.ceil(1315 * this.boxscale)
+          this.titleH = this.docHeight - this.canvasH
+          var s = 10
+          this.dpr = window.devicePixelRatio || 1
+          if (/iPad|iPhone|Android|Adr/i.test(u_agent)) {
+            this.dpr = 2;
+          }
+          if (this.dpr >= 2) {
+            this.dpr = 2;
+            this.rem = this.o / this.dpr / 5.2;
+          } else {
+            this.rem = this.o / 10 / this.dpr;
+          }
+          document.documentElement.style.fontSize = (this.rem) + 'px'
+          this.pageTransform ='rotate3d(0,0,1,-90deg)'
+          this.pageMarginTop =this.pageMarginLeft=(this.docWidth - this.docHeight) /2
+        }
+        selffun()
+        this.setZoom()
+      },
+
     setRemUnit() {
       const u_agent = navigator.userAgent;
       if (window.orientation === 0 || window.orientation === 180) {
@@ -621,14 +699,14 @@ export default {
       var imageHorse = new Image();
 
       this.imageObj.border = new Image();
-      this.imageObj.mingbian = new Image();
+      // this.imageObj.mingbian = new Image();
       this.imageObj.diming = new Image();
       this.imageObj.border = new Image();
       this.imageObj.route1 = new Image();
       this.imageObj.route2 = new Image();
       this.imageObj.minority03 = new Image();
       this.insterCanvas(this.imageObj.border,'border.png','canvasImages',false)
-      this.insterCanvas(this.imageObj.mingbian,'mingbian.png','canvasImages',false)
+      // this.insterCanvas(this.imageObj.mingbian,'mingbian.png','canvasImages',false)
       this.insterCanvas(this.imageObj.diming,'diming.png','canvasImages',false)
       this.insterCanvas(this.imageObj.border,'border.png','canvasImages',false)
       this.insterCanvas(this.imageObj.route1,'route1.png','canvasImages',false)
@@ -690,10 +768,11 @@ export default {
       });
     },
     setZoom() {
-      if (!document.getElementById("canvasInnerDiv")) {
-        return;
+      if (!document.getElementById('canvasInnerDiv')) {
+        return
       }
-      this.zoomObj = new zoom(document.getElementById("canvasInnerDiv"), {
+      if(this.isApp){
+        this.zoomObj = new zoomApp(document.getElementById('canvasInnerDiv'), {
         width: this.baseWidth,
         height: this.baseHeight,
         top: 0,
@@ -702,10 +781,22 @@ export default {
         // maxScale: this.boxscale * 10,
         warpWidth: this.boxscale * this.baseWidth,
         warpHeight: this.boxscale * this.baseHeight
-      });
-      this.zoomObj.setScale(this.boxscale);
-      // this.zoomObj.setTransform(false,0,0)
+      })
+      }else{
+        this.zoomObj = new zoom(document.getElementById('canvasInnerDiv'), {
+        width: this.baseWidth,
+        height: this.baseHeight,
+        top: 0,
+        left: 0,
+        minScale: this.boxscale,
+        // maxScale: this.boxscale * 10,
+        warpWidth: this.boxscale * this.baseWidth,
+        warpHeight: this.boxscale * this.baseHeight
+      })
+      }
+      this.zoomObj.setScale(this.boxscale)
     },
+
     insterCanvas2(img, src, fun) {
       img.src = require(`../static/img/${src}`);
       img.onload = () => {

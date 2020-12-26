@@ -470,8 +470,8 @@ export default {
     forApp(){
         const u_agent = navigator.userAgent
         var selffun = () => {
-          this.bodyHeight = window.innerHeight
-          this.bodytWidth = window.innerWidth
+          this.bodyHeight = document.body.innerHeight;
+        this.bodytWidth = document.body.clientWidth;
           var offest = (this.bodytWidth / this.bodyHeight)
           if (offest > 0.5) {
               this.boxscale = this.bodyHeight / 2048
