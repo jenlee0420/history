@@ -16,11 +16,11 @@
           id="map_container"
           class="modal_content"
           ref="map_container"
-          :style="{ 'width': canvasW + 'px', 'height': canvasH + 'px' }"
+          :style="{ width: canvasW + 'px', height: canvasH + 'px' }"
         >
           <div class="mapBackground" id="canvasInnerDiv" ref="canvasInnerDiv">
-            <imageview :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
-            <imageview :imgsrc="'mapDetail.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'mapDetail.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
           </div>
         </div>
         <div id="menu_container" style="float: right;">
@@ -147,6 +147,7 @@ import zoomApp from "./js/zoomApp.js";
 import modal from "./components/modal";
 import bar from "./components/bar";
 import imageview from "./components/ImageView";
+
 export default {
   components: {
     modal,
@@ -157,7 +158,14 @@ export default {
   beforeCreate() {
   },
   created() {
-     
+    if(document.body.clientWidth<600)
+    {
+      this.baseWidth =  this.baseWidth *0.5
+      this.baseHeight =  this.baseHeight *0.5
+      this.baseWidth_doc =  this.baseWidth_doc *0.5
+      this.baseHeight_doc =  this.baseHeight_doc *0.5
+    }
+     //alert(document.body.clientWidth+','+document.body.clientHeight)
     // const that = this;
     // that.timer = setInterval(function() {
     //   //
@@ -182,7 +190,7 @@ export default {
         display: this.load ? "none" : "block",
         transform: this.pageTransform,
         "margin-top": this.pageMarginTop + "px",
-        "margin-left": this.pageMarginLeft * -1 + "px"
+        "margin-left": this.pageMarginLeft * -1 + "px",   
       };
       return css;
     },
@@ -210,20 +218,17 @@ export default {
   mounted() {
     // this.testCanvas()
     this.createMap();    
-    
-    // window.addEventListener("onorientationchange" in window ?"orientationchange":"resize", this.setRemUnit, false);
-    // this.zoomObj = require("./js/zoom.js");
-    
-    if (this.isApp) {
-      this.forApp();
-    } else {
-      if ("onorientationchange" in window) {
-      window.addEventListener("orientationchange", this.oriChange, false);
-    } else {
-      window.addEventListener("resize", this.setRemUnit, false);
-    }
-      this.setRemUnit();
-    }
+    if ("onorientationchange" in window) {
+        window.addEventListener("orientationchange", this.oriChange, false)
+      } else {
+        window.addEventListener("resize", this.setRemUnit, false)
+      }
+
+    if(this.isApp){
+        this.forApp()
+      }else{
+        this.setRemUnit()
+      }
     
     this.initCanvas();
     
@@ -325,8 +330,14 @@ export default {
       ],
       bodytWidth: "",
       bodyHeight: "",
-      baseWidth: "1430",
-      baseHeight: "1316",
+      orgSetting:{
+  w:1430,
+  h:1315
+},
+      baseWidth: "1430",//地图大小
+      baseHeight: "1315",//地图大小
+      baseWidth_doc: "2048",//窗口大小
+      baseHeight_doc: "1396",//窗口大小
       orienta: "",
       boxscale: 1,
       o: "",
@@ -479,6 +490,7 @@ export default {
         case 1:
           // this.control.monk01 = swip
           clearTimeout(this.timer1[0]);
+          this.stopCityAni(this.canvasObj["dunhuang"]);
           if (swip) {
             if (!this.noVoice && !this.isShowall) {
               this.m02.currentTime = 0;
@@ -513,6 +525,7 @@ export default {
         case 2:
           // this.control.monk02 = swip
           clearTimeout(this.timer1[1]);
+          this.stopCityAni(this.canvasObj["pingcheng"]);
           if (swip) {
             if (!this.noVoice && !this.isShowall) {
               this.m03.currentTime = 0;
@@ -652,10 +665,10 @@ export default {
       }
     },
     oriChange() {
-      this.windowTimer=setTimeout(() => {
-          this.clearTimeout(this.windowTimer)
-          this.setRemUnit();
-        }, 200)
+      this.windowTimer = setTimeout(() => {
+        this.clearTimeout(this.windowTimer);
+        this.setRemUnit();
+      }, 200);
     },
     forApp() {
       const u_agent = navigator.userAgent;
@@ -665,19 +678,17 @@ export default {
         
         var offest = this.bodytWidth / this.bodyHeight;
         if (offest > 0.5) {
-          this.boxscale = this.bodyHeight / 2048;
-          this.o = 1396 * this.boxscale;
-        } else {
-          this.boxscale = this.bodytWidth / 1396;
-          this.o = this.bodytWidth;
-        }
-        this.docWidth = 2048 * this.boxscale;
-        this.docHeight = 1396 * this.boxscale;
+              this.boxscale = this.bodyHeight / this.baseWidth_doc
+              this.o = this.baseHeigth_doc * this.boxscale
+          }else{
+            this.boxscale = this.bodytWidth / this.baseHeight_doc
+            this.o = this.bodytWidth
+          }
+        this.docWidth = this.baseWidth_doc * this.boxscale;
+        this.docHeight = this.baseHeight_doc * this.boxscale;
         
-        this.canvasH = Math.ceil(1315 * this.boxscale);
-
-        this.canvasW = Math.ceil(1430 * this.boxscale);
-                
+        this.canvasH = Math.ceil(this.baseHeight * this.boxscale);
+        this.canvasW = Math.ceil(this.baseWidth * this.boxscale);                
         this.titleH = this.docHeight - this.canvasH;
         var s = 10;
         this.dpr = window.devicePixelRatio || 1;
@@ -718,23 +729,26 @@ export default {
          
         // console.log(u_agent, this.bodyHeight, this.bodytWidth)
         if (this.bodytWidth > this.bodyHeight) {
-          this.boxscale = this.bodyHeight / 1396;
+          this.boxscale = this.bodyHeight / this.baseHeight_doc;
           this.o = this.bodyHeight;
           var offest = this.bodytWidth / this.bodyHeight;
           if (offest < 1.49 && offest > 1) {
-            this.boxscale = this.bodytWidth / 2048;
-            this.o = 1396 * this.boxscale;
+            this.boxscale = this.bodytWidth / this.baseWidth_doc;
+            this.o = this.baseHeight_doc * this.boxscale;
           }
         } else {
-          this.boxscale = this.bodytWidth / 2048;
+          this.boxscale = this.bodytWidth / this.baseWidth_doc;
           this.o = this.bodytWidth;
         }
        
-        this.docWidth = 2048 * this.boxscale;
-        this.docHeight = 1396 * this.boxscale;
-        this.canvasW = Math.ceil(1430 * this.boxscale);
-        this.canvasH = Math.ceil(1315 * this.boxscale);
+        this.docWidth = this.baseWidth_doc * this.boxscale;
+        this.docHeight = this.baseHeight_doc * this.boxscale;
+
+        this.canvasW = Math.ceil(this.baseWidth * this.boxscale);
+        this.canvasH = Math.ceil(this.baseHeight * this.boxscale);
+        
         this.titleH = this.docHeight - this.canvasH;
+        
         var s = 10;
         this.dpr = window.devicePixelRatio || 1;
         if (/iPad|iPhone|Android|Adr/i.test(u_agent)) {
@@ -814,47 +828,58 @@ export default {
         },
         {
           name: "monk01",
-          zindex: 4
+          zindex: 4,
+          org:true
         },
         {
           name: "monk02",
-          zindex: 4
+          zindex: 4,
+          org:true
         },
         {
           name: "canvasroute",
-          zindex: 4
+          zindex: 4,
+          org:true
         },
         {
           name: "canvaszhangqian",
-          zindex: 4
+          zindex: 4,
+          org:true
         },
         {
           name: "canvastemple",
-          zindex: 4
+          zindex: 4,
+          org:true
         },
         {
           name: "canvastemple2",
-          zindex: 4
+          zindex: 4,
+          org:true
         },
         {
           name: "canvasStatue",
-          zindex: 4
+          zindex: 4,
+          org:true
         },
         {
           name: "canvasStatue2",
-          zindex: 4
+          zindex: 4,
+          org:true
         },
         {
           name: "canvasStatue3",
-          zindex: 4
+          zindex: 4,
+          org:true
         },
         {
           name: "canvasStatue4",
-          zindex: 4
+          zindex: 4,
+          org:true
         },
         {
           name: "canvasStatue5",
-          zindex: 4
+          zindex: 4,
+          org:true
         }
       ];
       let obj = this.createCanvas(list, divTag);

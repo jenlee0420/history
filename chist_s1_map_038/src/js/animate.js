@@ -528,8 +528,15 @@ const animate = {
       canvasStatic.id = canvasList[i].name;
       canvasStatic.style.position = "absolute";
       canvasStatic.style.zIndex = canvasList[i].zindex
-      canvasStatic.width = this.baseWidth;
+      
+      if(canvasList[i].org && document.body.clientWidth<600){
+        canvasStatic.width = this.orgSetting.w;
+        canvasStatic.height = this.orgSetting.h;
+        canvasStatic.style.transform = "scale(0.5)";
+      }else{
+        canvasStatic.width = this.baseWidth;
       canvasStatic.height = this.baseHeight;
+      }
       // canvasList.obj = canvasStatic
       canvasObj[canvasList[i].name] = canvasStatic
       contextObj[canvasList[i].name] = contextStatic
