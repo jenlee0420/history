@@ -1,6 +1,6 @@
 <template>
-    <div class="pos_a map"  :style="{'z-index':zindex}">
-        <img :src="require(`../../static/img/${this.imgsrc}`)" alt="" @load="load" v-show="imgStatic">
+    <div class="pos_a map" v-show="imgStatic" :style="{'z-index':zindex,width: canvasW + 'px', height: canvasH + 'px'}">
+        <img :src="require(`../../static/img/${this.imgsrc}`)" alt="" @load="load">
     </div>
 </template>
 <script>
@@ -9,7 +9,9 @@ export default {
   props: [
       "imgsrc",
       "static",
-      "zindex"
+      "zindex",
+      "canvasW",
+      "canvasH"
   ],
   mounted(){
 

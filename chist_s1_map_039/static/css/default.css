@@ -264,7 +264,9 @@ div.smallMap {
     margin-left: -0.45em;
     margin-top: -0.1em;
 }
-
+canvas{
+    transform-origin:top left
+}
 #soundCon {
     background-size: 100% auto;
     background-repeat: no-repeat;

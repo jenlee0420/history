@@ -13,8 +13,8 @@
       <div class="main_box">
         <div id="map_container" class="modal_content" ref="map_container" :style="{ width: canvasW + 'px', height: canvasH + 'px' }">
           <div class="mapBackground" id="canvasInnerDiv" ref="canvasInnerDiv">
-            <imageview :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
-            <imageview :imgsrc="'mapDetail.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'mapDetail.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
             
           </div>
         </div>
@@ -115,7 +115,7 @@ CB5biC!5e0!3m2!1szh-TW!2shk!4v1605773793955!5m2!1szh-TW!2shk"
   import modal from "./components/modal";
   import bar from "./components/bar";
   import imageview from "./components/ImageView";
-import { setTimeout, clearTimeout } from 'timers';
+const SCALE_NUM = 0.5
   export default {
     components: {
       modal,
@@ -125,15 +125,12 @@ import { setTimeout, clearTimeout } from 'timers';
     name: "App",
     beforeCreate() {},
     created() {
-      const that = this;
-      that.timer = setInterval(function() {
-        //
-        if (document.readyState === "complete" && that.imgCount >= that.imgTotal) {
-          // console.log(document.readyState, that.imgCount)
-          that.load = false;
-          window.clearInterval(that.timer);
-        }
-      }, 500);
+      if (document.body.clientWidth < 600) {
+        this.baseWidth = this.baseWidth * SCALE_NUM
+        this.baseHeight = this.baseHeight * SCALE_NUM
+        this.baseWidth_doc = this.baseWidth_doc * SCALE_NUM
+        this.baseHeight_doc = this.baseHeight_doc * SCALE_NUM
+      }
     },
     computed:{
       mainBoxStyle(){
@@ -193,20 +190,17 @@ import { setTimeout, clearTimeout } from 'timers';
     },
     data() {
       return {
+        windowTimer: null,
         imageObj: {
           border:null,
         },
         canvasImagesObj: {
           capital: null,
-          // wuhu: null,
-          // dongjin: null,
+        
         },
         control: {
      border:false,
-          // border1:false,
-          // border:false,
-          // route:false,
-          // refugee2:false
+          
         },
         Redroadtimer: null,
         load: true,
@@ -266,8 +260,14 @@ import { setTimeout, clearTimeout } from 'timers';
         ],
         bodytWidth: "",
         bodyHeight: "",
-        baseWidth: "1430",
-        baseHeight: "1316",
+        orgSetting: {
+          w: 1430,
+          h: 1315
+        },
+        baseWidth: "1430", //地图大小
+        baseHeight: "1315", //地图大小
+        baseWidth_doc: "2048", //窗口大小
+        baseHeight_doc: "1396", //窗口大小
         orienta: "",
         boxscale: 1,
         o: "",
@@ -373,7 +373,15 @@ import { setTimeout, clearTimeout } from 'timers';
               this.m01.currentTime = 0;
               this.m01.play();
             }
-            this.showCityAni(this.canvasObj['capital'],swip)
+            let canvasStatic =this.canvasObj['capital']
+            if(swip){
+              this.showCityAni(canvasStatic,swip)
+            }
+            else{
+              clearInterval(canvasStatic.timeout);
+      // canvasStatic.style.visibility = "hidden";
+              canvasStatic.ani = false;
+            }
             break;
           case 1:            
             
@@ -403,7 +411,10 @@ import { setTimeout, clearTimeout } from 'timers';
             this.drawRedPath(swip)
             break;
           case 3:  
-          
+          if (swip && !this.noVoice) {
+              this.m04.currentTime = 0;
+              this.m04.play();
+            }
          this.control.border=swip
             break;
           
@@ -431,30 +442,31 @@ import { setTimeout, clearTimeout } from 'timers';
         }
       },
       oriChange() {
-        setTimeout(() => {
+        this.windowTimer = setTimeout(() => {
+          this.clearTimeout(this.windowTimer);
           this.setRemUnit();
         }, 200);
       },
-      forApp(){
-        const u_agent = navigator.userAgent
+      forApp() {
+        const u_agent = navigator.userAgent;
         var selffun = () => {
           this.bodyHeight = document.body.innerHeight;
           this.bodytWidth = document.body.clientWidth;
-          var offest = (this.bodytWidth / this.bodyHeight)
+          var offest = this.bodytWidth / this.bodyHeight;
           if (offest > 0.5) {
-              this.boxscale = this.bodyHeight / 2048
-              this.o = 1396 * this.boxscale
-          }else{
-            this.boxscale = this.bodytWidth / 1396
+            this.boxscale = this.bodyHeight / this.baseWidth_doc
+            this.o = this.baseHeigth_doc * this.boxscale
+          } else {
+            this.boxscale = this.bodytWidth / this.baseHeight_doc
             this.o = this.bodytWidth
           }
-          this.docWidth = 2048 * this.boxscale
-          this.docHeight = 1396 * this.boxscale
-          this.canvasW = Math.ceil(1430 * this.boxscale)
-          this.canvasH = Math.ceil(1315 * this.boxscale)
-          this.titleH = this.docHeight - this.canvasH
-          var s = 10
-          this.dpr = window.devicePixelRatio || 1
+          this.docWidth = this.baseWidth_doc * this.boxscale;
+          this.docHeight = this.baseHeight_doc * this.boxscale;
+          this.canvasH = Math.ceil(this.baseHeight * this.boxscale);
+          this.canvasW = Math.ceil(this.baseWidth * this.boxscale);
+          this.titleH = this.docHeight - this.canvasH;
+          var s = 10;
+          this.dpr = window.devicePixelRatio || 1;
           if (/iPad|iPhone|Android|Adr/i.test(u_agent)) {
             this.dpr = 2;
           }
@@ -464,12 +476,13 @@ import { setTimeout, clearTimeout } from 'timers';
           } else {
             this.rem = this.o / 10 / this.dpr;
           }
-          document.documentElement.style.fontSize = (this.rem) + 'px'
-          this.pageTransform = 'rotate3d(0,0,1,-90deg)'
-          this.pageMarginTop =this.pageMarginLeft=(this.docWidth - this.docHeight) /2
-        }
-        selffun()
-        this.setZoom()
+          document.documentElement.style.fontSize = this.rem + "px";
+          this.pageTransform = "rotate3d(0,0,1,-90deg)";
+          this.pageMarginTop = this.pageMarginLeft =
+            (this.docWidth - this.docHeight) / 2;
+        };
+        selffun();
+        this.setZoom();
       },
 
       setRemUnit() {
@@ -487,21 +500,21 @@ import { setTimeout, clearTimeout } from 'timers';
           this.bodytWidth = window.innerWidth;
           // console.log(u_agent, this.bodyHeight, this.bodytWidth)
           if (this.bodytWidth > this.bodyHeight) {
-            this.boxscale = this.bodyHeight / 1396;
+            this.boxscale = this.bodyHeight / this.baseHeight_doc;
             this.o = this.bodyHeight;
             var offest = this.bodytWidth / this.bodyHeight;
             if (offest < 1.49 && offest > 1) {
-              this.boxscale = this.bodytWidth / 2048;
-              this.o = 1396 * this.boxscale;
+              this.boxscale = this.bodytWidth / this.baseWidth_doc;
+              this.o = this.baseHeight_doc * this.boxscale;
             }
           } else {
-            this.boxscale = this.bodytWidth / 2048;
+            this.boxscale = this.bodytWidth / this.baseWidth_doc;
             this.o = this.bodytWidth;
           }
-          this.docWidth = 2048 * this.boxscale;
-          this.docHeight = 1396 * this.boxscale;
-          this.canvasW = Math.ceil(1430 * this.boxscale);
-          this.canvasH = Math.ceil(1315 * this.boxscale);
+          this.docWidth = this.baseWidth_doc * this.boxscale;
+          this.docHeight = this.baseHeight_doc * this.boxscale;
+          this.canvasW = Math.ceil(this.baseWidth * this.boxscale);
+          this.canvasH = Math.ceil(this.baseHeight * this.boxscale);
           this.titleH = this.docHeight - this.canvasH;
           var s = 10;
           this.dpr = window.devicePixelRatio || 1;
@@ -559,7 +572,8 @@ import { setTimeout, clearTimeout } from 'timers';
           
         {
             name: "canvasroute",
-            zindex: 4
+            zindex: 4,
+             org:true,
           },
           {
             name: "canvasroute2",
@@ -571,7 +585,8 @@ import { setTimeout, clearTimeout } from 'timers';
           },
           {
             name: "canvaszhangqian",
-            zindex: 4
+            zindex: 4,
+             org:true,
           },
         ];
         let obj = this.createCanvas(list, divTag);
@@ -600,7 +615,7 @@ import { setTimeout, clearTimeout } from 'timers';
         
        Object.keys(this.canvasImagesObj).forEach((element,i) => {
           this.canvasImagesObj[element] = new Image();
-          this.insterCanvas(this.canvasImagesObj[element], String(element) + '.png', String(element), i==0?false:true)
+          this.insterCanvas(this.canvasImagesObj[element], String(element) + '.png', String(element),true)
         });
         var imageHorse = new Image();
         var route = new Image();
@@ -610,8 +625,8 @@ import { setTimeout, clearTimeout } from 'timers';
           source: route,
           originX: 0,
           originY: 0,
-          width: this.baseWidth,
-          height: this.baseHeight,
+          width: this.orgSetting.w,
+          height: this.orgSetting.h,
           mask1: {
             originX: 330,
             originY: 51,
@@ -681,6 +696,9 @@ import { setTimeout, clearTimeout } from 'timers';
       })
       }
       this.zoomObj.setScale(this.boxscale)
+      this.windowTimer = setTimeout(() => {
+          this.load = false;
+        }, 500);
     },
 
       insterCanvas(img, src, contextStatic, bool) {
@@ -757,7 +775,7 @@ import { setTimeout, clearTimeout } from 'timers';
           source: imageHorse,
            totalFrame: 3,
           currFrame: 0,
-           width: 246.5,
+           width: 246.1,
           height: 320,
           position: {
             currPoint: 0,

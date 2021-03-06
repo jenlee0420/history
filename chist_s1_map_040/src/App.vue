@@ -13,19 +13,18 @@
       <div class="main_box">
         <div id="map_container" class="modal_content" ref="map_container" :style="{ width: canvasW + 'px', height: canvasH + 'px' }">
           <div class="mapBackground" id="canvasInnerDiv" ref="canvasInnerDiv">
-            <imageview :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
-            <imageview :imgsrc="'mapDetail.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'mapDetail.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
             <!-- <imageview :imgsrc="'border.png'" :static="true" :zindex="1" @update="updateImg"></imageview> -->
-            <imageview :imgsrc="'beisong.png'" :static="control2.beisong" :zindex="1" @update="updateImg"></imageview>
-            <imageview :imgsrc="'nanhan.png'" :static="control2.nanhan" :zindex="1" @update="updateImg"></imageview>
-            <imageview :imgsrc="'beihan.png'" :static="control2.beihan" :zindex="1" @update="updateImg"></imageview>
-            <imageview :imgsrc="'nanping.png'" :static="control2.nanping" :zindex="1" @update="updateImg"></imageview>
-            <imageview :imgsrc="'su.png'" :static="control2.su" :zindex="1" @update="updateImg"></imageview>
-            <imageview :imgsrc="'nantang.png'" :static="control2.nantang" :zindex="1" @update="updateImg"></imageview>
-            <imageview :imgsrc="'wuyue.png'" :static="control2.wuyue" :zindex="1" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'beisong.png'" :static="control2.beisong.show" :zindex="1" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'nanhan.png'" :static="control2.nanhan.show" :zindex="1" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'beihan.png'" :static="control2.beihan.show" :zindex="1" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'nanping.png'" :static="control2.nanping.show" :zindex="1" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'su.png'" :static="control2.su.show" :zindex="1" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'nantang.png'" :static="control2.nantang.show" :zindex="1" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'wuyue.png'" :static="control2.wuyue.show" :zindex="1" @update="updateImg"></imageview>
             <!-- <imageview :imgsrc="'nianfen01.png'" :static="control.nianfen01" :zindex="1" @update="updateImg"></imageview>
-            <imageview :imgsrc="'nianfen02.png'" :static="control.nianfen02" :zindex="1" @update="updateImg"></imageview> -->
-
+                <imageview :imgsrc="'nianfen02.png'" :static="control.nianfen02" :zindex="1" @update="updateImg"></imageview> -->
           </div>
         </div>
         <div id="menu_container" style="float: right;">
@@ -54,9 +53,9 @@
       </div>
     </div>
     <modal class="" :style="AppStyle" :dragable="!isApp" headTitle="問題" :hideFooter="true" v-if="popWindow" @cancel-event="
-          popWindow = false;
-          list[5].show = false;
-        ">
+              popWindow = false;
+              list[5].show = false;
+            ">
       <div slot="modalCont">
         <div>
           <div class="question">
@@ -65,57 +64,57 @@
             </div>
             <div>
               <span class="item" :class="{ selected: currAns == index }" v-for="(item, index) in questionItem" :key="index" @click="checkans(index)">{{ item }}</span
-                >
+                    >
+                  </div>
+                  <div
+                    class="ansBox"
+                    :class="showWrong == false ? 'wrongico' : 'rightico'"
+                    v-if="currAns != null"
+                  ></div>
+                </div>
+                <div class="question question3">
+                  <div class="flex">
+                    <em class="mr5">2.</em>
+                    <em>
+                    以下哪項關於北漢的描述是正確的？</em>
+                </div>
+                <div>
+                  <span class="item" :class="{ selected: currAns2 == index }" v-for="(item, index) in questionItem2" :key="index" @click="checkans2(index)" v-html="item"></span
+                    >
+                  </div>
+                  <div
+                    class="ansBox"
+                    :class="showWrong2 == false ? 'wrongico' : 'rightico'"
+                    v-if="currAns2 != null"
+                  ></div>
+                </div>
               </div>
-              <div
-                class="ansBox"
-                :class="showWrong == false ? 'wrongico' : 'rightico'"
-                v-if="currAns != null"
-              ></div>
             </div>
-            <div class="question question3">
-              <div class="flex">
-                <em class="mr5">2.</em>
-                <em>
-                以下哪項關於北漢的描述是正確的？</em>
+          </modal>
+          <modal
+            class=""
+            :style="AppStyle" :dragable="!isApp"
+            :headTitle="list[4].text"
+            :hideFooter="true"
+            v-if="mapPop"
+            @cancel-event="
+              mapPop = false;
+              list[4].show = false;
+            "
+          >
+            <div slot="modalCont">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31457797.784411725!2d80.88715147621804!3d35.9690934090060
+    6!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x35d0992038b6f237%3A0x6defd67fbb81498c!2z5Lit5ZyL5rKz5Y2X55yB6ZaL5b
+    CB5biC!5e0!3m2!1szh-TW!2shk!4v1605773793955!5m2!1szh-TW!2shk"
+                :width="(isApp?docWidth:bodytWidth)/1.8" :height="(isApp?docHeight:bodyHeight)/1.8"
+                frameborder="0"
+                style="border:0;"
+                allowfullscreen=""
+              ></iframe>
             </div>
-            <div>
-              <span class="item" :class="{ selected: currAns2 == index }" v-for="(item, index) in questionItem2" :key="index" @click="checkans2(index)" v-html="item"></span
-                >
-              </div>
-              <div
-                class="ansBox"
-                :class="showWrong2 == false ? 'wrongico' : 'rightico'"
-                v-if="currAns2 != null"
-              ></div>
-            </div>
-          </div>
+          </modal>
         </div>
-      </modal>
-      <modal
-        class=""
-        :style="AppStyle" :dragable="!isApp"
-        :headTitle="list[4].text"
-        :hideFooter="true"
-        v-if="mapPop"
-        @cancel-event="
-          mapPop = false;
-          list[4].show = false;
-        "
-      >
-        <div slot="modalCont">
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31457797.784411725!2d80.88715147621804!3d35.9690934090060
-6!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x35d0992038b6f237%3A0x6defd67fbb81498c!2z5Lit5ZyL5rKz5Y2X55yB6ZaL5b
-CB5biC!5e0!3m2!1szh-TW!2shk!4v1605773793955!5m2!1szh-TW!2shk"
-            :width="(isApp?docWidth:bodytWidth)/1.8" :height="(isApp?docHeight:bodyHeight)/1.8"
-            frameborder="0"
-            style="border:0;"
-            allowfullscreen=""
-          ></iframe>
-        </div>
-      </modal>
-    </div>
 </template>
 
 <script>
@@ -125,7 +124,8 @@ CB5biC!5e0!3m2!1szh-TW!2shk!4v1605773793955!5m2!1szh-TW!2shk"
   import modal from "./components/modal";
   import bar from "./components/bar";
   import imageview from "./components/ImageView";
-import { setTimeout, clearTimeout } from 'timers';
+const SCALE_NUM = 0.5
+const SCALE_LIMIT = 800
   export default {
     components: {
       modal,
@@ -136,24 +136,23 @@ import { setTimeout, clearTimeout } from 'timers';
     beforeCreate() {},
     created() {
       const that = this;
-       that.load = false;
-      // that.timer = setInterval(function() {
-      //   //
-      //   if (document.readyState === "complete" && that.imgCount >= that.imgTotal) {
-      //     // console.log(document.readyState, that.imgCount)
-      //     that.load = false;
-      //     window.clearInterval(that.timer);
-      //   }
-      // }, 500);
+      that.load = false;
+      if (document.body.clientWidth < SCALE_LIMIT) {
+        this.baseWidth = this.baseWidth * SCALE_NUM
+        this.baseHeight = this.baseHeight * SCALE_NUM
+        this.baseWidth_doc = this.baseWidth_doc * SCALE_NUM
+        this.baseHeight_doc = this.baseHeight_doc * SCALE_NUM
+      }
     },
-    computed:{
-      mainBoxStyle(){
-        var css = {'width':this.docWidth+'px',
-        'height':this.docHeight+'px',
-        'display':this.load?'none':'block',       
-        transform:this.pageTransform,
-        'margin-top':this.pageMarginTop+'px',
-        'margin-left':(this.pageMarginLeft *-1) +'px'    
+    computed: {
+      mainBoxStyle() {
+        var css = {
+          'width': this.docWidth + 'px',
+          'height': this.docHeight + 'px',
+          'display': this.load ? 'none' : 'block',
+          transform: this.pageTransform,
+          'margin-top': this.pageMarginTop + 'px',
+          'margin-left': (this.pageMarginLeft * -1) + 'px'
         }
         return css
       },
@@ -170,33 +169,28 @@ import { setTimeout, clearTimeout } from 'timers';
         }
         return css
       },
-      isApp(){
-        if(window.location.search.indexOf('app')>=0){
+      isApp() {
+        if (window.location.search.indexOf('app') >= 0) {
           return true
-        }else{
+        } else {
           return false
         }
       }
     },
-
     mounted() {
-      // this.testCanvas()
       this.createMap();
       if ("onorientationchange" in window) {
         window.addEventListener("orientationchange", this.oriChange, false);
       } else {
         window.addEventListener("resize", this.setRemUnit, false);
       }
-      // window.addEventListener("onorientationchange" in window ?"orientationchange":"resize", this.setRemUnit, false);
-      // this.zoomObj = require("./js/zoom.js");
-      if(this.isApp){
+      
+      if (this.isApp) {
         this.forApp()
-      }else{
+      } else {
         this.setRemUnit()
       }
-
       this.initCanvas();
-      
       document
         .getElementById("map_container")
         .addEventListener("touchmove", this.bodyScroll, {
@@ -206,36 +200,51 @@ import { setTimeout, clearTimeout } from 'timers';
     data() {
       return {
         imageObj: {
-          city:null,
-          nianfen01:null,
-          nianfen02:null,
-          border:null
+          city: null,
+          nianfen01: null,
+          nianfen02a: null,
+          nianfen02b: null,
+          border: null
         },
         canvasImagesObj: {
           capital: null,
-          // wuhu: null,
-          // dongjin: null,
         },
-        control2:{
-          nanhan:true,
-          nantang:true,
-          beihan:true,
-          su:true,
-          nanping:true,
-          wuyue:true,
-          beisong:true,
-
+        control2: {
+          nanhan: {
+            show: true,
+            ani: false
+          },
+          nantang: {
+            show: true,
+            ani: false
+          },
+          beihan: {
+            show: true,
+            ani: false
+          },
+          su: {
+            show: true,
+            ani: false
+          },
+          nanping: {
+            show: true,
+            ani: false
+          },
+          wuyue: {
+            show: true,
+            ani: false
+          },
+          beisong: {
+            show: true,
+            ani: false
+          },
         },
         control: {
-          city:false,
-          border:false,
-          nianfen01:false,
-          nianfen02:false,
-          
-          // border1:false,
-          // border:false,
-          // route:false,
-          // refugee2:false
+          city: false,
+          border: false,
+          nianfen01: false,
+          nianfen02a: false,
+          nianfen02b: false,
         },
         Redroadtimer: null,
         load: true,
@@ -295,8 +304,14 @@ import { setTimeout, clearTimeout } from 'timers';
         ],
         bodytWidth: "",
         bodyHeight: "",
-        baseWidth: "1430",
-        baseHeight: "1316",
+        orgSetting: {
+          w: 1430,
+          h: 1315
+        },
+        baseWidth: "1430", //地图大小
+        baseHeight: "1315", //地图大小
+        baseWidth_doc: "2048", //窗口大小
+        baseHeight_doc: "1396", //窗口大小
         orienta: "",
         boxscale: 1,
         o: "",
@@ -307,6 +322,9 @@ import { setTimeout, clearTimeout } from 'timers';
         docWidth: "",
         docHeight: "",
         horseObject1: {},
+        horseObject2: {},
+        horseObject3: {},
+        horseObject4: {},
         scaleindex: 0,
         ele: null,
         popWindow: false,
@@ -319,26 +337,32 @@ import { setTimeout, clearTimeout } from 'timers';
         m07: null,
         m08: null,
         license: null,
-        horsetimerGroup: null,
-        drawHorsesTimeout: null,
-        drawHorsesTimeout1: null,
-        drawHorsesTimeout2: null,
-        drawHorsesTimeout3: null,
-        shipPlay: false,
+        drawTimeout: {
+          time1: null,
+          time2: null,
+          time3: null,
+          time4: null,
+          time5: null,
+          time6: null,
+          time7: null,
+          time8: null,
+          time9: null,
+          time10: null,
+          time11: null,
+          time12: null,
+          time13: null,
+          time14: null,
+          time15: null,
+          time16: null,
+        },
         titleH: 70,
         canvasAnimHorse: null,
-        prevorienta: "",
         pathObject: {},
-        pathObjectGreen: {},
-        pathObjectblue: {},
         scaleZoom: 0,
         debug: "",
         canvasObj: {},
         contextObj: {},
-        timer1: [],
-        isShowall:false,
-        route3:false,
-        btn2Play:false,
+        isShowall: false,
       };
     },
     watch: {
@@ -356,7 +380,6 @@ import { setTimeout, clearTimeout } from 'timers';
         },
         deep: true
       },
-      
     },
     methods: {
       updateImg() {
@@ -387,58 +410,141 @@ import { setTimeout, clearTimeout } from 'timers';
         // this.m06.pause();
         // this.license.pause();
       },
+      clearTimeAndShow(item){
+        this.sharpCity(item, false)
+        item.show = true
+        item.ani = false
+        
+      },
       showCanvas(index) {
-     
         let swip = !this.list[index].show;
         this.muteMe();
         switch (index) {
           case 0:
             //首都
-            if (swip && !this.noVoice) {
-              this.m01.currentTime = 0;
-              this.m01.play();
+            clearTimeout(this.drawTimeout.time14)
+            if (swip) {
+              if (this.isShowall || this.noVoice) {
+                this.drawTimeout.time14 = setTimeout(() => {
+                  this.drawHousePromise2(false, 'Songsoldier', 1013, 80)
+                }, 3000)
+              }else if (!this.noVoice) {
+                this.m01.currentTime = 0;
+                this.m01.play();
+                this.drawTimeout.time14 = setTimeout(() => {
+                  this.drawHousePromise2(false, 'Songsoldier', 1013, 80)
+                }, 17000)
+              }
+              this.showCityAni(this.canvasObj['capital'], swip)
+              this.drawHousePromise2(swip, 'Songsoldier', 1013, 80)
             }
-            this.showCityAni(this.canvasObj['capital'],swip)
-            if(!swip){
-                        clearInterval(this.canvasObj['capital'].timeout);
-                this.canvasObj['capital'].style.visibility = "visible";
-                this.canvasObj['capital'].ani = false;
+            if (!swip) {
+              this.drawHousePromise2(false, 'Songsoldier')
+              clearInterval(this.canvasObj['capital'].timeout);
+              this.canvasObj['capital'].style.visibility = "visible";
+              this.canvasObj['capital'].ani = false;
             }
             break;
-          case 1:            
-            
-            if (swip && !this.noVoice) {
-              this.m02.currentTime = 0;
-              this.m02.play();
-              // this.timer1 = setTimeout(()=>{
-              //    this.drawHousePromise2(false,'canvaszhangqian',625,100)
-              // },43000)
+          case 1:
+            clearTimeout(this.drawTimeout.time7)
+            clearTimeout(this.drawTimeout.time8)
+            clearTimeout(this.drawTimeout.time9)
+            clearTimeout(this.drawTimeout.time10)
+            clearTimeout(this.drawTimeout.time15)
+            clearTimeout(this.drawTimeout.time16)
+            if (swip) {
+              if (this.isShowall || this.noVoice) {
+              }
+              this.drawTimeout.time15 = setTimeout(() => {
+                this.sharpCity(this.control2.beisong, swip)
+              }, 10000)
+              this.drawTimeout.time16 = setTimeout(() => {
+                this.control.nianfen01 = true
+              }, 12500)
+              this.drawTimeout.time7 = setTimeout(() => {
+                this.drawHousePromise(swip, 'Songsoldier_walk')
+                this.sharpCity(this.control2.nanping, true)
+              }, 19000)
+              this.drawTimeout.time8 = setTimeout(() => {
+                this.sharpCity(this.control2.su, true)
+              }, 20000)
+              this.drawTimeout.time9 = setTimeout(() => {
+                this.sharpCity(this.control2.nanhan, true)
+              }, 21000)
+              this.drawTimeout.time10 = setTimeout(() => {
+                this.sharpCity(this.control2.nantang, true)
+              }, 22500)
+              if (!this.noVoice) {
+                this.m02.currentTime = 0;
+                this.m02.play();
+              }
+            } else {
+              this.control.nianfen01 = false
+              this.drawHousePromise(false, 'Songsoldier_walk')
+              
+              this.clearTimeAndShow(this.control2.nanping)
+              this.clearTimeAndShow(this.control2.su)
+              this.clearTimeAndShow(this.control2.nanhan)
+              this.clearTimeAndShow(this.control2.nantang)
+              this.clearTimeAndShow(this.control2.beisong)
             }
-            // if(this.isShowall){
-            //   this.timer1 = setTimeout(()=>{
-            //      this.drawHousePromise2(false,'canvaszhangqian',625,100)
-            //   },5000)
-            // }
-            // // this.control.border=swip
-            // this.drawHousePromise2(swip,'canvaszhangqian',625,100)
-            // if(!swip){
-            //   clearTimeout(this.timer1)
-            // }
-            this.control.nianfen01=swip
+            // this.control.nianfen01 = swip
             break;
           case 2:
-            if (swip && !this.noVoice) {
-              this.m03.currentTime = 0;
-              this.m03.play();
+            clearTimeout(this.drawTimeout.time4)
+            clearTimeout(this.drawTimeout.time5)
+            clearTimeout(this.drawTimeout.time6)
+            if (swip) {
+              if (this.isShowall || this.noVoice) {
+                // console.log('//1')
+                this.drawTimeout.time6 = setTimeout(() => {
+                  this.drawHousePromise2(false, 'Songsoldier_b', 1134, 539)
+                  this.drawHousePromise2(false, 'Songsoldier_a', 706, 80)
+                }, 6000)
+                this.drawTimeout.time4 = setTimeout(() => {
+                  this.control.nianfen02a = true
+                  this.sharpCity(this.control2.beihan, true)
+                }, 3000)
+                this.drawTimeout.time5 = setTimeout(() => {
+                  this.control.nianfen02b = true
+                  this.sharpCity(this.control2.wuyue, true)
+                }, 3000)
+              }else if (!this.noVoice) {
+                this.m03.currentTime = 0;
+                this.m03.play();                
+                this.drawTimeout.time6 = setTimeout(() => {
+                  this.drawHousePromise2_a(false, 'Songsoldier_b', 1134, 539)
+                  this.drawHousePromise2_b(false, 'Songsoldier_a', 706, 80)
+                }, 29000)
+                
+                this.drawTimeout.time4 = setTimeout(() => {
+                  this.control.nianfen02b = true
+                  this.sharpCity(this.control2.wuyue, true)
+                }, 12000)
+                this.drawTimeout.time5 = setTimeout(() => {
+                  this.control.nianfen02a = true
+                  this.sharpCity(this.control2.beihan, true)
+                }, 13000)
+              }
+              this.drawHousePromise2_a(true, 'Songsoldier_b', 1134, 539)
+              this.drawHousePromise2_b(true, 'Songsoldier_a', 706, 80)
+            } else {
+              this.drawHousePromise2_a(false, 'Songsoldier_b', 1134, 539)
+              this.drawHousePromise2_b(false, 'Songsoldier_a', 706, 80)
+              this.control.nianfen02a = false
+              this.control.nianfen02b = false
+              
+              this.clearTimeAndShow(this.control2.wuyue)
+              this.clearTimeAndShow(this.control2.beihan)
             }
-            // this.drawRedPath(swip)
-            this.control.nianfen02=swip
             break;
-          case 3:  
-          
-         this.control.city=swip
+          case 3:
+            if (swip && !this.noVoice) {
+              this.m04.currentTime = 0;
+              this.m04.play();
+            }
+            this.control.city = swip
             break;
-          
           case 4:
             this.mapPop = swip;
             break;
@@ -456,8 +562,7 @@ import { setTimeout, clearTimeout } from 'timers';
       conflict() {
         let swip3 = this.list[3].show;
         // this.control.capital.show = this.list[1].show;
-        this.canvasObj['capital'].style.visibility = this.list[0].show?'visible':'hidden'
-
+        this.canvasObj['capital'].style.visibility = this.list[0].show ? 'visible' : 'hidden'
         if (swip3) {
           this.canvasObj['capital'].style.visibility = 'visible'
         }
@@ -467,26 +572,26 @@ import { setTimeout, clearTimeout } from 'timers';
           this.setRemUnit();
         }, 200);
       },
-      forApp(){
-        const u_agent = navigator.userAgent
+      forApp() {
+        const u_agent = navigator.userAgent;
         var selffun = () => {
           this.bodyHeight = document.body.innerHeight;
           this.bodytWidth = document.body.clientWidth;
-          var offest = (this.bodytWidth / this.bodyHeight)
+          var offest = this.bodytWidth / this.bodyHeight;
           if (offest > 0.5) {
-              this.boxscale = this.bodyHeight / 2048
-              this.o = 1396 * this.boxscale
-          }else{
-            this.boxscale = this.bodytWidth / 1396
+            this.boxscale = this.bodyHeight / this.baseWidth_doc
+            this.o = this.baseHeigth_doc * this.boxscale
+          } else {
+            this.boxscale = this.bodytWidth / this.baseHeight_doc
             this.o = this.bodytWidth
           }
-          this.docWidth = 2048 * this.boxscale
-          this.docHeight = 1396 * this.boxscale
-          this.canvasW = Math.ceil(1430 * this.boxscale)
-          this.canvasH = Math.ceil(1315 * this.boxscale)
-          this.titleH = this.docHeight - this.canvasH
-          var s = 10
-          this.dpr = window.devicePixelRatio || 1
+          this.docWidth = this.baseWidth_doc * this.boxscale;
+          this.docHeight = this.baseHeight_doc * this.boxscale;
+          this.canvasH = Math.ceil(this.baseHeight * this.boxscale);
+          this.canvasW = Math.ceil(this.baseWidth * this.boxscale);
+          this.titleH = this.docHeight - this.canvasH;
+          var s = 10;
+          this.dpr = window.devicePixelRatio || 1;
           if (/iPad|iPhone|Android|Adr/i.test(u_agent)) {
             this.dpr = 2;
           }
@@ -496,14 +601,14 @@ import { setTimeout, clearTimeout } from 'timers';
           } else {
             this.rem = this.o / 10 / this.dpr;
           }
-          document.documentElement.style.fontSize = (this.rem) + 'px'
-          this.pageTransform = 'rotate3d(0,0,1,-90deg)'
-          this.pageMarginTop =this.pageMarginLeft=(this.docWidth - this.docHeight) /2
-        }
-        selffun()
-        this.setZoom()
+          document.documentElement.style.fontSize = this.rem + "px";
+          this.pageTransform = "rotate3d(0,0,1,-90deg)";
+          this.pageMarginTop = this.pageMarginLeft =
+            (this.docWidth - this.docHeight) / 2;
+        };
+        selffun();
+        this.setZoom();
       },
-
       setRemUnit() {
         const u_agent = navigator.userAgent;
         if (window.orientation === 0 || window.orientation === 180) {
@@ -519,21 +624,21 @@ import { setTimeout, clearTimeout } from 'timers';
           this.bodytWidth = window.innerWidth;
           // console.log(u_agent, this.bodyHeight, this.bodytWidth)
           if (this.bodytWidth > this.bodyHeight) {
-            this.boxscale = this.bodyHeight / 1396;
+            this.boxscale = this.bodyHeight / this.baseHeight_doc;
             this.o = this.bodyHeight;
             var offest = this.bodytWidth / this.bodyHeight;
             if (offest < 1.49 && offest > 1) {
-              this.boxscale = this.bodytWidth / 2048;
-              this.o = 1396 * this.boxscale;
+              this.boxscale = this.bodytWidth / this.baseWidth_doc;
+              this.o = this.baseHeight_doc * this.boxscale;
             }
           } else {
-            this.boxscale = this.bodytWidth / 2048;
+            this.boxscale = this.bodytWidth / this.baseWidth_doc;
             this.o = this.bodytWidth;
           }
-          this.docWidth = 2048 * this.boxscale;
-          this.docHeight = 1396 * this.boxscale;
-          this.canvasW = Math.ceil(1430 * this.boxscale);
-          this.canvasH = Math.ceil(1315 * this.boxscale);
+          this.docWidth = this.baseWidth_doc * this.boxscale;
+          this.docHeight = this.baseHeight_doc * this.boxscale;
+          this.canvasW = Math.ceil(this.baseWidth * this.boxscale);
+          this.canvasH = Math.ceil(this.baseHeight * this.boxscale);
           this.titleH = this.docHeight - this.canvasH;
           var s = 10;
           this.dpr = window.devicePixelRatio || 1;
@@ -556,17 +661,17 @@ import { setTimeout, clearTimeout } from 'timers';
       },
       initCanvas() {},
       showall(type) {
-        this.isShowall= type
+        this.isShowall = type
         this.list.forEach((e, index) => {
-        if (!this.list[index].type) {
-          if (type) {
-            this.list[index].show = false
-          } else {
-            this.list[index].show = true;
+          if (!this.list[index].type) {
+            if (type) {
+              this.list[index].show = false
+            } else {
+              this.list[index].show = true;
+            }
+            this.showCanvas(index);
           }
-          this.showCanvas(index);
-        }
-      });
+        });
         this.muteMe();
       },
       resetHorseObject(object) {
@@ -583,27 +688,30 @@ import { setTimeout, clearTimeout } from 'timers';
             name: "canvasImages",
             zindex: 2
           },
-          
           {
             name: "capital",
-            zindex: 3
-          },
-          
-        {
-            name: "canvasroute",
-            zindex: 4
+            zindex: 3,
+            
           },
           {
-            name: "canvasroute2",
-            zindex: 4
+            name: "Songsoldier",
+            zindex: 3,
+            org: true,
           },
           {
-            name: "canvaszhangqian2",
-            zindex: 4
+            name: "Songsoldier_a",
+            zindex: 3,
+            org: true,
           },
           {
-            name: "canvaszhangqian",
-            zindex: 4
+            name: "Songsoldier_b",
+            zindex: 3,
+            org: true,
+          },
+          {
+            name: "Songsoldier_walk",
+            zindex: 4,
+            org: true,
           },
         ];
         let obj = this.createCanvas(list, divTag);
@@ -623,102 +731,93 @@ import { setTimeout, clearTimeout } from 'timers';
         this.m04.src = require("../static/img/vo/Chist_s2_map_040_04.mp3");
         // this.m05.src = require("../static/img/vo/chist_s1_map_037_5.mp3");
         // this.m06.src = require("../static/img/vo/chist_s1_map_037_6.mp3");
-
-
         Object.keys(this.imageObj).forEach(element => {
           this.imageObj[element] = new Image();
-          this.insterCanvas(this.imageObj[element], String(element)+'.png', 'canvasImages', false)
+          this.insterCanvas(this.imageObj[element], String(element) + '.png', 'canvasImages', false)
           // this.insterCanvas2(this.imageObj[element],String(element)+'.png',()=>{
           //   this.imagesCanvas()
           // })
         });
-        
-        
-       Object.keys(this.canvasImagesObj).forEach((element,i) => {
+        Object.keys(this.canvasImagesObj).forEach((element, i) => {
           this.canvasImagesObj[element] = new Image();
-          this.insterCanvas(this.canvasImagesObj[element], String(element) + '.png', String(element), i==0?true:false)
+          this.insterCanvas(this.canvasImagesObj[element], String(element) + '.png', String(element), i == 0 ? true : false)
         });
         var imageHorse = new Image();
-        var route = new Image();
+        var Songsoldier_walk = new Image();
         var routeb = new Image();
-        // this.insterCanvas2(route, 'changcheng.png', () => {
-        //   this.pathObject = {
-        //   source: route,
-        //   originX: 0,
-        //   originY: 0,
-        //   width: this.baseWidth,
-        //   height: this.baseHeight,
-        //   mask1: {
-        //     originX: 330,
-        //     originY: 51,
-        //     width: 1,
-        //     height: 806,
-        //     currOriginX: 330,
-        //     currOriginY: 51,
-        //     shiftX: 2,
-        //     shiftY: 0,
-        //     endPoint: 600
-        //   },
-        //   }
-        // })
-        
-        // this.insterCanvas2(imageHorse, 'Liaosoldier.png', () => {
-        //   var translate = [
-        //     [659.8,100]       
-        //   ];
-        //   var scale = [1];
-        //   var dur = [
-        //     60,
-        //   ];
-        //   var sharpPoint = [
-        //     1, 
-        //   ];
-        //   this.horseObject1 = this.initHorseObject2(            
-        //     imageHorse
-        //   );
-         
-
-        // })
-        // this.insterCanvas2(zhangqian_b, 'zhangqian02.png', () => {
-        //   this.horseObject1.source2=zhangqian_b     
-        //   this.horseObject3.source2=zhangqian_b          
-        // })
-        // document.getElementById('map_container').append(divTag)
-        // divTag.append(divTag)
+        this.insterCanvas2(Songsoldier_walk, 'Songsoldier_b.png', () => {
+          // var translate = [
+          //   [786.6, 304],
+          //   [730.5, 364],
+          //   [618.5, 454],
+          //   [690.5, 480],
+          //   [750.5, 555],
+          //   [810.5, 776],
+          //   [952.0,696],
+          //   [1084, 776]
+          // ];
+          var translate = [
+            [786.6, 304],
+            [622.1, 452],
+            [748.1, 524],
+            [810.1, 764],
+            [950.1, 734],
+            [1102.0, 766]
+          ];
+          var scale = [1, 1, 1, 1, 1, 0];
+          // var dur = [10, 10, 10, 10, 10, 15,10];
+          var dur = [8, 4, 5,4, 13,10];
+          var sharpPoint = [1, 1, 1, 1, 1, 1];
+          this.horseObject2 = this.initHorseObject(
+            translate,
+            scale,
+            dur,
+            sharpPoint,
+            Songsoldier_walk
+          );
+        })
+        this.insterCanvas2(imageHorse, 'Songsoldier.png', () => {
+          this.horseObject1 = this.initHorseObject2(imageHorse);
+          this.horseObject3 = this.initHorseObject2(
+            imageHorse
+          );
+          this.horseObject4 = this.initHorseObject2(
+            imageHorse
+          );
+        })
         this.$nextTick(() => {
           this.setZoom();
         });
       },
-     setZoom() {
-      if (!document.getElementById('canvasInnerDiv')) {
-        return
-      }
-      if(this.isApp){
-        this.zoomObj = new zoomApp(document.getElementById('canvasInnerDiv'), {
-        width: this.baseWidth,
-        height: this.baseHeight,
-        top: 0,
-        left: 0,
-        minScale: this.boxscale,
-        // maxScale: this.boxscale * 10,
-        warpWidth: this.boxscale * this.baseWidth,
-        warpHeight: this.boxscale * this.baseHeight
-      })
-      }else{
-        this.zoomObj = new zoom(document.getElementById('canvasInnerDiv'), {
-        width: this.baseWidth,
-        height: this.baseHeight,
-        top: 0,
-        left: 0,
-        minScale: this.boxscale,
-        // maxScale: this.boxscale * 10,
-        warpWidth: this.boxscale * this.baseWidth,
-        warpHeight: this.boxscale * this.baseHeight
-      })
-      }
-      this.zoomObj.setScale(this.boxscale)
-    },
-
+      setZoom() {
+        if (!document.getElementById('canvasInnerDiv')) {
+          return
+        }
+        if (this.isApp) {
+          this.zoomObj = new zoomApp(document.getElementById('canvasInnerDiv'), {
+            width: this.baseWidth,
+            height: this.baseHeight,
+            top: 0,
+            left: 0,
+            minScale: this.boxscale,
+            // maxScale: this.boxscale * 10,
+            warpWidth: this.boxscale * this.baseWidth,
+            warpHeight: this.boxscale * this.baseHeight
+          })
+        } else {
+          this.zoomObj = new zoom(document.getElementById('canvasInnerDiv'), {
+            width: this.baseWidth,
+            height: this.baseHeight,
+            top: 0,
+            left: 0,
+            minScale: this.boxscale,
+            // maxScale: this.boxscale * 10,
+            warpWidth: this.boxscale * this.baseWidth,
+            warpHeight: this.boxscale * this.baseHeight
+          })
+        }
+        this.zoomObj.setScale(this.boxscale)
+      },
       insterCanvas(img, src, contextStatic, bool) {
         img.src = require(`../static/img/${src}`);
         img.onload = () => {
@@ -745,10 +844,10 @@ import { setTimeout, clearTimeout } from 'timers';
       initHorseObject(translate, scale, dur, sharpPoint, imageHorse) {
         var object = {
           source: imageHorse,
-          totalFrame: 9,
+          totalFrame: 5,
           currFrame: 0,
-          width: 277.5,
-          height: 170,
+          width: 164,
+          height: 510,
           point: sharpPoint,
           position: {
             points: translate,
@@ -770,7 +869,7 @@ import { setTimeout, clearTimeout } from 'timers';
           source: imageHorse,
           totalFrame: 9,
           currFrame: 0,
-           width: 277.5,
+          width: 277.5,
           height: 170,
           point: sharpPoint,
           position: {
@@ -791,10 +890,10 @@ import { setTimeout, clearTimeout } from 'timers';
       initHorseObject2(imageHorse) {
         var object = {
           source: imageHorse,
-           totalFrame: 3,
+          totalFrame: 3,
           currFrame: 0,
-           width: 246.5,
-          height: 320,
+          width: 163,
+          height: 510,
           position: {
             currPoint: 0,
             dur: 1,
@@ -861,13 +960,15 @@ import { setTimeout, clearTimeout } from 'timers';
 
 <style lang="less">
   #app {
-    .fs21{
+    .fs21 {
       font-size: 0.22rem;
     }
     .pos_a {
       position: absolute;
-    } 
-    font-family: Verdana, Arial, sans-serif;
+    }
+    font-family: Verdana,
+    Arial,
+    sans-serif;
     .mapBackground {
       display: inline-block; // background: url("../static/img/map.png");
       background-size: cover;
@@ -915,7 +1016,8 @@ import { setTimeout, clearTimeout } from 'timers';
         }
       }
     }
-    .question2,.question3 {
+    .question2,
+    .question3 {
       flex-wrap: wrap;
       display: flex; // margin-bottom: 0.5em !important;
       .item {
@@ -923,7 +1025,6 @@ import { setTimeout, clearTimeout } from 'timers';
         margin-bottom: 0.8em !important;
       }
     }
-   
     .flex {
       display: flex;
       em {

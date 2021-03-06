@@ -1,3 +1,5 @@
+const SCALE_NUM = 0.5
+const SCALE_LIMIT = 800
 const animate = {
   sharpCity(obj, bool) {
     if (!bool) {
@@ -45,110 +47,34 @@ const animate = {
     }, 260);
     canvasStatic.ani = true;
   },
-  drawRedPath(flag) {
-    let canvasAnimPath = document.getElementById("canvasroute");
-    let contextAnimPath = canvasAnimPath.getContext("2d");
-    let pathObject = this.pathObject;
-    
-    if (flag == true) {
-     
-      if (pathObject.mask1.width < pathObject.mask1.endPoint) {
-        console.log(pathObject.mask1.width)
-        pathObject.playing = true;
-        this.canvasClear(canvasAnimPath);
-        contextAnimPath.save();
-        contextAnimPath.beginPath();
-        contextAnimPath.rect(
-          pathObject.mask1.currOriginX,
-          pathObject.mask1.currOriginY,
-          pathObject.mask1.width,
-          pathObject.mask1.height
-        );
-
-        contextAnimPath.clip();
-        contextAnimPath.drawImage(
-          pathObject.source,
-          pathObject.originX,
-          pathObject.originY,
-          pathObject.width,
-          pathObject.height
-        );
-        if (pathObject.mask1.currOriginX < pathObject.mask1.endPoint) {
-          pathObject.mask1.width += pathObject.mask1.shiftX;
-        } else {
-
-        }
-        contextAnimPath.restore();
-        canvasAnimPath.style.visibility = "visible";
-        pathObject.timeout = setTimeout(() => {
-          this.drawRedPath(flag);
-        }, 30);
-      } else {
-        this.control.refugee2 = flag
-      }
-    } else {
-      canvasAnimPath.style.visibility = "hidden";
-      pathObject.mask1.currOriginX = pathObject.mask1.originX;
-      pathObject.mask1.currOriginY = pathObject.mask1.originY;
-      pathObject.mask1.width=1
-      pathObject.playing = false;
-      clearTimeout(pathObject.timeout);
-    }
-  },
-  drawRedPath2(flag) {
-    let canvasAnimPath = document.getElementById("canvasroute2");
-    let contextAnimPath = canvasAnimPath.getContext("2d");
-    let pathObject = this.pathObject2;
-    if (flag == true) {
-      if (pathObject.mask1.currOriginY < pathObject.mask1.endPoint) {
-        pathObject.playing = true;
-        this.canvasClear(canvasAnimPath);
-        contextAnimPath.save();
-        contextAnimPath.beginPath();
-        contextAnimPath.rect(
-          pathObject.mask1.currOriginX,
-          pathObject.mask1.currOriginY,
-          pathObject.mask1.width,
-          pathObject.mask1.height
-        );
-
-        contextAnimPath.clip();
-        contextAnimPath.drawImage(
-          pathObject.source,
-          pathObject.originX,
-          pathObject.originY,
-          pathObject.width,
-          pathObject.height
-        );
-        if (pathObject.mask1.currOriginY < pathObject.mask1.endPoint) {
-          pathObject.mask1.currOriginY += pathObject.mask1.shiftX;
-        } else {
-
-        }
-        contextAnimPath.restore();
-        canvasAnimPath.style.visibility = "visible";
-        pathObject.timeout = setTimeout(() => {
-          this.drawRedPath2(flag);
-        }, 30);
-      } else {
-        this.drawHousePromise(flag)
-      }
-    } else {
-      canvasAnimPath.style.visibility = "hidden";
-      pathObject.mask1.currOriginX = pathObject.mask1.originX;
-      pathObject.mask1.currOriginY = pathObject.mask1.originY;
-
-      pathObject.playing = false;
-      clearTimeout(pathObject.timeout);
-    }
-  },
-  drawHousePromise2(flag, canvasId, x, y) {
-    let canvasAnimHorse = document.getElementById(canvasId);
+  
+  drawHousePromise(flag, canvasId) {    
+    let canvasAnimHorse = this.canvasObj[canvasId]
     let contextAnimHorse = canvasAnimHorse.getContext("2d");
-    clearInterval(this.drawHorsesTimeout1);
     if (flag) {
       canvasAnimHorse.style.visibility = "visible";
-      this.drawHorsesTimeout1 = setInterval(() => {
+      canvasAnimHorse.timeout = setInterval(() => {
+        this.canvasClear(canvasAnimHorse);
+        this.drawHorse(
+          this.horseObject2,
+          contextAnimHorse,
+          this.horseObject2.source
+        )
+      }, 150);
+    } else {
+      clearInterval(canvasAnimHorse.timeout);
+      this.canvasClear(canvasAnimHorse);
+      canvasAnimHorse.style.visibility = "hidden";
+      this.resetHorseObject(this.horseObject2)
+    }
+  },
+  drawHousePromise2(flag, canvasId, x, y) {    
+    let canvasAnimHorse = this.canvasObj[canvasId]
+    let contextAnimHorse = canvasAnimHorse.getContext("2d");
+    clearInterval(this.drawTimeout.time11);
+    if (flag) {
+      canvasAnimHorse.style.visibility = "visible";
+      this.drawTimeout.time11 = setInterval(() => {
         this.canvasClear(canvasAnimHorse);
         this.drawHorse2(
           this.horseObject1,
@@ -156,9 +82,51 @@ const animate = {
           this.horseObject1.source,
           x, y
         )
-      }, 250);
+      }, 350);
     } else {
-      clearInterval(this.drawHorsesTimeout1);
+      clearInterval(this.drawTimeout.time11);
+      this.canvasClear(canvasAnimHorse);
+      canvasAnimHorse.style.visibility = "hidden";
+    }
+  },
+  drawHousePromise2_a(flag, canvasId, x, y) {    
+    let canvasAnimHorse = this.canvasObj[canvasId]
+    let contextAnimHorse = canvasAnimHorse.getContext("2d");
+    if (flag) {
+      clearInterval(this.drawTimeout.time12);
+      canvasAnimHorse.style.visibility = "visible";
+      this.drawTimeout.time12 = setInterval(() => {
+        this.canvasClear(canvasAnimHorse);
+        this.drawHorse2(
+          this.horseObject3,
+          contextAnimHorse,
+          this.horseObject3.source,
+          x, y
+        )
+      }, 350);
+    } else {
+      clearInterval(this.drawTimeout.time12);
+      this.canvasClear(canvasAnimHorse);
+      canvasAnimHorse.style.visibility = "hidden";
+    }
+  },
+  drawHousePromise2_b(flag, canvasId, x, y) {    
+    let canvasAnimHorse = this.canvasObj[canvasId]
+    let contextAnimHorse = canvasAnimHorse.getContext("2d");
+    if (flag) {
+      clearInterval(this.drawTimeout.time13);
+      canvasAnimHorse.style.visibility = "visible";
+      this.drawTimeout.time13 = setInterval(() => {
+        this.canvasClear(canvasAnimHorse);
+        this.drawHorse2(
+          this.horseObject4,
+          contextAnimHorse,
+          this.horseObject4.source,
+          x, y
+        )
+      }, 300);
+    } else {
+      clearInterval(this.drawTimeout.time13);
       this.canvasClear(canvasAnimHorse);
       canvasAnimHorse.style.visibility = "hidden";
     }
@@ -223,9 +191,9 @@ const animate = {
             object.position.currDur) /
           object.position.dur[object.position.currPoint];
       } else {
-        scale =1
-        position[0] = object.position.points[object.position.totalPoint - 1][0]
-        position[1] = object.position.points[object.position.totalPoint - 1][1]
+        // scale =1
+        // position[0] = object.position.points[object.position.totalPoint - 1][0]
+        // position[1] = object.position.points[object.position.totalPoint - 1][1]
       }
       contextS.drawImage(
         imageHorse,
@@ -235,8 +203,8 @@ const animate = {
         object.height,
         position[0],
         position[1],
-        object.width * scale,
-        object.height * scale);
+        object.width * scale *0.5,
+        object.height * scale*0.5);
 
       contextS.restore();
       // Anim Position control
@@ -253,42 +221,39 @@ const animate = {
     });
   },
   drawHorse2(object, contextS, imageHorse, x, y) {
-    // console.log(x,y)
     return new Promise((resolve, rej) => {
       contextS.save();
       var position = new Array();
       var scale;
       if (object.currFrame < object.totalFrame - 1) {
-        object.currFrame++;
+          object.currFrame++;
       } else {
-        object.currFrame = 0;
+          object.currFrame = 0;
       }
       contextS.drawImage(
-        imageHorse,
-        object.currFrame * object.width,
-        0,
-        object.width,
-        object.height,
-        x,
-        y,
-        object.width * .5,
-        object.height* .5);
+          imageHorse,
+          object.currFrame * object.width,
+          0,
+          object.width,
+          object.height,
+          x,
+          y,
+          object.width * 0.5,
+          object.height * 0.5);
       contextS.restore();
       // Anim Position control
       if (
-        object.position.currDur <=
-        object.position.dur[object.position.currPoint]
+          object.position.currDur <=
+          object.position.dur[object.position.currPoint]
       ) {
-        object.position.currDur++;
+          object.position.currDur++;
       } else {
-        object.position.currDur = 1;
-        object.position.currPoint++;
+          object.position.currDur = 1;
+          object.position.currPoint++;
       }
       // return "ok";
 
-    });
-
-    // })
+  });
   },
   createCanvas(canvasList, divTag) {
     let canvasObj = {},
@@ -301,8 +266,15 @@ const animate = {
       canvasStatic.id = canvasList[i].name;
       canvasStatic.style.position = "absolute";
       canvasStatic.style.zIndex = canvasList[i].zindex
-      canvasStatic.width = this.baseWidth;
+      
+      if(canvasList[i].org && document.body.clientWidth<SCALE_LIMIT){
+        canvasStatic.width = this.orgSetting.w;
+        canvasStatic.height = this.orgSetting.h;
+        canvasStatic.style.transform = `scale(${SCALE_NUM})`;
+      }else{
+        canvasStatic.width = this.baseWidth;
       canvasStatic.height = this.baseHeight;
+      }
       // canvasList.obj = canvasStatic
       canvasObj[canvasList[i].name] = canvasStatic
       contextObj[canvasList[i].name] = contextStatic
@@ -314,7 +286,6 @@ const animate = {
     this.canvasClear(this.canvasObj['canvasImages']);
     this.canvasObj['canvasImages'].style.visibility = 'visible'
     Object.keys(this.control).forEach(e => {
-      console.log(e,this.imageObj[e],this.control[e])
       if ((this.control[e] == true) && this.imageObj[e]) {
         this.contextObj['canvasImages'].drawImage(this.imageObj[e], 0, 0, this.baseWidth, this.baseHeight);
       }

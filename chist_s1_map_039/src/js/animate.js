@@ -1,3 +1,4 @@
+const SCALE_NUM = 0.5
 const animate = {
   sharpCity(obj, bool) {
     if (!bool) {
@@ -53,7 +54,6 @@ const animate = {
     if (flag == true) {
      
       if (pathObject.mask1.width < pathObject.mask1.endPoint) {
-        console.log(pathObject.mask1.width)
         pathObject.playing = true;
         this.canvasClear(canvasAnimPath);
         contextAnimPath.save();
@@ -301,8 +301,15 @@ const animate = {
       canvasStatic.id = canvasList[i].name;
       canvasStatic.style.position = "absolute";
       canvasStatic.style.zIndex = canvasList[i].zindex
-      canvasStatic.width = this.baseWidth;
+      
+      if(canvasList[i].org && document.body.clientWidth<600){
+        canvasStatic.width = this.orgSetting.w;
+        canvasStatic.height = this.orgSetting.h;
+        canvasStatic.style.transform = `scale(${SCALE_NUM})`;
+      }else{
+        canvasStatic.width = this.baseWidth;
       canvasStatic.height = this.baseHeight;
+      }
       // canvasList.obj = canvasStatic
       canvasObj[canvasList[i].name] = canvasStatic
       contextObj[canvasList[i].name] = contextStatic
