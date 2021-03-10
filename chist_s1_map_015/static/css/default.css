@@ -10,7 +10,9 @@ body {
     flex: 1;
     display: flex;
 }
-
+canvas{
+    transform-origin:top left
+}
 #map_container {
     /* flex: 1 */
     overflow: hidden;

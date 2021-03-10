@@ -246,7 +246,7 @@ const SCALE_LIMIT = 800
           nianfen02a: false,
           nianfen02b: false,
         },
-        Redroadtimer: null,
+        windowTimer:null,
         load: true,
         noVoice: false,
         zoomObj: null,
@@ -568,7 +568,8 @@ const SCALE_LIMIT = 800
         }
       },
       oriChange() {
-        setTimeout(() => {
+        this.windowTimer = setTimeout(() => {
+          clearTimeout(this.windowTimer);
           this.setRemUnit();
         }, 200);
       },

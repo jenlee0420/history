@@ -471,7 +471,7 @@
       },
       oriChange() {
         this.windowTimer = setTimeout(() => {
-          this.clearTimeout(this.windowTimer);
+          clearTimeout(this.windowTimer);
           this.setRemUnit();
         }, 200);
       },

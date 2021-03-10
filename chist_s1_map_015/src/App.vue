@@ -5,8 +5,7 @@
       <img :src="require('../static/img/loading.gif')" />
     </div>
     <div
-      id="main_container"
-      :style="{'width':docWidth+'px','height':docHeight+'px','display':load?'none':'block'}"
+      id="main_container" :style="mainBoxStyle"
     >
       <div class="title_bar purpleGradient" :style="{'height':titleH +'px'}">
         <span>宋帝南逃路線圖 (1276-1279 年)</span>
@@ -17,16 +16,16 @@
           id="map_container"
           class="modal_content"
           ref="map_container"
-          :style="{'width':canvasW+'px','height':canvasH+'px'}"
+          :style="{ width: canvasW + 'px', height: canvasH + 'px' }"
         >
           <div class="mapBackground" id="canvasInnerDiv" ref="canvasInnerDiv">
-            <imageview :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
-            <imageview :imgsrc="'mapDetail.png'" :static="true" :zindex="2" @update="updateImg"></imageview>
-            <imageview :imgsrc="'nansong.png'" :static="true" :zindex="2" @update="updateImg"></imageview>
-            <imageview :imgsrc="'capital.png'" :static="control.capital.show" :zindex="4" @update="updateImg"></imageview>
-            <imageview :imgsrc="'main_city.png'" :static="control.main_city" :zindex="4" @update="updateImg"></imageview>
-            <imageview :imgsrc="'city1.png'" :static="control.city.show" :zindex="4" @update="updateImg"></imageview>
-            <imageview :imgsrc="'border.png'" :static="control.border" :zindex="2" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'mapDetail.png'" :static="true" :zindex="2" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'nansong.png'" :static="control.nansong" :zindex="2" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'capital.png'" :static="control.capital.show" :zindex="4" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'main_city.png'" :static="control.main_city" :zindex="4" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'city1.png'" :static="control.city.show" :zindex="4" @update="updateImg"></imageview>
+            <imageview  :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'border.png'" :static="control.border" :zindex="2" @update="updateImg"></imageview>
 
             
           </div>
@@ -65,7 +64,7 @@
       </div>
     </div>
     <modal
-      class
+      :style="AppStyle" :dragable="!isApp"
       headTitle="問題"
       :hideFooter="true"
       v-if="popWindow"
@@ -113,7 +112,7 @@
       </div>
     </modal>
     <modal
-      class
+       :style="AppStyle" :dragable="!isApp"
       :headTitle="list[5].text"
       :hideFooter="true"
       v-if="mapPop"
@@ -122,8 +121,7 @@
       <div slot="modalCont">
         <iframe
           src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d22507750.899880774!2d88.37957330485277!3d39.37896229950811!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x34018c5d7ac54d75%3A0x46f25214eb2ce06c!2z5Lit5ZyL5buj5p2x55yB5rGf6ZaA5biC5paw5pyD5Y2A5bSW6ZaA6Y6u!5e0!3m2!1szh-TW!2shk!4v1575947305602!5m2!1szh-TW!2shk"
-          :width="bodytWidth/1.8"
-          :height="bodyHeight/1.8"
+          :width="(isApp?docWidth:bodytWidth)/1.8" :height="(isApp?docHeight:bodyHeight)/1.8"
           frameborder="0"
           style="border:0;"
           allowfullscreen
@@ -134,11 +132,13 @@
 </template>
 
 <script>
-import zoom from "./js/zoom.js";
-import modal from "./components/modal";
-import bar from "./components/bar";
-import imageview from "./components/ImageView";
-// import tools from './js/animate.js';
+  import zoom from "./js/zoom.js";
+  import zoomApp from "./js/zoomApp.js";
+  import modal from "./components/modal";
+  import bar from "./components/bar";
+  import imageview from "./components/ImageView";
+import { constants } from 'fs';
+const SCALE_NUM = 0.5
 export default {
   components: {
     modal,
@@ -146,17 +146,48 @@ export default {
     imageview
   },
   name: "App",
-  beforeCreate() {},
-  created() {
-    const that = this;
-    that.timer = setInterval(function() {
-      console.log(document.readyState);
-      if (document.readyState === "complete" && that.imgCount == that.imgTotal) {
-        that.load = false;
-        window.clearInterval(that.timer);
+    beforeCreate() {},
+    created() {
+      if (document.body.clientWidth < 600) {
+        this.baseWidth = this.baseWidth * SCALE_NUM
+        this.baseHeight = this.baseHeight * SCALE_NUM
+        this.baseWidth_doc = this.baseWidth_doc * SCALE_NUM
+        this.baseHeight_doc = this.baseHeight_doc * SCALE_NUM
       }
-    }, 10);
-  },
+    },
+  computed: {
+      mainBoxStyle() {
+        var css = {
+          width: this.docWidth + "px",
+          height: this.docHeight + "px",
+          display: this.load ? "none" : "block",
+          transform: this.pageTransform,
+          "margin-top": this.pageMarginTop + "px",
+          "margin-left": this.pageMarginLeft * -1 + "px",
+        };
+        return css;
+      },
+      AppStyle() {
+        var css = {};
+        if (this.isApp) {
+          css = {
+            width: this.docWidth + "px",
+            height: this.docHeight + "px",
+            transform: this.pageTransform,
+            "margin-top": this.pageMarginTop + "px",
+            "margin-left": this.pageMarginLeft * -1 + "px"
+          };
+        }
+        return css;
+      },
+      isApp() {
+        if (window.location.search.indexOf("app") >= 0) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    },
   mounted() {
     this.createMap();
     if ("onorientationchange" in window) {
@@ -164,9 +195,11 @@ export default {
     } else {
       window.addEventListener("resize", this.setRemUnit, false);
     }
-    // window.addEventListener("onorientationchange" in window ?"orientationchange":"resize", this.setRemUnit, false);
-    this.zoomObj = require("./js/zoom.js");
-    this.setRemUnit();
+   if (this.isApp) {
+        this.forApp()
+      } else {
+        this.setRemUnit()
+      }
     this.initCanvas();
 
     document
@@ -188,6 +221,7 @@ export default {
           ani:false,
           timer:null
         },
+        nansong:true,
         border:false,
         main_city:false
       },
@@ -251,10 +285,16 @@ export default {
       ],
       bodytWidth: "",
       bodyHeight: "",
-      baseWidth: "1430",
-      baseHeight: "1315",
-      orienta: "",
-      boxscale: 1,
+     orgSetting: {
+          w: 1430,
+          h: 1315
+        },
+        baseWidth: "1430", //地图大小
+        baseHeight: "1315", //地图大小
+        baseWidth_doc: "2048", //窗口大小
+        baseHeight_doc: "1396", //窗口大小
+        orienta: "",
+        boxscale: 1,
       o: "",
       dpr: 1,
       rem: "",
@@ -291,10 +331,7 @@ export default {
       horsetimerGroup: null,
       drawHorsesTimeout: null,
       drawHorsesTimeout2: null,
-      redTimer: {
-        timer:null,
-        animate:false
-      },
+      Timer3: null,
       shipPlay: false,
       titleH: 70,
       prevorienta: "",
@@ -321,12 +358,12 @@ export default {
       },
       deep: true
     },
-    imgCount:function(n,o){
-      // if(n == this.imgTotal && document.readyState == "complete"){
-      //   console.log(n)
-      //   // this.load = false;
-      // }
-    }
+    // control: {
+    //     handler(n, o) {
+    //       this.imagesCanvas();
+    //     },
+    //     deep: true
+    //   },
   },
   methods: {
     updateImg(){
@@ -377,14 +414,26 @@ export default {
            this.sharpCity(this.control.city,swip)
           break;
         case 3:
+          clearTimeout(this.Timer3)
           if (swip && !this.noVoice) {
             this.license.currentTime = 0;
             this.license.play();
             this.m03.currentTime = 0;
             this.m03.play();
           }
-          this.drawRedPath(swip)
+          this.Timer3 = setTimeout(()=>{
+            this.control.nansong= false
+          },26000)
+          
+          this.control.nansong=true
+          if(!this.pathObject.playing){
+            this.drawRedPath(swip)
+          }
+          if(!swip){
+             this.drawRedPath(false)
+          }
           this.drawHousePromise(swip)
+          
           break;
         case 4:
           this.control.border =  swip
@@ -405,6 +454,9 @@ export default {
     },
     controller(){
       let swip3= this.list[3].show
+      this.control.capital.show = this.list[0].show;
+        this.control.city.show = this.list[2].show;
+        this.control.main_city = this.list[1].show;
       if(swip3){
         this.control.capital.show = true;
         this.control.city.show = true;
@@ -412,85 +464,100 @@ export default {
       }
     },
     oriChange() {
-      setTimeout(() => {
-        this.setRemUnit();
-      }, 200);
-    },
-    setRemUnit() {
-      const u_agent = navigator.userAgent;
-      if (window.orientation === 0 || window.orientation === 180) {
-        //竖屏
-        this.orienta = 1;
-      } else if (window.orientation === 90 || window.orientation === -90) {
-        //横屏
-        this.orienta = 2;
-      }
-      // var that = this
-      var selffun = () => {
-        this.bodyHeight = window.innerHeight;
-        this.bodytWidth = window.innerWidth;
-        // console.log(u_agent, this.bodyHeight, this.bodytWidth)
-        if (this.bodytWidth > this.bodyHeight) {
-          this.boxscale = this.bodyHeight / 1396;
-          this.o = this.bodyHeight;
+        this.windowTimer = setTimeout(() => {
+          clearTimeout(this.windowTimer);
+          this.setRemUnit();
+        }, 200);
+      },
+      forApp() {
+        const u_agent = navigator.userAgent;
+        var selffun = () => {
+          this.bodyHeight = document.body.innerHeight;
+          this.bodytWidth = document.body.clientWidth;
           var offest = this.bodytWidth / this.bodyHeight;
-          if (offest < 1.49 && offest > 1) {
-            this.boxscale = this.bodytWidth / 2048;
-            this.o = 1396 * this.boxscale;
+          if (offest > 0.5) {
+            this.boxscale = this.bodyHeight / this.baseWidth_doc
+            this.o = this.baseHeigth_doc * this.boxscale
+          } else {
+            this.boxscale = this.bodytWidth / this.baseHeight_doc
+            this.o = this.bodytWidth
           }
-        } else {
-          this.boxscale = this.bodytWidth / 2048;
-          this.o = this.bodytWidth;
-        }
-        this.docWidth = 2048 * this.boxscale;
-        this.docHeight = 1396 * this.boxscale;
-        this.canvasW = Math.ceil(1430 * this.boxscale);
-        this.canvasH = Math.ceil(1315 * this.boxscale);
-        this.titleH = this.docHeight - this.canvasH;
-        var s = 10;
-        this.dpr = window.devicePixelRatio || 1;
-        if (/iPad|iPhone|Android|Adr/i.test(u_agent)) {
-          this.dpr = 2;
-        }
-        if (this.dpr >= 2) {
-          this.dpr = 2;
-          this.rem = this.o / this.dpr / 7.5;
-          if (this.orienta == 2) {
+          this.docWidth = this.baseWidth_doc * this.boxscale;
+          this.docHeight = this.baseHeight_doc * this.boxscale;
+          this.canvasH = Math.ceil(this.baseHeight * this.boxscale);
+          this.canvasW = Math.ceil(this.baseWidth * this.boxscale);
+          this.titleH = this.docHeight - this.canvasH;
+          var s = 10;
+          this.dpr = window.devicePixelRatio || 1;
+          if (/iPad|iPhone|Android|Adr/i.test(u_agent)) {
+            this.dpr = 2;
+          }
+          if (this.dpr >= 2) {
+            this.dpr = 2;
             this.rem = this.o / this.dpr / 5.2;
+          } else {
+            this.rem = this.o / 10 / this.dpr;
           }
-        } else {
-          this.rem = this.o / 10 / this.dpr;
+          document.documentElement.style.fontSize = this.rem + "px";
+          this.pageTransform = "rotate3d(0,0,1,-90deg)";
+          this.pageMarginTop = this.pageMarginLeft =
+            (this.docWidth - this.docHeight) / 2;
+        };
+        selffun();
+        this.setZoom();
+      },
+    setRemUnit() {
+        const u_agent = navigator.userAgent;
+        if (window.orientation === 0 || window.orientation === 180) {
+          //竖屏
+          this.orienta = 1;
+        } else if (window.orientation === 90 || window.orientation === -90) {
+          //横屏
+          this.orienta = 2;
         }
-        console.log(this.boxscale, this.o, this.dpr, this.rem);
-        document.documentElement.style.fontSize = this.rem + "px";
-      };
-      selffun();
-      this.setZoom();
-    },
+        // var that = this
+        var selffun = () => {
+          this.bodyHeight = window.innerHeight;
+          this.bodytWidth = window.innerWidth;
+          // console.log(u_agent, this.bodyHeight, this.bodytWidth)
+          if (this.bodytWidth > this.bodyHeight) {
+            this.boxscale = this.bodyHeight / this.baseHeight_doc;
+            this.o = this.bodyHeight;
+            var offest = this.bodytWidth / this.bodyHeight;
+            if (offest < 1.49 && offest > 1) {
+              this.boxscale = this.bodytWidth / this.baseWidth_doc;
+              this.o = this.baseHeight_doc * this.boxscale;
+            }
+          } else {
+            this.boxscale = this.bodytWidth / this.baseWidth_doc;
+            this.o = this.bodytWidth;
+          }
+          this.docWidth = this.baseWidth_doc * this.boxscale;
+          this.docHeight = this.baseHeight_doc * this.boxscale;
+          this.canvasW = Math.ceil(this.baseWidth * this.boxscale);
+          this.canvasH = Math.ceil(this.baseHeight * this.boxscale);
+          this.titleH = this.docHeight - this.canvasH;
+          var s = 10;
+          this.dpr = window.devicePixelRatio || 1;
+          if (/iPad|iPhone|Android|Adr/i.test(u_agent)) {
+            this.dpr = 2;
+          }
+          if (this.dpr >= 2) {
+            this.dpr = 2;
+            this.rem = this.o / this.dpr / 7.5;
+            if (this.orienta == 2) {
+              this.rem = this.o / this.dpr / 5.2;
+            }
+          } else {
+            this.rem = this.o / 10 / this.dpr;
+          }
+          document.documentElement.style.fontSize = this.rem + "px";
+        };
+        selffun();
+        this.setZoom();
+      },
     initCanvas() {},
-    showCityAni(canvasStatic, bool) {
-      if (!bool) {
-        clearInterval(canvasStatic.timeout);
-        canvasStatic.style.visibility = "hidden";
-        canvasStatic.ani = false;
-        return;
-      }
-      if (canvasStatic.ani == true) {
-        return;
-      }
-      let show = false;
-      let times = 6;
-      canvasStatic.timeout = setInterval(() => {
-        if (times == 0) {
-          clearInterval(canvasStatic.timeout);
-          return;
-        }
-        canvasStatic.style.visibility = show ? "visible" : "hidden";
-        show = !show;
-        times -= 1;
-      }, 260);
-      canvasStatic.ani = true;
-    },
+    
     showall(type) {
       this.list.forEach((e, index) => {
         if (!this.list[index].type) {
@@ -515,8 +582,8 @@ export default {
     createMap() {
       var divTag = this.$refs.canvasInnerDiv;
       let list = [
-        { name: "myCanvasAnimRoad", zindex: 3 },
-        { name: "myCanvasAnimHorse", zindex: 3 },
+        { name: "myCanvasAnimRoad", zindex: 3 ,org:true,},
+        { name: "myCanvasAnimHorse", zindex: 4 ,org:true,},
       ];
       let obj = this.createCanvas(list, divTag);
       this.canvasObj = obj[0];
@@ -543,8 +610,8 @@ export default {
           source: null,
           originX: 0,
           originY: 0,
-          width: this.baseWidth,
-          height: this.baseHeight,
+          width: this.orgSetting.w,
+          height: this.orgSetting.h,
           mask1: {
             originX: 1024,
             originY: 100,
@@ -552,7 +619,7 @@ export default {
             height: 1,
             currOriginX: 1024,
             currOriginY: 100,
-            shiftX: 6,
+            shiftX: 3,
             shiftY: 0,
             endPoint:460
           },
@@ -578,7 +645,7 @@ export default {
             height: 1,
             currOriginX: 932,
             currOriginY: 879,
-            shiftX: 5,
+            shiftX: 4,
             shiftY: 0,
             endPoint:78
           },
@@ -589,7 +656,7 @@ export default {
             height: 95,
             currOriginX: 950,
             currOriginY: 940,
-            shiftX: 5,
+            shiftX: 4,
             shiftY: 0,
             endPoint:243
           },
@@ -600,7 +667,7 @@ export default {
             height: 71,
             currOriginX: 710,
             currOriginY: 1016,
-            shiftX: 5,
+            shiftX: 4,
             shiftY: 0,
             endPoint:102
           },
@@ -614,7 +681,7 @@ export default {
       this.insterCanvas2(imageHorse,'warship.png',()=>{
         var translate = [[1060, 44], [1054, 154], [966, 402],[1157,552]];
         var scale = [1, 1, 1,0];
-        var dur = [10, 20, 18,10];
+        var dur = [25, 35, 30,20];
         var sharpPoint = ''
         this.horseObject1 = this.initHorseObject(
           translate,
@@ -623,9 +690,9 @@ export default {
           sharpPoint,
           imageHorse
         );
-        var translate = [[1073, 486], [1075, 606],[967,688],[943,887]];
-        var scale = [1, 1,1,0];
-        var dur = [10, 10, 8,10];
+        var translate = [[1073, 486], [1075, 606],[967,688],[865,837]];
+        var scale = [1, 1,1,1];
+        var dur = [20, 20, 20,20];
         var sharpPoint = ''
         this.horseObject2 = this.initHorseObject(
           translate,
@@ -636,7 +703,7 @@ export default {
         );
         var translate = [[865, 837], [750,887],[722, 1027]];
         var scale = [1,1, 0];
-        var dur = [10,10,10];
+        var dur = [15,15,15];
         var sharpPoint = ''
         this.horseObject3 = this.initHorseObject(
           translate,
@@ -647,7 +714,7 @@ export default {
         );
         var translate = [[595, 987], [598, 1099]];
         var scale = [1, 0];
-        var dur = [12,20];
+        var dur = [20,25];
         var sharpPoint = ''
         this.horseObject4 = this.initHorseObject(
           translate,
@@ -664,22 +731,37 @@ export default {
       });
     },
     setZoom() {
-      if (!document.getElementById("canvasInnerDiv")) {
-        return;
-      }
-      this.zoomObj = new zoom(document.getElementById("canvasInnerDiv"), {
-        width: this.baseWidth,
-        height: this.baseHeight,
-        top: 0,
-        left: 0,
-        minScale: this.boxscale,
-        // maxScale: this.boxscale * 10,
-        warpWidth: this.boxscale * this.baseWidth,
-        warpHeight: this.boxscale * this.baseHeight
-      });
-      this.zoomObj.setScale(this.boxscale);
-      // this.zoomObj.setTransform(false,0,0)
-    },
+        if (!document.getElementById("canvasInnerDiv")) {
+          return;
+        }
+        if (this.isApp) {
+          this.zoomObj = new zoomApp(document.getElementById("canvasInnerDiv"), {
+            width: this.baseWidth,
+            height: this.baseHeight,
+            top: 0,
+            left: 0,
+            minScale: this.boxscale,
+            // maxScale: this.boxscale * 10,
+            warpWidth: this.boxscale * this.baseWidth,
+            warpHeight: this.boxscale * this.baseHeight
+          });
+        } else {
+          this.zoomObj = new zoom(document.getElementById("canvasInnerDiv"), {
+            width: this.baseWidth,
+            height: this.baseHeight,
+            top: 0,
+            left: 0,
+            minScale: this.boxscale,
+            // maxScale: this.boxscale * 10,
+            warpWidth: this.boxscale * this.baseWidth,
+            warpHeight: this.boxscale * this.baseHeight
+          });
+        }
+        this.zoomObj.setScale(this.boxscale);
+        this.windowTimer = setTimeout(() => {
+          this.load = false;
+        }, 500);
+      },
     insterCanvas2(img, src, fun) {
       img.src = require(`../static/img/${src}`);
       img.onload = () => {

@@ -526,7 +526,7 @@ Y6f5biC!5e0!3m2!1szh-TW!2shk!4v1605842735946!5m2!1szh-TW!2shk" :width="(isApp?do
       },
       oriChange() {
         this.windowTimer = setTimeout(() => {
-          this.clearTimeout(this.windowTimer);
+          clearTimeout(this.windowTimer);
           this.setRemUnit();
         }, 200);
       },

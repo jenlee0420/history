@@ -166,7 +166,7 @@ const animate = {
             this.control.rice_043=false
           },5500)
         })
-      }, 200);      
+      }, 100);      
     } else {
       clearInterval(this.drawHorsesTimeout1);
       this.canvasClear(canvasAnimHorse);

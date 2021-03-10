@@ -52,7 +52,7 @@
           <div class="question question2">
             <div class="flex">
               <em class="mr5">1.</em>
-              <em>根據地圖所示<span class="dot">，</span>以下哪項屬於臨安<span class="dot">、</span>泉州及廣州的共同特色？</em>
+              <em>根據地圖所示<span class="dot">，</span>以下哪項屬於臨安<span class="dot">、</span>泉州及廣州的共通點？</em>
             </div>
             <div>
               <span class="item" :class="{ selected: currAns == index }" v-for="(item, index) in questionItem" :key="index" @click="checkans(index)">{{ item }}</span>
@@ -422,7 +422,7 @@ bee5biC!5e0!3m2!1szh-TW!2shk!4v1605860868478!5m2!1szh-TW!2shk" :width="(isApp?do
       },
       oriChange() {
         this.windowTimer = setTimeout(() => {
-          this.clearTimeout(this.windowTimer);
+          clearTimeout(this.windowTimer);
           this.setRemUnit();
         }, 200);
       },

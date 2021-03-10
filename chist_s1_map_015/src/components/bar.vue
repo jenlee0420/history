@@ -19,6 +19,7 @@
     min="10"
     max="1000"
     step="10"
+    :ori="isApp?'90':'1'"
     v-model="sliderValue"/>
     <div
       class="blueButton zoom_button"
@@ -48,6 +49,15 @@ export default {
       startArea: false,
       sliderValue:10
     };
+  },
+  computed:{
+    isApp(){
+        if(window.location.search.indexOf('app')>=0){
+          return true
+        }else{
+          return false
+        }
+      }
   },
   watch: {
     sliderValue(n) {
@@ -98,6 +108,7 @@ export default {
   }
 }
 .slider{
+  // transform: rotate(-90deg);
   width: 50%!important;
   height: 0.52rem!important;
   display: inherit!important;

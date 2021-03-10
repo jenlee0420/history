@@ -439,7 +439,7 @@ CB5biC!5e0!3m2!1szh-TW!2shk!4v1605773793955!5m2!1szh-TW!2shk" :width="(isApp?doc
       },
       oriChange() {
         this.windowTimer = setTimeout(() => {
-          this.clearTimeout(this.windowTimer);
+          clearTimeout(this.windowTimer);
           this.setRemUnit();
         }, 200);
       },
@@ -602,7 +602,7 @@ CB5biC!5e0!3m2!1szh-TW!2shk!4v1605773793955!5m2!1szh-TW!2shk" :width="(isApp?doc
         this.insterCanvas2(imageHorse, "ship_043.png", () => {
           var translate = [[1183, 783], [1213, 739],[1117.9,655],[1083.9,573],[961.9,579],[841.9,545],[813.9,517]];
           var scale = [1, 1,1,1,1,1,0];
-          var dur = [10,10,10,10,10,10];
+          var dur = [20,20,20,25,25,15];
           var sharpPoint = [1, 1,1,1,1,1,1];
           this.horseObject1 = this.initHorseObject(
             translate,

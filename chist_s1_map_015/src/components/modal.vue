@@ -44,7 +44,8 @@ export default {
     "hideMask",
     "hideFooter",
     "loading",
-    "onlyConfirm"
+    "onlyConfirm",
+    'dragable'
   ],
   mounted() {
     document.getElementById('modalWrap').addEventListener("touchmove", this.bodyScroll, {
@@ -74,6 +75,7 @@ export default {
       this.$emit("cancel-event");
     },
     startDrag(event) {
+      if(!this.dragable){return}
       console.log('startdarg')
       let touch = event;
       this.el = this.$refs.modalWindow;
@@ -92,7 +94,7 @@ export default {
       }
       this.distanceX = touch.clientX - this.el.offsetLeft;
       this.distanceY = touch.clientY - this.el.offsetTop;
-      console.log(this.el.offsetTop,this.el.offsetLeft)
+      // console.log(this.el.offsetTop,this.el.offsetLeft)
       
       this.el.style.left = this.el.offsetLeft + "px";
       this.el.style.top = this.el.offsetTop + "px";
@@ -160,17 +162,18 @@ export default {
 
 <style lang="less">
 .modalWrap {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 99;
+  z-index: 9999;
   display: flex;
   justify-content: center;
   align-items: center;
+  // background-color:rgba(0, 0, 0, .5);
+  
 }
-
 .modalWindow {
   // max-width: 73vw;
   height: auto;

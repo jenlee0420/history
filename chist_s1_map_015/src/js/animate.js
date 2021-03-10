@@ -1,3 +1,4 @@
+const SCALE_NUM = 0.5
 const animate = {
     sharpCity(obj,bool){
       if (!bool) {
@@ -282,26 +283,44 @@ const animate = {
         });
       },
     
-    createCanvas(canvasList, divTag) {
+      createCanvas(canvasList, divTag) {
         let canvasObj = {},
-            contextObj = {}
-
+          contextObj = {}
+    
         for (var i = 0; i < canvasList.length; i++) {
-            var canvasStatic = document.createElement("canvas");
-            var contextStatic = canvasStatic.getContext("2d");
-            // 
-            canvasStatic.id = canvasList[i].name;
-            canvasStatic.style.position = "absolute";
-            canvasStatic.style.zIndex = canvasList[i].zindex
+          var canvasStatic = document.createElement("canvas");
+          var contextStatic = canvasStatic.getContext("2d");
+          // 
+          canvasStatic.id = canvasList[i].name;
+          canvasStatic.style.position = "absolute";
+          canvasStatic.style.zIndex = canvasList[i].zindex
+          
+          
+          if(canvasList[i].org && document.body.clientWidth<600){
+            canvasStatic.width = this.orgSetting.w;
+            canvasStatic.height = this.orgSetting.h;
+            canvasStatic.style.transform = `scale(${SCALE_NUM})`;
+          }else{
             canvasStatic.width = this.baseWidth;
-            canvasStatic.height = this.baseHeight;
-            // canvasList.obj = canvasStatic
-            canvasObj[canvasList[i].name] = canvasStatic
-            contextObj[canvasList[i].name] = contextStatic
-            divTag.appendChild(canvasStatic);
+          canvasStatic.height = this.baseHeight;
+          }
+          // canvasList.obj = canvasStatic
+          canvasObj[canvasList[i].name] = canvasStatic
+          contextObj[canvasList[i].name] = contextStatic
+          divTag.appendChild(canvasStatic);
         }
         return [canvasObj, contextObj]
-    },
+      },
+      imagesCanvas() {
+        this.canvasClear(this.canvasObj['canvasImages']);
+        this.canvasObj['canvasImages'].style.visibility = 'visible'
+        Object.keys(this.control).forEach(e => {
+          // console.log(e,this.imageObj[e])
+          if ((this.control[e] == true) && this.imageObj[e]) {
+            this.contextObj['canvasImages'].drawImage(this.imageObj[e], 0, 0, this.baseWidth, this.baseHeight);
+          }
+        });
+      }
 
 }
 export default animate;
