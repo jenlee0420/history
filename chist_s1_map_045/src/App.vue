@@ -1,41 +1,43 @@
 <template>
   <div id="app">
+    {{debug}}
     <!-- <canvas id="testCanvas"></canvas> -->
     <!-- <div class="pos_a" style="font-size:0.5rem">{{debug}}</div> -->
     <div v-if="load" id="loading" style="width:820px;">
-      <img :src="require('../static/img/loading.gif')" />
+      <img :src="require('../static/img/loading.gif')">
     </div>
     <div v-show="!load" id="main_container" :style="mainBoxStyle">
       <div class="title_bar purpleGradient" :style="{ height: titleH + 'px' }">
-        <span>五代十國形勢圖 (923-936 年)</span>
+        <span>蒙古滅夏攻金形勢圖 (公元前 1227-公元前 1227 年)</span>
         <div id="soundCon" :class="{ mute: noVoice }" @click="setVoice"></div>
       </div>
       <div class="main_box">
         <div id="map_container" class="modal_content" ref="map_container" :style="{ width: canvasW + 'px', height: canvasH + 'px' }">
           <div class="mapBackground" id="canvasInnerDiv" ref="canvasInnerDiv">
             <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
-            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'mapDetail.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
-            
-          </div>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'mapDetail.png'" :static="true" :zindex="1" @update="updateImg"></imageview>           
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'country.png'" :static="true" :zindex="2" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'capital.png'" :static="control.capital.show" :zindex="2" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'main_city1.png'" :static="control.main_city1.show" :zindex="2" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'main_city2.png'" :static="control.main_city2.show" :zindex="2" @update="updateImg"></imageview>
+             </div>
         </div>
         <div id="menu_container" style="float: right;">
           <div id="action_container" class="greyContainer" style="padding: 1px 0.03em 0.03em; height: auto; flex: 1 1 0%;">
             <div class="sample_title">圖例</div>
             <div class="sample blueButton action" :class="{ clicked: item.show }" v-for="(item, index) in list" :key="index" @click="showCanvas(index)">
               <div class="iconItem">
-                <span class="icon"><img :src="item.ico"/></span>
+                <span class="icon">
+                    <img :src="item.ico">
+                  </span>
                 <span v-html="item.text"></span>
               </div>
             </div>
           </div>
           <div class="greyContainer">
             <div style="display: flex; width: 100%; justify-content: space-between;">
-              <div class="blueButton action_all" @click="showall(true)">
-                全部顯示
-              </div>
-              <div class="blueButton action_all " @click="showall(false)">
-                全部隱藏
-              </div>
+              <div class="blueButton action_all" @click="showall(true)">全部顯示</div>
+              <div class="blueButton action_all" @click="showall(false)">全部隱藏</div>
             </div>
           </div>
           <!-- 滑块 -->
@@ -44,79 +46,53 @@
       </div>
     </div>
     <modal class="" :style="AppStyle" :dragable="!isApp" headTitle="問題" :hideFooter="true" v-if="popWindow" @cancel-event="
-          popWindow = false;
-          list[5].show = false;
-        ">
+                  popWindow = false;
+                  list[7].show = false;
+                ">
       <div slot="modalCont">
         <div>
+          <div class="question question3">
+            <div class="flex">
+              <em class="mr5">1.</em>
+              <em>根據地圖所示<span class="dot">，</span>以下哪項關於蒙古軍事行動的描述是正確的？</em>
+            </div>
+            <div>
+              <span class="item" :class="{ selected: currAns == index }" v-for="(item, index) in questionItem" :key="index" @click="checkans(index)">{{ item }}</span>
+            </div>
+            <div class="ansBox" :class="showWrong == false ? 'wrongico' : 'rightico'" v-if="currAns != null"></div>
+          </div>
           <div class="question">
             <div class="flex">
-              <em class="mr5">1.</em><em> 以下哪一個「十國」政權<span class="dot">，</span>領有部分長江流域及淮河南岸的領地？</em>
+              <em class="mr5">2.</em>
+              <em>根據地圖所示<span class="dot">，</span>以下哪處是金國敗亡前的最後據點？</em>
             </div>
             <div>
-              <span class="item" :class="{ selected: currAns == index }" v-for="(item, index) in questionItem" :key="index" @click="checkans(index)">{{ item }}</span
-                >
-              </div>
-              <div
-                class="ansBox"
-                :class="showWrong == false ? 'wrongico' : 'rightico'"
-                v-if="currAns != null"
-              ></div>
+              <span class="item" :class="{ selected: currAns2 == index }" v-for="(item, index) in questionItem2" :key="index" @click="checkans2(index)" v-html="item"></span>
             </div>
-            <div class="question">
-              <div class="flex">
-                <em class="mr5">2.</em>
-                <em>
-                以下哪一個「五代十國」的政權並沒有相連海岸線？</em>
-            </div>
-            <div>
-              <span class="item" :class="{ selected: currAns2 == index }" v-for="(item, index) in questionItem2" :key="index" @click="checkans2(index)" v-html="item"></span
-                >
-              </div>
-              <div
-                class="ansBox"
-                :class="showWrong2 == false ? 'wrongico' : 'rightico'"
-                v-if="currAns2 != null"
-              ></div>
-            </div>
+            <div class="ansBox" :class="showWrong2 == false ? 'wrongico' : 'rightico'" v-if="currAns2 != null"></div>
           </div>
         </div>
-      </modal>
-      <modal
-        class=""
-        :style="AppStyle" :dragable="!isApp"
-        :headTitle="list[4].text"
-        :hideFooter="true"
-        v-if="mapPop"
-        @cancel-event="
-          mapPop = false;
-          list[4].show = false;
-        "
-      >
-        <div slot="modalCont">
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31457797.784411725!2d80.88715147621804!3d35.9690934090060
-6!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x35d0992038b6f237%3A0x6defd67fbb81498c!2z5Lit5ZyL5rKz5Y2X55yB6ZaL5b
-CB5biC!5e0!3m2!1szh-TW!2shk!4v1605773793955!5m2!1szh-TW!2shk"
-            :width="(isApp?docWidth:bodytWidth)/1.8" :height="(isApp?docHeight:bodyHeight)/1.8"
-            frameborder="0"
-            style="border:0;"
-            allowfullscreen=""
-          ></iframe>
-        </div>
-      </modal>
-    </div>
+      </div>
+    </modal>
+    <modal class="" :style="AppStyle" :dragable="!isApp" :headTitle="list[6].text" :hideFooter="true" v-if="mapPop" @cancel-event="
+                  mapPop = false;
+                  list[6].show = false;
+                ">
+      <div slot="modalCont">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d37109877.244061485!2d85.94751295403468!3d36.59739942294035!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x344bb629439aaa99%3A0xa7bfd183824de83a!2z5Lit5ZyL5rWZ5rGf55yB5p2t5bee5biC!5e0!3m2!1szh-TW!2shk!4v1605860868478!5m2!1szh-TW!2shk" :width="(isApp?docWidth:bodytWidth)/1.8" :height="(isApp?docHeight:bodyHeight)/1.8" frameborder="0" style="border:0;" allowfullscreen></iframe>
+      </div>
+    </modal>
+  </div>
 </template>
 
 <script>
   import zoom from "./js/zoom.js";
-  import zoomApp from './js/zoomApp.js'
+  import zoomApp from "./js/zoomApp.js";
   // import canvasFun from "./js/canvas.js";
   import modal from "./components/modal";
   import bar from "./components/bar";
   import imageview from "./components/ImageView";
-const SCALE_NUM = 0.5
-const SCALE_LIMIT = 800
+  const SCALE_NUM = 0.5
   export default {
     components: {
       modal,
@@ -126,62 +102,59 @@ const SCALE_LIMIT = 800
     name: "App",
     beforeCreate() {},
     created() {
-      if (document.body.clientWidth < SCALE_LIMIT) {
+      if (document.body.clientWidth < 800) {
         this.baseWidth = this.baseWidth * SCALE_NUM
         this.baseHeight = this.baseHeight * SCALE_NUM
         this.baseWidth_doc = this.baseWidth_doc * SCALE_NUM
         this.baseHeight_doc = this.baseHeight_doc * SCALE_NUM
       }
     },
-    computed:{
-      mainBoxStyle(){
-        var css = {'width':this.docWidth+'px',
-        'height':this.docHeight+'px',
-        'display':this.load?'none':'block',       
-        transform:this.pageTransform,
-        'margin-top':this.pageMarginTop+'px',
-        'margin-left':(this.pageMarginLeft *-1) +'px'    
-        }
-        return css
+    computed: {
+      mainBoxStyle() {
+        var css = {
+          width: this.docWidth + "px",
+          height: this.docHeight + "px",
+          display: this.load ? "none" : "block",
+          transform: this.pageTransform,
+          "margin-top": this.pageMarginTop + "px",
+          "margin-left": this.pageMarginLeft * -1 + "px",
+        };
+        return css;
       },
       AppStyle() {
-        var css = {}
+        var css = {};
         if (this.isApp) {
           css = {
-            'width': this.docWidth + 'px',
-            'height': this.docHeight + 'px',
+            width: this.docWidth + "px",
+            height: this.docHeight + "px",
             transform: this.pageTransform,
-            'margin-top': this.pageMarginTop + 'px',
-            'margin-left': (this.pageMarginLeft * -1) + 'px'
-          }
+            "margin-top": this.pageMarginTop + "px",
+            "margin-left": this.pageMarginLeft * -1 + "px"
+          };
         }
-        return css
+        return css;
       },
-      isApp(){
-        if(window.location.search.indexOf('app')>=0){
-          return true
-        }else{
-          return false
+      isApp() {
+        if (window.location.search.indexOf("app") >= 0) {
+          return true;
+        } else {
+          return false;
         }
       }
     },
-
     mounted() {
       // this.testCanvas()
       this.createMap();
       if ("onorientationchange" in window) {
-        window.addEventListener("orientationchange", this.oriChange, false);
+        window.addEventListener("orientationchange", this.oriChange, false)
       } else {
-        window.addEventListener("resize", this.setRemUnit, false);
+        window.addEventListener("resize", this.setRemUnit, false)
       }
-      // window.addEventListener("onorientationchange" in window ?"orientationchange":"resize", this.setRemUnit, false);
-      // this.zoomObj = require("./js/zoom.js");
-      if(this.isApp){
+      if (this.isApp) {
         this.forApp()
-      }else{
+      } else {
         this.setRemUnit()
       }
-
       this.initCanvas();
       document
         .getElementById("map_container")
@@ -192,36 +165,47 @@ const SCALE_LIMIT = 800
     data() {
       return {
         windowTimer: null,
-        imageObj: {
-          border:null,
-        },
-        canvasImagesObj: {
-          capital: null,
-        
+        imageObj: {         
+          // main_city1: null,
+          // main_city2:null,
+          border: null,
+          battlefield:null,
+          route:null,
+          gate:null,
         },
         control: {
-     border:false,
-          
+          capital: {
+            show: true,
+            ani: false
+          },
+         main_city1: {
+            show: true,
+            ani: false
+          },
+          main_city2:{
+            show: true,
+            ani: false
+          },
+          border: false,
+          battlefield:false,
+          route:false,
+          gate:false
         },
-        Redroadtimer: null,
         load: true,
         noVoice: false,
         zoomObj: null,
         imgCount: 0,
-        imgTotal: 5,
-        questionItem: [
-          "A. 南漢",
-          "B. 南唐",
-          "C. 南平 "
-        ],
-        rightans: 1,
+        imgTotal: 15,
+        questionItem: ["A. 進軍至長江以北地帶 ", "B. 分兵兩路滅西夏及金國", "C. 與南宋聯兵消滅西夏 "],
+        rightans: 0,
         showWrong: 0,
         currAns: null,
-        questionItem2: ["A. 楚",
-          "B. 吳越 ",
-          "C. 閩"
+        questionItem2: [
+          "A. 大散關 ",
+          "B. 大興府 ",
+          "C. 大興府 "
         ],
-        rightans2: 0,
+        rightans2: 2 ,
         showWrong2: 0,
         currAns2: null,
         data: [],
@@ -232,25 +216,36 @@ const SCALE_LIMIT = 800
             show: false
           },
           {
-            ico: require("../static/img/icon/yanyun_icon.png"),
-            text: "燕雲之地",
+            ico: require("../static/img/icon/gate_icon.png"),
+            text: "關口",
+            show: false
+          },
+      {
+            ico: require("../static/img/icon/city_icon.png"),
+            text: "都城 ",
             show: false
           },
           {
-            ico: require("../static/img/icon/GreatWall_039_icon.png"),
-            text: "長城",
+            ico: require("../static/img/icon/border_icon.png"),
+            text: "疆界 ",
             show: false
           },
           {
-            ico: require("../static/img/icon/border_039_icon.png"),
-            text: "疆界",
+            ico: require("../static/img/icon/battlefield_icon.png"),
+            text: "戰場 ",
             show: false
           },
+           {
+            ico: require("../static/img/icon/route_045_icon.png"),
+            text: "蒙古出兵滅夏攻金次序 ",
+            show: false
+          },
+          
           {
             ico: require("../static/img/icon/capital_icon.png"),
-            text: "開封（今河南省開封市）",
+            text: "臨安（今浙江省杭州市）",
             show: false,
-            type: "map",
+            type: "map"
           },
           {
             ico: require("../static/img/icon/question_icon.png"),
@@ -274,11 +269,20 @@ const SCALE_LIMIT = 800
         o: "",
         dpr: 1,
         rem: "",
-        canvasH: "",
-        canvasW: "",
+        canvasH: 0,
+        canvasW: 0,
         docWidth: "",
         docHeight: "",
         horseObject1: {},
+        horseObject2: {},
+        horseObject3: {},
+        horseObject4: {},
+        horseObject5: {},
+        horseObject6: {},
+        horseObject7: {},
+        horseObject8: {},
+        horseObject9: {},
+        horseObject10: {},
         scaleindex: 0,
         ele: null,
         popWindow: false,
@@ -295,7 +299,7 @@ const SCALE_LIMIT = 800
         drawHorsesTimeout: null,
         drawHorsesTimeout1: null,
         drawHorsesTimeout2: null,
-        drawHorsesTimeout3: null,
+  
         shipPlay: false,
         titleH: 70,
         canvasAnimHorse: null,
@@ -308,9 +312,10 @@ const SCALE_LIMIT = 800
         canvasObj: {},
         contextObj: {},
         timer1: [],
-        isShowall:false,
-        route3:false,
-        btn2Play:false,
+        timer2: [],
+        timer3: null,
+        isShowall: false,
+        btn2Play: false
       };
     },
     watch: {
@@ -318,29 +323,24 @@ const SCALE_LIMIT = 800
         handler(n, o) {
           this.scaleindex =
             ((n.scale - n.minScale) / (n.maxScale - n.minScale)) * 10;
-          this.debug = n.scale + "---" + n.maxScale + "--" + this.scaleindex;
         },
         deep: true
       },
       control: {
         handler(n, o) {
-          this.imagesCanvas()
+          this.imagesCanvas();
         },
         deep: true
       },
-      route3:function(n){
-        if(n){
-          this.drawHousePromise3(n)
-        }
-      }
+      
     },
     methods: {
       updateImg() {
-        this.imgCount++
+        this.imgCount++;
       },
       setVoice() {
-        this.noVoice = !this.noVoice
-        this.muteMe()
+        this.noVoice = !this.noVoice;
+        this.muteMe();
       },
       bodyScroll(event) {
         event.preventDefault();
@@ -354,19 +354,21 @@ const SCALE_LIMIT = 800
         );
         this.zoomObj.setTransform(false);
       },
+      clear() {
+      },
       muteMe() {
         this.m01.pause();
         this.m02.pause();
         this.m03.pause();
         this.m04.pause();
-        // this.m05.pause();
-        // this.m06.pause();
-        // this.license.pause();
+        this.m05.pause();
       },
       showCanvas(index) {
-     
         let swip = !this.list[index].show;
         this.muteMe();
+        if (index != 1 && index != 2) {
+          // this.clear();
+        }
         switch (index) {
           case 0:
             //首都
@@ -374,55 +376,79 @@ const SCALE_LIMIT = 800
               this.m01.currentTime = 0;
               this.m01.play();
             }
-            let canvasStatic =this.canvasObj['capital']
-            if(swip){
-              this.showCityAni(canvasStatic,swip)
-            }
-            else{
-              clearInterval(canvasStatic.timeout);
-      // canvasStatic.style.visibility = "hidden";
-              canvasStatic.ani = false;
+            this.sharpCity(this.control.capital, swip)
+            if(!swip){
+              this.control.capital.show=true
             }
             break;
-          case 1:            
-            
-            if (swip && !this.noVoice) {
-              this.m02.currentTime = 0;
-              this.m02.play();
-              this.timer1 = setTimeout(()=>{
-                 this.drawHousePromise2(false,'canvaszhangqian',625,100)
-              },43000)
-            }
-            if(this.isShowall){
-              this.timer1 = setTimeout(()=>{
-                 this.drawHousePromise2(false,'canvaszhangqian',625,100)
-              },5000)
-            }
-            // this.control.border=swip
-            this.drawHousePromise2(swip,'canvaszhangqian',625,100)
-            if(!swip){
-              clearTimeout(this.timer1)
-            }
+          case 1:         
+              if (swip && !this.noVoice) {
+                this.m02.currentTime = 0;
+                this.m02.play();
+              }   
+            this.control.gate=swip
             break;
           case 2:
-            if (swip && !this.noVoice) {
-              this.m03.currentTime = 0;
-              this.m03.play();
+            clearTimeout(this.timer1)
+            clearTimeout(this.timer2)
+           if (swip) {
+              if (!this.noVoice && !this.isShowall) {
+                 this.m03.currentTime = 0;
+                  this.m03.play();     
+                  this.timer1 = setTimeout(() => {
+                    this.sharpCity(this.control.main_city1, swip)
+                  }, 16000);   
+                  this.timer2 = setTimeout(() => {
+                    this.sharpCity(this.control.main_city2, swip)
+                  }, 40000);           
+              } else{
+                this.timer1 = setTimeout(() => {
+                    this.sharpCity(this.control.main_city1, swip)
+                  }, 6000);
+                  this.timer2 = setTimeout(() => {
+                    this.sharpCity(this.control.main_city2, swip)
+                  }, 10000);
+              }      
             }
-            this.drawRedPath(swip)
+            // if(!swip){
+              this.control.main_city1.show=true
+              this.control.main_city2.show=true
+            // }
             break;
-          case 3:  
-          if (swip && !this.noVoice) {
+          case 3:
+            this.control.border = swip
+            break;
+          case 4:
+            if (swip && !this.noVoice) {
               this.m04.currentTime = 0;
               this.m04.play();
             }
-         this.control.border=swip
-            break;
-          
-          case 4:
-            this.mapPop = swip;
+            this.control.battlefield = swip
             break;
           case 5:
+            clearTimeout(this.timer3)
+            this.control.route=swip
+            if (swip) {
+              if (!this.noVoice && !this.isShowall) {
+                 this.m05.currentTime = 0;
+                  this.m05.play();     
+                  this.timer3 = setTimeout(() => {
+                     this.drawHousePromise2(swip)
+                  }, 21000);   
+                          
+              } else{
+                this.timer3 = setTimeout(() => {
+                     this.drawHousePromise2(swip)
+                  }, 8000);
+              }      
+            }
+            this.drawHousePromise(swip)
+            
+            break;
+          case 6:
+            this.mapPop = swip;
+            break;
+          case 7:
             this.popWindow = swip;
             this.currAns = null;
             this.currAns2 = null;
@@ -435,11 +461,10 @@ const SCALE_LIMIT = 800
       },
       conflict() {
         let swip3 = this.list[3].show;
-        // this.control.capital.show = this.list[1].show;
-        this.canvasObj['capital'].style.visibility = this.list[0].show?'visible':'hidden'
-
+        let swip1 = this.list[1].show;
+        this.control.main_city = swip1
         if (swip3) {
-          this.canvasObj['capital'].style.visibility = 'visible'
+        this.control.main_city = true
         }
       },
       oriChange() {
@@ -485,7 +510,6 @@ const SCALE_LIMIT = 800
         selffun();
         this.setZoom();
       },
-
       setRemUnit() {
         const u_agent = navigator.userAgent;
         if (window.orientation === 0 || window.orientation === 180) {
@@ -538,17 +562,17 @@ const SCALE_LIMIT = 800
       },
       initCanvas() {},
       showall(type) {
-        this.isShowall= type
+        this.isShowall = type;
         this.list.forEach((e, index) => {
-        if (!this.list[index].type) {
-          if (type) {
-            this.list[index].show = false
-          } else {
-            this.list[index].show = true;
+          if (!this.list[index].type) {
+            if (type) {
+              this.list[index].show = false;
+            } else {
+              this.list[index].show = true;
+            }
+            this.showCanvas(index);
           }
-          this.showCanvas(index);
-        }
-      });
+        });
         this.muteMe();
       },
       resetHorseObject(object) {
@@ -562,34 +586,17 @@ const SCALE_LIMIT = 800
       createMap() {
         var divTag = this.$refs.canvasInnerDiv;
         let list = [{
-            name: "canvasImages",
-            zindex: 2
-          },
-          
-          {
-            name: "capital",
-            zindex: 3
-          },
-          
-        {
-            name: "canvasroute",
-            zindex: 4,
-             org:true,
-          },
-          {
-            name: "canvasroute2",
-            zindex: 4
-          },
-          {
-            name: "canvaszhangqian2",
-            zindex: 4
-          },
-          {
-            name: "canvaszhangqian",
-            zindex: 4,
-             org:true,
-          },
-        ];
+          name: "canvasImages",
+          zindex: 3
+        },{
+          name: "canvashouse1",
+          zindex: 4,
+          org:true,
+        },{
+          name: "canvashouse2",
+          zindex: 4,
+          org:true,
+        } ];
         let obj = this.createCanvas(list, divTag);
         this.canvasObj = obj[0];
         this.contextObj = obj[1];
@@ -598,121 +605,106 @@ const SCALE_LIMIT = 800
         this.m02 = document.createElement("audio");
         this.m03 = document.createElement("audio");
         this.m04 = document.createElement("audio");
-        // this.m05 = document.createElement("audio");
-        // this.m06 = document.createElement("audio");
-        this.license = document.createElement("audio");
-        this.m01.src = require("../static/img/vo/Chist_s2_map_039_01.mp3");
-        this.m02.src = require("../static/img/vo/Chist_s2_map_039_02.mp3");
-        this.m03.src = require("../static/img/vo/Chist_s2_map_039_03.mp3");
-        this.m04.src = require("../static/img/vo/Chist_s2_map_039_04.mp3");
-        // this.m05.src = require("../static/img/vo/chist_s1_map_037_5.mp3");
-        // this.m06.src = require("../static/img/vo/chist_s1_map_037_6.mp3");
-
-
+        this.m05 = document.createElement("audio");
+        this.m06 = document.createElement("audio");
+        
+        this.m07 = document.createElement("audio");
+        this.m08= document.createElement("audio");
+        
+        this.m01.src = require("../static/img/vo/Chist_s2_map_045_01.mp3");
+        this.m02.src = require("../static/img/vo/Chist_s2_map_045_02.mp3");
+        this.m03.src = require("../static/img/vo/Chist_s2_map_045_03.mp3");
+        this.m04.src = require("../static/img/vo/Chist_s2_map_045_05.mp3");
+        this.m05.src = require("../static/img/vo/Chist_s2_map_045_06.mp3");
         Object.keys(this.imageObj).forEach(element => {
           this.imageObj[element] = new Image();
-          this.insterCanvas(this.imageObj[element], String(element)+'.png', 'canvasImages', false)
-        });
-        
-       Object.keys(this.canvasImagesObj).forEach((element,i) => {
-          this.canvasImagesObj[element] = new Image();
-          this.insterCanvas(this.canvasImagesObj[element], String(element) + '.png', String(element),true)
-        });
-        var imageHorse = new Image();
-        var route = new Image();
-        var routeb = new Image();
-        this.insterCanvas2(route, 'changcheng.png', () => {
-          this.pathObject = {
-          source: route,
-          originX: 0,
-          originY: 0,
-          width: this.orgSetting.w,
-          height: this.orgSetting.h,
-          mask1: {
-            originX: 330,
-            originY: 51,
-            width: 1,
-            height: 806,
-            currOriginX: 330,
-            currOriginY: 51,
-            shiftX: 2,
-            shiftY: 0,
-            endPoint: 600
-          },
-          }
-        })
-        
-        this.insterCanvas2(imageHorse, 'Liaosoldier.png', () => {
-          var translate = [
-            [659.8,100]       
-          ];
-          var scale = [1];
-          var dur = [
-            60,
-          ];
-          var sharpPoint = [
-            1, 
-          ];
-          this.horseObject1 = this.initHorseObject2(            
-            imageHorse
+          this.insterCanvas(
+            this.imageObj[element],
+            String(element) + ".png",
+            "canvasImages",
+            false
           );
-         
+        });
+        // var imageHorse = new Image();
+        // this.insterCanvas2(imageHorse, "Mengtrooper_045.png", () => {
+        //   this.horseObject4 = this.initHorseObject2(imageHorse);          
+        // });
+        var people = new Image();
+        this.insterCanvas2(people, "Mengtrooper_045.png", () => {
+          var translate = [[170.0, -78], [133.9, 100],[143.9,392]];
+          var scale = [1, 1,0];
+          var dur = [50,40,8];
+          var sharpPoint = [1, 1,1];
+          this.horseObject1 = this.initHorseObject(
+            translate,
+            scale,
+            dur,
+            sharpPoint,
+            people
+          );
+          
+          translate = [[381.9, -78], [487.9, 65],[578.0, 267],[618.0,439],[674.1,737]];
+          scale = [1, 1,1,1,0];
+          dur = [30,25,25,25,8];
+          sharpPoint = [1, 1,1,1,1];
+          this.horseObject2= this.initHorseObject(
+            translate,
+            scale,
+            dur,
+            sharpPoint,
+            people
+          );
 
-        })
-        // this.insterCanvas2(zhangqian_b, 'zhangqian02.png', () => {
-        //   this.horseObject1.source2=zhangqian_b     
-        //   this.horseObject3.source2=zhangqian_b          
-        // })
-        // document.getElementById('map_container').append(divTag)
-        // divTag.append(divTag)
+          
+        });
+        
         this.$nextTick(() => {
           this.setZoom();
         });
       },
-     setZoom() {
-      if (!document.getElementById('canvasInnerDiv')) {
-        return
-      }
-      if(this.isApp){
-        this.zoomObj = new zoomApp(document.getElementById('canvasInnerDiv'), {
-        width: this.baseWidth,
-        height: this.baseHeight,
-        top: 0,
-        left: 0,
-        minScale: this.boxscale,
-        // maxScale: this.boxscale * 10,
-        warpWidth: this.boxscale * this.baseWidth,
-        warpHeight: this.boxscale * this.baseHeight
-      })
-      }else{
-        this.zoomObj = new zoom(document.getElementById('canvasInnerDiv'), {
-        width: this.baseWidth,
-        height: this.baseHeight,
-        top: 0,
-        left: 0,
-        minScale: this.boxscale,
-        // maxScale: this.boxscale * 10,
-        warpWidth: this.boxscale * this.baseWidth,
-        warpHeight: this.boxscale * this.baseHeight
-      })
-      }
-      this.zoomObj.setScale(this.boxscale)
-      this.windowTimer = setTimeout(() => {
+      setZoom() {
+        if (!document.getElementById("canvasInnerDiv")) {
+          return;
+        }
+        if (this.isApp) {
+          this.zoomObj = new zoomApp(document.getElementById("canvasInnerDiv"), {
+            width: this.baseWidth,
+            height: this.baseHeight,
+            top: 0,
+            left: 0,
+            minScale: this.boxscale,
+            // maxScale: this.boxscale * 10,
+            warpWidth: this.boxscale * this.baseWidth,
+            warpHeight: this.boxscale * this.baseHeight
+          });
+        } else {
+          this.zoomObj = new zoom(document.getElementById("canvasInnerDiv"), {
+            width: this.baseWidth,
+            height: this.baseHeight,
+            top: 0,
+            left: 0,
+            minScale: this.boxscale,
+            // maxScale: this.boxscale * 10,
+            warpWidth: this.boxscale * this.baseWidth,
+            warpHeight: this.boxscale * this.baseHeight
+          });
+        }
+        this.zoomObj.setScale(this.boxscale);
+        this.windowTimer = setTimeout(() => {
           this.load = false;
         }, 500);
-    },
-
+      },
       insterCanvas(img, src, contextStatic, bool) {
         img.src = require(`../static/img/${src}`);
         img.onload = () => {
-          this.imgCount++
-            this.contextObj[contextStatic].drawImage(
-              img,
-              0,
-              0,
-              this.baseWidth,
-              this.baseHeight
-            );
+          this.imgCount++;
+          this.contextObj[contextStatic].drawImage(
+            img,
+            0,
+            0,
+            this.baseWidth,
+            this.baseHeight
+          );
           this.canvasObj[contextStatic].style.visibility = bool ?
             "visible" :
             "hidden";
@@ -721,40 +713,17 @@ const SCALE_LIMIT = 800
       insterCanvas2(img, src, fun) {
         img.src = require(`../static/img/${src}`);
         img.onload = () => {
-          this.imgCount++
-            fun()
-        }
+          this.imgCount++;
+          fun();
+        };
       },
       initHorseObject(translate, scale, dur, sharpPoint, imageHorse) {
         var object = {
           source: imageHorse,
-          totalFrame: 9,
+          totalFrame: 5,
           currFrame: 0,
-          width: 277.5,
-          height: 170,
-          point: sharpPoint,
-          position: {
-            points: translate,
-            scales: scale,
-            currPoint: 0,
-            totalPoint: translate.length,
-            dur: dur,
-            currDur: 1
-          },
-          division: 1,
-          animating: false,
-          animated: false,
-          timeout: null
-        };
-        return object;
-      },
-      initHorseObject3(translate, scale, dur, sharpPoint, imageHorse) {
-        var object = {
-          source: imageHorse,
-          totalFrame: 9,
-          currFrame: 0,
-           width: 277.5,
-          height: 170,
+          width: 220,
+          height: 460,
           point: sharpPoint,
           position: {
             points: translate,
@@ -774,10 +743,10 @@ const SCALE_LIMIT = 800
       initHorseObject2(imageHorse) {
         var object = {
           source: imageHorse,
-           totalFrame: 3,
+          totalFrame: 5,
           currFrame: 0,
-           width: 246.1,
-          height: 320,
+          width: 2080,
+          height: 504,
           position: {
             currPoint: 0,
             dur: 1,
@@ -792,7 +761,7 @@ const SCALE_LIMIT = 800
       },
       canvasClear(canvas) {
         if (!canvas) {
-          return
+          return;
         }
         var context = canvas.getContext("2d");
         context.save();
@@ -844,13 +813,15 @@ const SCALE_LIMIT = 800
 
 <style lang="less">
   #app {
-    .fs21{
+    .fs21 {
       font-size: 0.22rem;
     }
     .pos_a {
       position: absolute;
-    } 
-    font-family: Verdana, Arial, sans-serif;
+    }
+    font-family: Verdana,
+    Arial,
+    sans-serif;
     .mapBackground {
       display: inline-block; // background: url("../static/img/map.png");
       background-size: cover;
@@ -898,7 +869,8 @@ const SCALE_LIMIT = 800
         }
       }
     }
-    .question2,.question3 {
+    .question2,
+    .question3 {
       flex-wrap: wrap;
       display: flex; // margin-bottom: 0.5em !important;
       .item {
@@ -906,7 +878,11 @@ const SCALE_LIMIT = 800
         margin-bottom: 0.8em !important;
       }
     }
-   
+    .question2{
+       .item {
+        width: 40% !important;
+       }
+    }
     .flex {
       display: flex;
       em {

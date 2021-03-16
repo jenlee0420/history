@@ -1,5 +1,4 @@
 const SCALE_NUM = 0.5
-const SCALE_LIMIT = 800
 const animate = {
   sharpCity(obj, bool) {
     if (!bool) {
@@ -102,82 +101,38 @@ const animate = {
       clearTimeout(pathObject.timeout);
     }
   },
-  drawRedPath2(flag) {
-    let canvasAnimPath = document.getElementById("canvasroute2");
-    let contextAnimPath = canvasAnimPath.getContext("2d");
-    let pathObject = this.pathObject2;
-    if (flag == true) {
-      if (pathObject.mask1.currOriginY < pathObject.mask1.endPoint) {
-        pathObject.playing = true;
-        this.canvasClear(canvasAnimPath);
-        contextAnimPath.save();
-        contextAnimPath.beginPath();
-        contextAnimPath.rect(
-          pathObject.mask1.currOriginX,
-          pathObject.mask1.currOriginY,
-          pathObject.mask1.width,
-          pathObject.mask1.height
-        );
 
-        contextAnimPath.clip();
-        contextAnimPath.drawImage(
-          pathObject.source,
-          pathObject.originX,
-          pathObject.originY,
-          pathObject.width,
-          pathObject.height
-        );
-        if (pathObject.mask1.currOriginY < pathObject.mask1.endPoint) {
-          pathObject.mask1.currOriginY += pathObject.mask1.shiftX;
-        } else {
-
-        }
-        contextAnimPath.restore();
-        canvasAnimPath.style.visibility = "visible";
-        pathObject.timeout = setTimeout(() => {
-          this.drawRedPath2(flag);
-        }, 30);
-      } else {
-        this.drawHousePromise(flag)
-      }
-    } else {
-      canvasAnimPath.style.visibility = "hidden";
-      pathObject.mask1.currOriginX = pathObject.mask1.originX;
-      pathObject.mask1.currOriginY = pathObject.mask1.originY;
-
-      pathObject.playing = false;
-      clearTimeout(pathObject.timeout);
-    }
-  },
+ 
   drawHousePromise(flag) {
-    let canvasAnimHorse = document.getElementById("canvaszhangqian");
+    let canvasAnimHorse = document.getElementById('canvashouse1');
     let contextAnimHorse = canvasAnimHorse.getContext("2d");
-    clearInterval(this.drawHorsesTimeout);
+    clearInterval(this.drawHorsesTimeout1);
     if (flag) {
       canvasAnimHorse.style.visibility = "visible";
-      this.drawHorsesTimeout = setInterval(() => {
+      this.drawHorsesTimeout1 = setInterval(() => {
         this.canvasClear(canvasAnimHorse);
         this.drawHorse(
           this.horseObject1,
           contextAnimHorse,
           this.horseObject1.source,
-          true,
-          0.45
-        )
-      }, 250);
+          false,
+        ).then(()=>{          
+         
+        })
+      }, 150);      
     } else {
-      clearInterval(this.drawHorsesTimeout);
+      clearInterval(this.drawHorsesTimeout1);
       this.canvasClear(canvasAnimHorse);
       canvasAnimHorse.style.visibility = "hidden";
       this.resetHorseObject(this.horseObject1)
     }
   },
-  drawCity(flag) {
-    let canvasAnimHorse = document.getElementById("canvastemple");
+  
+  drawHousePromise2(flag) {
+    let canvasAnimHorse = document.getElementById('canvashouse2');
     let contextAnimHorse = canvasAnimHorse.getContext("2d");
     clearInterval(this.drawHorsesTimeout2);
     if (flag) {
-      // console.log(flag,'.....')
       canvasAnimHorse.style.visibility = "visible";
       this.drawHorsesTimeout2 = setInterval(() => {
         this.canvasClear(canvasAnimHorse);
@@ -185,9 +140,8 @@ const animate = {
           this.horseObject2,
           contextAnimHorse,
           this.horseObject2.source,
-          false
         )
-      }, 120);
+      }, 150);
     } else {
       clearInterval(this.drawHorsesTimeout2);
       this.canvasClear(canvasAnimHorse);
@@ -195,8 +149,29 @@ const animate = {
       this.resetHorseObject(this.horseObject2)
     }
   },
-  drawCity2(flag) {
-    let canvasAnimHorse = document.getElementById("canvastemple2");
+  drawHousePromise4(flag,canvasid,x,y) {
+    let canvasAnimHorse = document.getElementById(canvasid);
+    let contextAnimHorse = canvasAnimHorse.getContext("2d");
+    clearInterval(this.drawHorsesTimeout9);
+    if (flag) {
+      canvasAnimHorse.style.visibility = "visible";
+      this.drawHorsesTimeout9 = setInterval(() => {
+        this.canvasClear(canvasAnimHorse);
+        this.drawHorse2(
+          this.horseObject4,
+          contextAnimHorse,
+          this.horseObject4.source,
+          x,y
+        )
+      }, 250);
+    } else {
+      clearInterval(this.drawHorsesTimeout9);
+      this.canvasClear(canvasAnimHorse);
+      canvasAnimHorse.style.visibility = "hidden";
+    }
+  },
+  drawHousePromise3(flag) {
+    let canvasAnimHorse = document.getElementById('canvaspeople3');
     let contextAnimHorse = canvasAnimHorse.getContext("2d");
     clearInterval(this.drawHorsesTimeout3);
     if (flag) {
@@ -207,9 +182,8 @@ const animate = {
           this.horseObject3,
           contextAnimHorse,
           this.horseObject3.source,
-          false
         )
-      }, 120);
+      }, 250);
     } else {
       clearInterval(this.drawHorsesTimeout3);
       this.canvasClear(canvasAnimHorse);
@@ -218,58 +192,9 @@ const animate = {
     }
   },
 
-  drawHousePromise2(flag, canvasId, x, y) {
-    let canvasAnimHorse = document.getElementById(canvasId);
-    let contextAnimHorse = canvasAnimHorse.getContext("2d");
-    clearInterval(this.drawHorsesTimeout1);
-    if (flag) {
-      canvasAnimHorse.style.visibility = "visible";
-      this.drawHorsesTimeout1 = setInterval(() => {
-        this.canvasClear(canvasAnimHorse);
-        this.drawHorse2(
-          this.horseObject1,
-          contextAnimHorse,
-          this.horseObject1.source,
-          x, y
-        )
-      }, 250);
-    } else {
-      clearInterval(this.drawHorsesTimeout1);
-      this.canvasClear(canvasAnimHorse);
-      canvasAnimHorse.style.visibility = "hidden";
-    }
-  },
-  drawHousePromise3(flag, canvasId, x, y) {
-    let canvasAnimHorse = document.getElementById(canvasId);
-    let contextAnimHorse = canvasAnimHorse.getContext("2d");
-    clearInterval(this.drawHorsesTimeout9);
-    if (flag) {
-      canvasAnimHorse.style.visibility = "visible";
-      this.drawHorsesTimeout9 = setInterval(() => {
-        this.canvasClear(canvasAnimHorse);
-        this.drawHorse2(
-          this.horseObject2,
-          contextAnimHorse,
-          this.horseObject2.source,
-          x, y
-        )
-      }, 250);
-    } else {
-      clearInterval(this.drawHorsesTimeout9);
-      this.canvasClear(canvasAnimHorse);
-      canvasAnimHorse.style.visibility = "hidden";
-    }
-  },
-
   drawHorse(object, contextS, imageHorse, isStop,scale) {
-    var Sscale = scale?scale:0.5
+    var Sscale = scale?scale:0.45
     return new Promise((resolve, rej) => {
-      // 
-      if(object.source.src.indexOf('buddhastatue')>-1 && this.list[6].show == true && object.position.currPoint == 2 && !this.btn2Play){
-        console.log(object.source.src)
-        this.btn2Play = true
-      }
-
       contextS.save();
       // if (object.point==-1) {
       //     contextS.scale(-1, 1);
@@ -322,6 +247,7 @@ const animate = {
             object.position.points[object.position.currPoint + 1][1] *
             object.position.currDur) /
           object.position.dur[object.position.currPoint];
+          
       } else if(isStop) { 
         scale =1
         position[0] = object.position.points[object.position.totalPoint - 1][0]
@@ -367,8 +293,8 @@ const animate = {
       }
       contextS.drawImage(
           imageHorse,
-          object.currFrame * object.width,
           0,
+          object.currFrame * object.height,
           object.width,
           object.height,
           x,
@@ -402,7 +328,8 @@ const animate = {
       canvasStatic.style.position = "absolute";
       canvasStatic.style.zIndex = canvasList[i].zindex
       
-      if(canvasList[i].org && document.body.clientWidth<SCALE_LIMIT){
+      
+      if(canvasList[i].org && document.body.clientWidth<800){
         canvasStatic.width = this.orgSetting.w;
         canvasStatic.height = this.orgSetting.h;
         canvasStatic.style.transform = `scale(${SCALE_NUM})`;

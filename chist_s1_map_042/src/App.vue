@@ -92,6 +92,8 @@ Y6f5biC!5e0!3m2!1szh-TW!2shk!4v1605842735946!5m2!1szh-TW!2shk" :width="(isApp?do
   import modal from "./components/modal";
   import bar from "./components/bar";
   import imageview from "./components/ImageView";
+  const SCALE_NUM = 0.5
+const SCALE_LIMIT = 800
   export default {
     components: {
       modal,
@@ -101,11 +103,11 @@ Y6f5biC!5e0!3m2!1szh-TW!2shk!4v1605842735946!5m2!1szh-TW!2shk" :width="(isApp?do
     name: "App",
     beforeCreate() {},
     created() {
-      if (document.body.clientWidth < 600) {
-        this.baseWidth = this.baseWidth * 0.5
-        this.baseHeight = this.baseHeight * 0.5
-        this.baseWidth_doc = this.baseWidth_doc * 0.5
-        this.baseHeight_doc = this.baseHeight_doc * 0.5
+      if (document.body.clientWidth < SCALE_LIMIT) {
+        this.baseWidth = this.baseWidth *SCALE_NUM
+        this.baseHeight = this.baseHeight * SCALE_NUM
+        this.baseWidth_doc = this.baseWidth_doc * SCALE_NUM
+        this.baseHeight_doc = this.baseHeight_doc * SCALE_NUM
       }
     },
     computed: {

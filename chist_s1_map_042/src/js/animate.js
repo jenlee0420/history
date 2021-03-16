@@ -1,3 +1,5 @@
+const SCALE_NUM = 0.5
+const SCALE_LIMIT = 800
 const animate = {
   sharpCity(obj, bool) {
     if (!bool) {
@@ -420,10 +422,10 @@ const animate = {
       canvasStatic.style.position = "absolute";
       canvasStatic.style.zIndex = canvasList[i].zindex
       
-      if(canvasList[i].org && document.body.clientWidth<600){
+      if(canvasList[i].org && document.body.clientWidth<SCALE_LIMIT){
         canvasStatic.width = this.orgSetting.w;
         canvasStatic.height = this.orgSetting.h;
-        canvasStatic.style.transform = "scale(0.5)";
+        canvasStatic.style.transform = `scale(${SCALE_NUM})`;
       }else{
         canvasStatic.width = this.baseWidth;
       canvasStatic.height = this.baseHeight;
