@@ -8,7 +8,7 @@
     </div>
     <div v-show="!load" id="main_container" :style="mainBoxStyle">
       <div class="title_bar purpleGradient" :style="{ height: titleH + 'px' }">
-        <span>蒙古滅夏攻金形勢圖 (公元前 1227-公元前 1227 年)</span>
+        <span>蒙古滅夏攻金形勢圖 (公元前1227-前1234 年)</span>
         <div id="soundCon" :class="{ mute: noVoice }" @click="setVoice"></div>
       </div>
       <div class="main_box">
@@ -17,9 +17,14 @@
             <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
             <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'mapDetail.png'" :static="true" :zindex="1" @update="updateImg"></imageview>           
             <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'country.png'" :static="true" :zindex="2" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'border.png'" :static="control.border" :zindex="1" @update="updateImg"></imageview>
             <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'capital.png'" :static="control.capital.show" :zindex="2" @update="updateImg"></imageview>
             <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'main_city1.png'" :static="control.main_city1.show" :zindex="2" @update="updateImg"></imageview>
             <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'main_city2.png'" :static="control.main_city2.show" :zindex="2" @update="updateImg"></imageview>
+<imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'battlefield.png'" :static="control.battlefield" :zindex="3" @update="updateImg"></imageview>
+             <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'gate.png'" :static="control.gate" :zindex="3" @update="updateImg"></imageview>
+             <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'route.png'" :static="control.route" :zindex="4" @update="updateImg"></imageview>
+             
              </div>
         </div>
         <div id="menu_container" style="float: right;">
@@ -168,10 +173,10 @@
         imageObj: {         
           // main_city1: null,
           // main_city2:null,
-          border: null,
-          battlefield:null,
-          route:null,
-          gate:null,
+          // border: null,
+          // battlefield:null,
+          // route:null,
+          // gate:null,
         },
         control: {
           capital: {
@@ -203,7 +208,7 @@
         questionItem2: [
           "A. 大散關 ",
           "B. 大興府 ",
-          "C. 大興府 "
+          "C. 蔡州 "
         ],
         rightans2: 2 ,
         showWrong2: 0,
@@ -369,10 +374,11 @@
         if (index != 1 && index != 2) {
           // this.clear();
         }
+        this.isShowall=false
         switch (index) {
           case 0:
             //首都
-            if (swip && !this.noVoice) {
+            if (swip && !this.noVoice && !this.isShowall) {
               this.m01.currentTime = 0;
               this.m01.play();
             }
@@ -382,7 +388,7 @@
             }
             break;
           case 1:         
-              if (swip && !this.noVoice) {
+              if (swip && !this.noVoice && !this.isShowall) {
                 this.m02.currentTime = 0;
                 this.m02.play();
               }   
@@ -397,10 +403,10 @@
                   this.m03.play();     
                   this.timer1 = setTimeout(() => {
                     this.sharpCity(this.control.main_city1, swip)
-                  }, 16000);   
+                  }, 19000);   
                   this.timer2 = setTimeout(() => {
                     this.sharpCity(this.control.main_city2, swip)
-                  }, 40000);           
+                  }, 37000);           
               } else{
                 this.timer1 = setTimeout(() => {
                     this.sharpCity(this.control.main_city1, swip)
@@ -410,16 +416,20 @@
                   }, 10000);
               }      
             }
-            // if(!swip){
+            if(!swip){
+              this.sharpCity(this.control.main_city1, swip)
+              this.sharpCity(this.control.main_city2, swip)
+            }
               this.control.main_city1.show=true
               this.control.main_city2.show=true
-            // }
+            
+            
             break;
           case 3:
             this.control.border = swip
             break;
           case 4:
-            if (swip && !this.noVoice) {
+            if (swip && !this.noVoice && !this.isShowall) {
               this.m04.currentTime = 0;
               this.m04.play();
             }
@@ -429,20 +439,23 @@
             clearTimeout(this.timer3)
             this.control.route=swip
             if (swip) {
-              if (!this.noVoice && !this.isShowall) {
+              if (!this.noVoice || !this.isShowall) {
                  this.m05.currentTime = 0;
                   this.m05.play();     
                   this.timer3 = setTimeout(() => {
-                     this.drawHousePromise2(swip)
-                  }, 21000);   
+                     this.drawHousePromise2(true)
+                  }, 14000);   
                           
               } else{
                 this.timer3 = setTimeout(() => {
-                     this.drawHousePromise2(swip)
+                     this.drawHousePromise2(true)
                   }, 8000);
               }      
             }
             this.drawHousePromise(swip)
+            if(!swip){
+              this.drawHousePromise2(false)
+            }
             
             break;
           case 6:
@@ -460,11 +473,11 @@
         if(index!=false)this.conflict();
       },
       conflict() {
-        let swip3 = this.list[3].show;
-        let swip1 = this.list[1].show;
-        this.control.main_city = swip1
-        if (swip3) {
-        this.control.main_city = true
+        let swip4 = this.list[4].show;
+        let swip5 = this.list[5].show;
+        this.control.battlefield = swip4
+        if (swip5) {
+        this.control.battlefield = true
         }
       },
       oriChange() {
@@ -563,6 +576,7 @@
       initCanvas() {},
       showall(type) {
         this.isShowall = type;
+        console.log(this.isShowall )
         this.list.forEach((e, index) => {
           if (!this.list[index].type) {
             if (type) {
@@ -587,7 +601,7 @@
         var divTag = this.$refs.canvasInnerDiv;
         let list = [{
           name: "canvasImages",
-          zindex: 3
+          zindex: 1
         },{
           name: "canvashouse1",
           zindex: 4,
@@ -643,10 +657,10 @@
             people
           );
           
-          translate = [[381.9, -78], [487.9, 65],[578.0, 267],[618.0,439],[674.1,737]];
-          scale = [1, 1,1,1,0];
-          dur = [30,25,25,25,8];
-          sharpPoint = [1, 1,1,1,1];
+          translate = [[381.9, -78], [487.9, 65],[578.0, 267],[618.0,439],[664.0,621],[774.0,801]];
+          scale = [1, 1,1,1,1,0];
+          dur = [30,25,25,25,10,8];
+          sharpPoint = [1, 1,1,1,1,1];
           this.horseObject2= this.initHorseObject(
             translate,
             scale,

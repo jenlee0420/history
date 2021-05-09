@@ -17,6 +17,13 @@
             <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
             <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'mapDetail.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
             <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'capital.png'" :static="control.capital.show" :zindex="1" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'city.png'" :static="control.city" :zindex="2" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'city1.png'" :static="control.city1" :zindex="2" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'battlefield01.png'" :static="control.battlefield01" :zindex="3" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'battlefield02.png'" :static="control.battlefield02" :zindex="3" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'battlefield03.png'" :static="control.battlefield03" :zindex="3" @update="updateImg"></imageview>
+
+
           </div>
         </div>
         <div id="menu_container" style="float: right;">
@@ -167,11 +174,11 @@ const SCALE_LIMIT = 800
         windowTimer: null,
         imageObj: {
           // capital: null,
-          city: null,
-          city1: null,
-          battlefield01: null,
-          battlefield02: null,
-          battlefield03: null,
+          // city: null,
+          // city1: null,
+          // battlefield01: null,
+          // battlefield02: null,
+          // battlefield03: null,
           border: null,
         },
         canvasImagesObj: {
@@ -353,6 +360,7 @@ const SCALE_LIMIT = 800
         if (index != 1 && index != 2) {
           // this.clear();
         }
+        this.isShowall= false
         switch (index) {
           case 0:
             //首都
@@ -395,35 +403,36 @@ const SCALE_LIMIT = 800
                 this.timer1[1] = setTimeout(() => {
                   this.control.battlefield02 = true
                   this.drawHousePromise3(false, 'canvasFighting2')
-                  this.drawHousePromise3(swip, 'canvasFighting', 704, 620)
+                  this.drawHousePromise3(swip, 'canvasFighting1', 704, 620)
                 }, 30000)
                 this.timer1[2] = setTimeout(() => {
                   this.control.battlefield03 = true
-                  this.drawHousePromise3(swip, 'canvasFighting', 562, 468)
+                  this.drawHousePromise3(false,'canvasFighting1')
+                  this.drawHousePromise4(swip, 'canvasFighting', 562, 468)
                 }, 65000)
                 this.timer1[4] = setTimeout(() => {
-                  this.control.battlefield03 = true
-                  this.drawHousePromise3(false, 'canvasFighting', 562, 468)
+                  this.drawHousePromise4(false, 'canvasFighting', 562, 468)
                 }, 85000)
               } else if (this.noVoice || this.isShowall) {
                 this.timer1[1] = setTimeout(() => {
                   this.control.battlefield02 = true
                   this.drawHousePromise3(false, 'canvasFighting2')
-                  this.drawHousePromise3(swip, 'canvasFighting', 704, 620)
+                  this.drawHousePromise3(swip, 'canvasFighting1', 704, 620)
                 }, 3000)
                 this.timer1[2] = setTimeout(() => {
                   this.control.battlefield03 = true
-                  this.drawHousePromise3(swip, 'canvasFighting', 562, 468)
+                  this.drawHousePromise3(false,'canvasFighting1')
+                  this.drawHousePromise4(swip, 'canvasFighting', 562, 468)
                 }, 6000)
                 this.timer1[4] = setTimeout(() => {
-                  this.drawHousePromise3(false, 'canvasFighting', 562, 468)
+                  this.drawHousePromise4(false, 'canvasFighting', 562, 468)
                 }, 9000)
               }
             } else {
               this.control.battlefield02 = false
               this.control.battlefield03 = false
-              this.drawHousePromise3(false, 'canvasFighting', 704, 620)
-              this.drawHousePromise3(false, 'canvasFighting', 704, 620)
+              this.drawHousePromise3(false, 'canvasFighting1')
+              this.drawHousePromise4(false, 'canvasFighting')
             }
             this.drawHousePromise3(swip, 'canvasFighting2', 862, 506)
             this.control.battlefield01 = swip
@@ -440,7 +449,7 @@ const SCALE_LIMIT = 800
               } else if (this.noVoice || this.isShowall) {
                 this.timer1[3] = setTimeout(() => {
                   this.drawHousePromise2(false, 'canvasDust', 480, 516)
-                }, 6000)
+                }, 8000)
               }
             } else {
             }
@@ -598,6 +607,11 @@ const SCALE_LIMIT = 800
             org: true,
           }, {
             name: "canvasFighting",
+            zindex: 4,
+            org: true,
+          },
+          {
+            name: "canvasFighting1",
             zindex: 4,
             org: true,
           },

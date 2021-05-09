@@ -8,7 +8,7 @@
     </div>
     <div v-show="!load" id="main_container" :style="mainBoxStyle">
       <div class="title_bar purpleGradient" :style="{ height: titleH + 'px' }">
-        <span>宋代四大區域市場位置圖 (979-1127 年)</span>
+        <span>北宋四大區域市場位置圖 (979-1127 年)</span>
         <div id="soundCon" :class="{ mute: noVoice }" @click="setVoice"></div>
       </div>
       <div class="main_box">
@@ -18,12 +18,15 @@
             <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'mapDetail.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
             <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'capital.png'" :static="control.capital.show" :zindex="1" @update="updateImg"></imageview>
             <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'horse.png'" :static="control.horse.show" :zindex="1" @update="updateImg"></imageview>
+          
+          <imageview v-for="(item,index) in canvasImagesObj" :key="index"
+          :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="`${index}.png`" :static="control[index]" :zindex="3" @update="updateImg"></imageview>
           </div>
         </div>
         <div id="menu_container" style="float: right;">
           <div id="action_container" class="greyContainer" style="padding: 1px 0.03em 0.03em; height: auto; flex: 1 1 0%;">
             <div class="sample_title">圖例</div>
-            <div class="sample blueButton action" :class="{ clicked: item.show }" v-for="(item, index) in list" :key="index" @click="showCanvas(index)">
+            <div class="sample blueButton action" :class="{ clicked: item.show }" v-for="(item, index) in list" :key="index" @click="showCanvashandle(index)">
               <div class="iconItem">
                 <span class="icon">
                     <img :src="item.ico">
@@ -180,7 +183,7 @@ const SCALE_LIMIT = 800
         canvasImagesObj: {
           city: null,
           city1: null,
-           city2: null,
+          city2: null,
           textile: null,
           wood: null,
           porcelain: null,
@@ -384,7 +387,8 @@ const SCALE_LIMIT = 800
       },
       clear() {
       },
-      muteMe() {
+      muteMe() {        
+        if(this.isShowall){return}
         this.m01.pause();
         this.m02.pause();
         this.m03.pause();
@@ -394,16 +398,21 @@ const SCALE_LIMIT = 800
         this.m07.pause();
         this.m08.pause();
       },
+      showCanvashandle(index){
+        this.isShowall=false
+        this.showCanvas(index)
+      },
       showCanvas(index) {
         let swip = !this.list[index].show;
         this.muteMe();
         if (index != 1 && index != 2) {
           // this.clear();
         }
+        
         switch (index) {
           case 0:
             //首都
-            if (swip && !this.noVoice) {
+            if (swip && !this.noVoice && !this.isShowall) {
               this.m01.currentTime = 0;
               this.m01.play();
             }
@@ -463,35 +472,35 @@ const SCALE_LIMIT = 800
             
             break;
           case 3:
-           if (swip && !this.noVoice) {
+           if (swip && !this.noVoice && !this.isShowall) {
                 this.m04.currentTime = 0;
                 this.m04.play();
             }
             this.control.porcelain = swip
             break;
           case 4:
-           if (swip && !this.noVoice) {
+           if (swip && !this.noVoice && !this.isShowall) {
                 this.m05.currentTime = 0;
                 this.m05.play();
             }
             this.control.textile = swip
             break;
           case 5:
-           if (swip && !this.noVoice) {
+           if (swip && !this.noVoice && !this.isShowall) {
                 this.m06.currentTime = 0;
                 this.m06.play();
             }
             this.control.rice = swip
             break;
           case 6:
-           if (swip && !this.noVoice) {
+           if (swip && !this.noVoice && !this.isShowall) {
                 this.m07.currentTime = 0;
                 this.m07.play();
             }
             this.control.wood = swip
             break;
           case 7:
-            if (swip && !this.noVoice) {
+            if (swip && !this.noVoice && !this.isShowall) {
               this.m08.currentTime = 0;
               this.m08.play();
             }
@@ -722,14 +731,14 @@ const SCALE_LIMIT = 800
         //     false
         //   );
         // });
-        Object.keys(this.canvasImagesObj).forEach((element, i) => {
-          this.canvasImagesObj[element] = new Image();
-          this.insterCanvas(
-            this.canvasImagesObj[element],
-            String(element) + ".png",
-            String(element), false
-          );
-        });
+        // Object.keys(this.canvasImagesObj).forEach((element, i) => {
+        //   this.canvasImagesObj[element] = new Image();
+        //   this.insterCanvas(
+        //     this.canvasImagesObj[element],
+        //     String(element) + ".png",
+        //     String(element), false
+        //   );
+        // });
         var imageHorse = new Image();
         // this.insterCanvas2(imageHorse, "dust_041.png", () => {
         //   this.horseObject1 = this.initHorseObject2(imageHorse);

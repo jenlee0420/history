@@ -141,7 +141,7 @@ const animate = {
           contextAnimHorse,
           this.horseObject2.source,
         )
-      }, 150);
+      }, 140);
     } else {
       clearInterval(this.drawHorsesTimeout2);
       this.canvasClear(canvasAnimHorse);

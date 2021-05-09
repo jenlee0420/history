@@ -19,3 +19,4 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+/chist_s2_map_050/chist_s2_map_050

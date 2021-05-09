@@ -8,7 +8,7 @@
     </div>
     <div v-show="!load" id="main_container" :style="mainBoxStyle">
       <div class="title_bar purpleGradient" :style="{ height: titleH + 'px' }">
-        <span>汴京地理位置圖 (979 年)</span>
+        <span>汴京位置圖 (979 年)</span>
         <div id="soundCon" :class="{ mute: noVoice }" @click="setVoice"></div>
       </div>
       <div class="main_box">
@@ -21,8 +21,8 @@
             
             <!-- <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'border.png'" :static="control.border" :zindex="1" @update="updateImg"></imageview>
             
-            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'rice_043.png'" :static="control.rice_043" :zindex="1" @update="updateImg"></imageview>  
-            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'main_city.png'" :static="control.main_city" :zindex="1" @update="updateImg"></imageview> -->
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'rice_043.png'" :static="control.rice_043" :zindex="1" @update="updateImg"></imageview>   -->
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'main_city.png'" :static="control.main_city" :zindex="1" @update="updateImg"></imageview>
           </div>
         </div>
         <div id="menu_container" style="float: right;">
@@ -172,7 +172,7 @@ CB5biC!5e0!3m2!1szh-TW!2shk!4v1605773793955!5m2!1szh-TW!2shk" :width="(isApp?doc
         imageObj: {         
           border: null,
           
-          main_city: null,
+          // main_city: null,
           rice_043: null,
         },
         canvasImagesObj: {
@@ -368,6 +368,7 @@ CB5biC!5e0!3m2!1szh-TW!2shk!4v1605773793955!5m2!1szh-TW!2shk" :width="(isApp?doc
         if (index != 1 && index != 2) {
           // this.clear();
         }
+        this.isShowall=false
         switch (index) {
           case 0:
             //首都

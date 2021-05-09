@@ -16,7 +16,8 @@
           <div class="mapBackground" id="canvasInnerDiv" ref="canvasInnerDiv">
             <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
             <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'mapDetail.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
-           <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'capital.png'" :static="control.capital.show" :zindex="2" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'capital.png'" :static="control.capital.show" :zindex="2" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'main_city.png'" :static="control.main_city" :zindex="4" @update="updateImg"></imageview>
             
              </div>
         </div>
@@ -49,7 +50,7 @@
                 ">
       <div slot="modalCont">
         <div>
-          <div class="question question2">
+          <div class="question question3">
             <div class="flex">
               <em class="mr5">1.</em>
               <em>根據地圖所示<span class="dot">，</span>以下哪項屬於臨安<span class="dot">、</span>泉州及廣州的共通點？</em>
@@ -168,7 +169,7 @@ bee5biC!5e0!3m2!1szh-TW!2shk!4v1605860868478!5m2!1szh-TW!2shk" :width="(isApp?do
         imageObj: {         
           border: null,
           route:null,
-          main_city: null,
+          // main_city: null,
         },
         control: {
           capital: {
@@ -348,6 +349,7 @@ bee5biC!5e0!3m2!1szh-TW!2shk!4v1605860868478!5m2!1szh-TW!2shk" :width="(isApp?do
         if (index != 1 && index != 2) {
           // this.clear();
         }
+        this.isShowall=false
         switch (index) {
           case 0:
             //首都
@@ -602,9 +604,9 @@ bee5biC!5e0!3m2!1szh-TW!2shk!4v1605860868478!5m2!1szh-TW!2shk" :width="(isApp?do
             people
           );
           
-          translate = [[766, 99], [730, 293],[730, 293],[698.0,493],[702.1,657],[702.1,657],[718,817],[798,1017]];
+          translate = [[766, 99], [730, 293],[730, 293],[698.0,493],[702.1,657],[710.1,657],[718,817],[798,1017]];
           scale = [1, 1,1,1,1,1,1,0];
-          dur = [20,10,15,10,10,10,10,8];
+          dur = [15,10,8,8,20,10,10,8];
           sharpPoint = [1, 1,1,1,1,1,1,1];
           this.horseObject2= this.initHorseObject(
             translate,

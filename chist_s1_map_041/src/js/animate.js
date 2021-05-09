@@ -172,51 +172,7 @@ const animate = {
       this.resetHorseObject(this.horseObject1)
     }
   },
-  drawCity(flag) {
-    let canvasAnimHorse = document.getElementById("canvastemple");
-    let contextAnimHorse = canvasAnimHorse.getContext("2d");
-    clearInterval(this.drawHorsesTimeout2);
-    if (flag) {
-      // console.log(flag,'.....')
-      canvasAnimHorse.style.visibility = "visible";
-      this.drawHorsesTimeout2 = setInterval(() => {
-        this.canvasClear(canvasAnimHorse);
-        this.drawHorse(
-          this.horseObject2,
-          contextAnimHorse,
-          this.horseObject2.source,
-          false
-        )
-      }, 120);
-    } else {
-      clearInterval(this.drawHorsesTimeout2);
-      this.canvasClear(canvasAnimHorse);
-      canvasAnimHorse.style.visibility = "hidden";
-      this.resetHorseObject(this.horseObject2)
-    }
-  },
-  drawCity2(flag) {
-    let canvasAnimHorse = document.getElementById("canvastemple2");
-    let contextAnimHorse = canvasAnimHorse.getContext("2d");
-    clearInterval(this.drawHorsesTimeout3);
-    if (flag) {
-      canvasAnimHorse.style.visibility = "visible";
-      this.drawHorsesTimeout3 = setInterval(() => {
-        this.canvasClear(canvasAnimHorse);
-        this.drawHorse(
-          this.horseObject3,
-          contextAnimHorse,
-          this.horseObject3.source,
-          false
-        )
-      }, 120);
-    } else {
-      clearInterval(this.drawHorsesTimeout3);
-      this.canvasClear(canvasAnimHorse);
-      canvasAnimHorse.style.visibility = "hidden";
-      this.resetHorseObject(this.horseObject3)
-    }
-  },
+
 
   drawHousePromise2(flag, canvasId, x, y) {
     let canvasAnimHorse = document.getElementById(canvasId);
@@ -256,6 +212,27 @@ const animate = {
       }, 250);
     } else {
       clearInterval(this.drawHorsesTimeout9);
+      this.canvasClear(canvasAnimHorse);
+      canvasAnimHorse.style.visibility = "hidden";
+    }
+  },
+  drawHousePromise4(flag, canvasId, x, y) {
+    let canvasAnimHorse = document.getElementById(canvasId);
+    let contextAnimHorse = canvasAnimHorse.getContext("2d");
+    clearInterval(this.drawHorsesTimeout2);
+    if (flag) {
+      canvasAnimHorse.style.visibility = "visible";
+      this.drawHorsesTimeout2 = setInterval(() => {
+        this.canvasClear(canvasAnimHorse);
+        this.drawHorse2(
+          this.horseObject2,
+          contextAnimHorse,
+          this.horseObject2.source,
+          x, y
+        )
+      }, 250);
+    } else {
+      clearInterval(this.drawHorsesTimeout2);
       this.canvasClear(canvasAnimHorse);
       canvasAnimHorse.style.visibility = "hidden";
     }

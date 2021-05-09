@@ -7,7 +7,7 @@
     </div>
     <div v-show="!load" id="main_container" :style="mainBoxStyle">
       <div class="title_bar purpleGradient" :style="{ height: titleH + 'px' }">
-        <span>五代十國形勢圖 (923-936 年)</span>
+        <span>五代十國形勢圖 (943 年)</span>
         <div id="soundCon" :class="{ mute: noVoice }" @click="setVoice"></div>
       </div>
       <div class="main_box">
@@ -15,6 +15,7 @@
           <div class="mapBackground" id="canvasInnerDiv" ref="canvasInnerDiv">
             <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'map.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
             <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'mapDetail.png'" :static="true" :zindex="1" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'capital.png'" :static="control.capital.show" :zindex="3" @update="updateImg"></imageview>
             
           </div>
         </div>
@@ -196,12 +197,15 @@ const SCALE_LIMIT = 800
           border:null,
         },
         canvasImagesObj: {
-          capital: null,
+          // capital: null,
         
         },
         control: {
      border:false,
-          
+          capital:{
+            show:true,
+            ani:null,
+          }
         },
         Redroadtimer: null,
         load: true,
@@ -367,6 +371,7 @@ const SCALE_LIMIT = 800
      
         let swip = !this.list[index].show;
         this.muteMe();
+        
         switch (index) {
           case 0:
             //首都
@@ -374,15 +379,9 @@ const SCALE_LIMIT = 800
               this.m01.currentTime = 0;
               this.m01.play();
             }
-            let canvasStatic =this.canvasObj['capital']
-            if(swip){
-              this.showCityAni(canvasStatic,swip)
-            }
-            else{
-              clearInterval(canvasStatic.timeout);
-      // canvasStatic.style.visibility = "hidden";
-              canvasStatic.ani = false;
-            }
+            // let canvasStatic =this.canvasObj['capital']
+            this.sharpCity(this.control.capital, swip)
+            this.control.capital.show=true
             break;
           case 1:            
             
@@ -431,15 +430,16 @@ const SCALE_LIMIT = 800
             break;
         }
         this.list[index].show = swip;
-        if(index!=false)this.conflict();
+        // if(index!=false)this.conflict();
       },
       conflict() {
         let swip3 = this.list[3].show;
-        // this.control.capital.show = this.list[1].show;
-        this.canvasObj['capital'].style.visibility = this.list[0].show?'visible':'hidden'
+        // this.control.capital.show = this.list[0].show;
+        // this.canvasObj['capital'].style.visibility = this.list[0].show?'visible':'hidden'
 
         if (swip3) {
-          this.canvasObj['capital'].style.visibility = 'visible'
+          // this.canvasObj['capital'].style.visibility = 'visible'
+          // this.control.capital.show = true
         }
       },
       oriChange() {

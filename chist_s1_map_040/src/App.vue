@@ -23,8 +23,12 @@
             <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'su.png'" :static="control2.su.show" :zindex="1" @update="updateImg"></imageview>
             <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'nantang.png'" :static="control2.nantang.show" :zindex="1" @update="updateImg"></imageview>
             <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'wuyue.png'" :static="control2.wuyue.show" :zindex="1" @update="updateImg"></imageview>
-            <!-- <imageview :imgsrc="'nianfen01.png'" :static="control.nianfen01" :zindex="1" @update="updateImg"></imageview>
-                <imageview :imgsrc="'nianfen02.png'" :static="control.nianfen02" :zindex="1" @update="updateImg"></imageview> -->
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'city.png'" :static="control.city" :zindex="1" @update="updateImg"></imageview>
+            <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'nianfen01.png'" :static="control.nianfen01" :zindex="1" @update="updateImg"></imageview>
+                <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'nianfen02a.png'" :static="control.nianfen02" :zindex="1" @update="updateImg"></imageview>
+                <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'nianfen02b.png'" :static="control.nianfen02" :zindex="1" @update="updateImg"></imageview>
+                <imageview :canvasW="baseWidth" :canvasH="baseHeight" :imgsrc="'capital.png'" :static="control2.capital.show" :zindex="3" @update="updateImg"></imageview>
+
           </div>
         </div>
         <div id="menu_container" style="float: right;">
@@ -200,14 +204,14 @@ const SCALE_LIMIT = 800
     data() {
       return {
         imageObj: {
-          city: null,
-          nianfen01: null,
-          nianfen02a: null,
-          nianfen02b: null,
+         
+          // nianfen01: null,
+          // nianfen02a: null,
+          // nianfen02b: null,
           border: null
         },
         canvasImagesObj: {
-          capital: null,
+          // capital: null,
         },
         control2: {
           nanhan: {
@@ -235,6 +239,10 @@ const SCALE_LIMIT = 800
             ani: false
           },
           beisong: {
+            show: true,
+            ani: false
+          },
+          capital: {
             show: true,
             ani: false
           },
@@ -419,6 +427,7 @@ const SCALE_LIMIT = 800
       showCanvas(index) {
         let swip = !this.list[index].show;
         this.muteMe();
+        this.isShowall= false
         switch (index) {
           case 0:
             //首都
@@ -435,15 +444,15 @@ const SCALE_LIMIT = 800
                   this.drawHousePromise2(false, 'Songsoldier', 1013, 80)
                 }, 17000)
               }
-              this.showCityAni(this.canvasObj['capital'], swip)
+              // this.showCityAni(this.canvasObj['capital'], swip)
+              this.sharpCity(this.control2.capital, swip)
               this.drawHousePromise2(swip, 'Songsoldier', 1013, 80)
             }
             if (!swip) {
               this.drawHousePromise2(false, 'Songsoldier')
-              clearInterval(this.canvasObj['capital'].timeout);
-              this.canvasObj['capital'].style.visibility = "visible";
-              this.canvasObj['capital'].ani = false;
+              this.sharpCity(this.control2.capital, swip)
             }
+            this.control2.capital.show=true
             break;
           case 1:
             clearTimeout(this.drawTimeout.time7)
@@ -689,11 +698,7 @@ const SCALE_LIMIT = 800
             name: "canvasImages",
             zindex: 2
           },
-          {
-            name: "capital",
-            zindex: 3,
-            
-          },
+          
           {
             name: "Songsoldier",
             zindex: 3,
